@@ -1,0 +1,28 @@
+a_description_for_the_package: a collection of tools to work with BPMN
+classifiers:
+- 'Development Status :: 4 - Beta'
+- 'Intended Audience :: Developers'
+- 'Programming Language :: Python :: 3'
+- 'Programming Language :: Python :: 3.8'
+console_scripts:
+- bt=bpmn_tools.__main__:cli
+first_year_of_publication: '2023'
+github_account: christophevg
+github_repo_name: bpmn-tools
+keywords_describing_the_package: bpmn tools
+license: MIT
+package_module_name: bpmn_tools
+package_name: bpmn-tools
+package_tagline: a collection of tools to work with BPMN
+package_title: BPMN Tools
+requires:
+- fire
+- xmltodict
+scripts: []
+your_author_name: Christophe VG
+your_email_address: contact@christophe.vg
+your_full_name: Christophe VG
+your_name: Christophe VG
+skip:
+- tests
+- (package_module_name)
