@@ -8,8 +8,8 @@ def prune(lst):
   return lst
 
 class Process():
-  def __init__(self, id="process"):
-    self.id = id
+  def __init__(self, ref="process"):
+    self.ref = ref
     self._activities = {}
   
   def append(self, activity):
@@ -34,7 +34,7 @@ class Process():
     # TODO detect flows
 
     # add properties
-    base["@id"] = self.id
+    base["@ref"] = self.ref
     return {
       f"bpmn:{self.__class__.__name__.lower()}" : base
     }
@@ -49,19 +49,19 @@ class Flow():
     self.target.incoming.append(self)
 
   @property
-  def id(self):
-    return f"flow_{self.source.id}_{self.target.id}"
+  def ref(self):
+    return f"flow_{self.source.ref}_{self.target.ref}"
 
   def as_dict(self):
     return {
-      "@id"       : self.id,
-      "@sourceRef": self.source.id,
-      "@targetRef": self.target.id
+      "@ref"       : self.ref,
+      "@sourceRef": self.source.ref,
+      "@targetRef": self.target.ref
     }
 
 class Activity():
-  def __init__(self, id):
-    self.id = id
+  def __init__(self, ref):
+    self.ref = ref
     self.incoming = []
     self.outgoing = []
   
@@ -71,31 +71,31 @@ class Activity():
   
   def as_dict(self):
     base = {
-      "@id": self.id
+      "@ref": self.ref
     }
     if self.outgoing:
-      base["bpmn:outgoing"] = prune([ flow.id for flow in self.outgoing ])
+      base["bpmn:outgoing"] = prune([ flow.ref for flow in self.outgoing ])
     if self.incoming:
-      base["bpmn:incoming"] = prune([ flow.id for flow in self.incoming ])
+      base["bpmn:incoming"] = prune([ flow.ref for flow in self.incoming ])
     return base
 
 class Start(Activity):
   __tag__ = "startEvent"
 
-  def __init__(self, id="start"):
-    super().__init__(id)
+  def __init__(self, ref="start"):
+    super().__init__(ref)
 
 class End(Activity):
   __tag__ = "endEvent"
 
-  def __init__(self, id="end"):
-    super().__init__(id)
+  def __init__(self, ref="end"):
+    super().__init__(ref)
 
 class Task(Activity):
   __tag__ = "task"
 
-  def __init__(self, name, id="task"):
-    super().__init__(id)
+  def __init__(self, name, ref="task"):
+    super().__init__(ref)
     self.name = name
 
   def as_dict(self):
@@ -104,8 +104,8 @@ class Task(Activity):
     return base
 
 class Collaboration():
-  def __init__(self, id="process"):
-    self.id = id
+  def __init__(self, ref="process"):
+    self.ref = ref
     self.participants = []
   
   def append(self, participant):
@@ -126,20 +126,20 @@ class Collaboration():
       }
 
     # add properties
-    base["@id"] = self.id
+    base["@ref"] = self.ref
     return {
       f"bpmn:{self.__class__.__name__.lower()}" : base
     }
 
 class Participant():
-  def __init__(self, name, process, id="participant"):
-    self.id      = id
+  def __init__(self, name, process, ref="participant"):
+    self.ref      = ref
     self.name    = name
     self.process = process
 
   def as_dict(self):
     return {
-      "@id"        : self.id, 
+      "@ref"        : self.ref, 
       "@name"      : self.name,
-      "@processRef": self.process.id
+      "@processRef": self.process.ref
     }

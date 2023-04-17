@@ -13,40 +13,40 @@ def test_create_single_step_process():
   """
   activities = [
     Start(),
-    Task('Say "Hello!"', id="hello"),
+    Task('Say "Hello!"', ref="hello"),
     End()
   ]
 
-  process = Process(id="process").extend(activities).extend([
+  process = Process(ref="process").extend(activities).extend([
     Flow(source=activities[0], target=activities[1]),
     Flow(source=activities[1], target=activities[2])
   ]).as_dict()
 
   assert process == {
     "bpmn:process": {
-      "@id": "process",
+      "@ref": "process",
       "bpmn:startEvent": {
-        "@id": "start",
+        "@ref": "start",
         "bpmn:outgoing": "flow_start_hello"
       },
       "bpmn:task": {
-        "@id": "hello",
+        "@ref": "hello",
         "@name": "Say \"Hello!\"",
         "bpmn:incoming": "flow_start_hello",
         "bpmn:outgoing": "flow_hello_end"
       },
       "bpmn:endEvent": {
-        "@id": "end",
+        "@ref": "end",
         "bpmn:incoming": "flow_hello_end"
       },
       "bpmn:sequenceFlow": [
         {
-          "@id": "flow_start_hello",
+          "@ref": "flow_start_hello",
           "@sourceRef": "start",
           "@targetRef": "hello"
         },
         {
-          "@id": "flow_hello_end",
+          "@ref": "flow_hello_end",
           "@sourceRef": "hello",
           "@targetRef": "end"
         }
@@ -56,17 +56,17 @@ def test_create_single_step_process():
 
 def test_create_single_participant_collaboration():
   """
-    Create a single participant collaboration for Process(id="process")
+    Create a single participant collaboration for Process(ref="process")
   """
-  collaboration = Collaboration(id="collaboration").append(
-    Participant("participant", Process(id="process"), id="participant")
+  collaboration = Collaboration(ref="collaboration").append(
+    Participant("participant", Process(ref="process"), ref="participant")
   ).as_dict()
   
   assert collaboration == {
     "bpmn:collaboration": {
-      "@id": "collaboration",
+      "@ref": "collaboration",
       "bpmn:participant": {
-        "@id": "participant",
+        "@ref": "participant",
         "@name": "participant",
         "@processRef": "process"
       }
