@@ -4,6 +4,7 @@
 """
 
 from bpmn_tools.diagrams import Process, Start, End, Task, Flow
+from bpmn_tools.diagrams import Collaboration, Participant
 
 def test_create_single_step_process():
   """
@@ -16,12 +17,12 @@ def test_create_single_step_process():
     End()
   ]
 
-  bpmn = Process().extend(activities).extend([
+  process = Process(id="process").extend(activities).extend([
     Flow(source=activities[0], target=activities[1]),
     Flow(source=activities[1], target=activities[2])
   ]).as_dict()
 
-  assert bpmn == {
+  assert process == {
     "bpmn:process": {
       "@id": "process",
       "bpmn:startEvent": {
@@ -50,5 +51,24 @@ def test_create_single_step_process():
           "@targetRef": "end"
         }
       ]
+    }
+  }
+
+def test_create_single_participant_collaboration():
+  """
+    Create a single participant collaboration for Process(id="process")
+  """
+  collaboration = Collaboration(id="collaboration").append(
+    Participant("participant", Process(id="process"), id="participant")
+  ).as_dict()
+  
+  assert collaboration == {
+    "bpmn:collaboration": {
+      "@id": "collaboration",
+      "bpmn:participant": {
+        "@id": "participant",
+        "@name": "participant",
+        "@processRef": "process"
+      }
     }
   }

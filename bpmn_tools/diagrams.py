@@ -102,3 +102,44 @@ class Task(Activity):
     base = super().as_dict()
     base["@name"] = self.name
     return base
+
+class Collaboration():
+  def __init__(self, id="process"):
+    self.id = id
+    self.participants = []
+  
+  def append(self, participant):
+    self.participants.append(participant)
+    return self
+
+  def extend(self, participants):
+    self.participants.extend(participants)
+    return self
+
+  def as_dict(self):
+    # compile participants
+    if self.participants:
+      base = {
+        f"bpmn:participant" : prune([
+          participant.as_dict() for participant in self.participants
+        ])
+      }
+
+    # add properties
+    base["@id"] = self.id
+    return {
+      f"bpmn:{self.__class__.__name__.lower()}" : base
+    }
+
+class Participant():
+  def __init__(self, name, process, id="participant"):
+    self.id      = id
+    self.name    = name
+    self.process = process
+
+  def as_dict(self):
+    return {
+      "@id"        : self.id, 
+      "@name"      : self.name,
+      "@processRef": self.process.id
+    }
