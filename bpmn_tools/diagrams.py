@@ -7,9 +7,48 @@ def prune(lst):
     return lst[0]
   return lst
 
+class Definitions():
+  def __init__(self, id="definitions"):
+    self.id = id
+    self._definitions = {}
+  
+  def append(self, definition):
+    try:
+      self._definitions[definition.__tag__].append(definition)
+    except KeyError:
+      self._definitions[definition.__tag__] = [ definition ]
+    return self
+
+  def extend(self, definitions):
+    for definition in definitions:
+      self.append(definition)
+    return self
+
+  def as_dict(self):
+    # compile definitions
+    base = {
+      f"bpmn:{name}" : prune([
+        definition.as_dict()[f"bpmn:{name}"] for definition in definitions
+      ]) for name, definitions in self._definitions.items()
+    }
+    # add properties
+    base["@id"] = self.id
+    # add namespaces
+    base.update({
+      "@xmlns:bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL",
+      "@xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
+      "@xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",
+      "@xmlns:di": "http://www.omg.org/spec/DD/20100524/DI"
+    })
+    return {
+      f"bpmn:{self.__class__.__name__.lower()}" : base
+    }
+
 class Process():
-  def __init__(self, ref="process"):
-    self.ref = ref
+  __tag__ = "process"
+
+  def __init__(self, id="process"):
+    self.id = id
     self._activities = {}
   
   def append(self, activity):
@@ -31,10 +70,8 @@ class Process():
         activity.as_dict() for activity in activities
       ]) for name, activities in self._activities.items()
     }
-    # TODO detect flows
-
     # add properties
-    base["@ref"] = self.ref
+    base["@id"] = self.id
     return {
       f"bpmn:{self.__class__.__name__.lower()}" : base
     }
@@ -49,19 +86,19 @@ class Flow():
     self.target.incoming.append(self)
 
   @property
-  def ref(self):
-    return f"flow_{self.source.ref}_{self.target.ref}"
+  def id(self):
+    return f"flow_{self.source.id}_{self.target.id}"
 
   def as_dict(self):
     return {
-      "@ref"       : self.ref,
-      "@sourceRef": self.source.ref,
-      "@targetRef": self.target.ref
+      "@id"       : self.id,
+      "@sourceRef": self.source.id,
+      "@targetRef": self.target.id
     }
 
 class Activity():
-  def __init__(self, ref):
-    self.ref = ref
+  def __init__(self, id):
+    self.id = id
     self.incoming = []
     self.outgoing = []
   
@@ -71,31 +108,31 @@ class Activity():
   
   def as_dict(self):
     base = {
-      "@ref": self.ref
+      "@id": self.id
     }
     if self.outgoing:
-      base["bpmn:outgoing"] = prune([ flow.ref for flow in self.outgoing ])
+      base["bpmn:outgoing"] = prune([ flow.id for flow in self.outgoing ])
     if self.incoming:
-      base["bpmn:incoming"] = prune([ flow.ref for flow in self.incoming ])
+      base["bpmn:incoming"] = prune([ flow.id for flow in self.incoming ])
     return base
 
 class Start(Activity):
   __tag__ = "startEvent"
 
-  def __init__(self, ref="start"):
-    super().__init__(ref)
+  def __init__(self, id="start"):
+    super().__init__(id)
 
 class End(Activity):
   __tag__ = "endEvent"
 
-  def __init__(self, ref="end"):
-    super().__init__(ref)
+  def __init__(self, id="end"):
+    super().__init__(id)
 
 class Task(Activity):
   __tag__ = "task"
 
-  def __init__(self, name, ref="task"):
-    super().__init__(ref)
+  def __init__(self, name, id="task"):
+    super().__init__(id)
     self.name = name
 
   def as_dict(self):
@@ -104,8 +141,10 @@ class Task(Activity):
     return base
 
 class Collaboration():
-  def __init__(self, ref="process"):
-    self.ref = ref
+  __tag__ = "collaboration"
+
+  def __init__(self, id="process"):
+    self.id = id
     self.participants = []
   
   def append(self, participant):
@@ -126,20 +165,20 @@ class Collaboration():
       }
 
     # add properties
-    base["@ref"] = self.ref
+    base["@id"] = self.id
     return {
       f"bpmn:{self.__class__.__name__.lower()}" : base
     }
 
 class Participant():
-  def __init__(self, name, process, ref="participant"):
-    self.ref      = ref
+  def __init__(self, name, process, id="participant"):
+    self.id     = id
     self.name    = name
     self.process = process
 
   def as_dict(self):
     return {
-      "@ref"        : self.ref, 
+      "@id"        : self.id, 
       "@name"      : self.name,
-      "@processRef": self.process.ref
+      "@processRef": self.process.id
     }
