@@ -49,26 +49,26 @@ class Process():
 
   def __init__(self, id="process"):
     self.id = id
-    self._activities = {}
+    self._elements = {}
   
-  def append(self, activity):
+  def append(self, element):
     try:
-      self._activities[activity.__tag__].append(activity)
+      self._elements[element.__tag__].append(element)
     except KeyError:
-      self._activities[activity.__tag__] = [ activity ]
+      self._elements[element.__tag__] = [ element ]
     return self
 
-  def extend(self, activities):
-    for activity in activities:
-      self.append(activity)
+  def extend(self, elements):
+    for element in elements:
+      self.append(element)
     return self
 
   def as_dict(self):
-    # compile activities
+    # compile elements
     base = {
       f"bpmn:{name}" : prune([
-        activity.as_dict() for activity in activities
-      ]) for name, activities in self._activities.items()
+        element.as_dict() for element in elements
+      ]) for name, elements in self._elements.items()
     }
     # add properties
     base["@id"] = self.id
@@ -99,13 +99,15 @@ class Flow():
 class Activity():
   __labeled__ = False
 
-  def __init__(self, id):
+  def __init__(self, id, x=0, y=0):
     self.id = id
+    self.x = x
+    self.y = y
     self.incoming = []
     self.outgoing = []
   
-  def flow_to(self, next_activity):
-    Flow(self, next_activity)
+  def flow_to(self, next_element):
+    Flow(self, next_element)
     return self
   
   def as_dict(self):
@@ -193,11 +195,9 @@ class Participant():
     }
 
 class Shape():
-  def __init__(self, element, id=None, x=0, y=0, label=None):
+  def __init__(self, element, id=None, label=None):
     self._id = id
     self.element = element
-    self.x = x
-    self.y = y
     self.label = label
 
   @property
@@ -208,8 +208,8 @@ class Shape():
   @property
   def bounds(self):
     return {
-      "x" : self.x,
-      "y" : self.y,
+      "x" : self.element.x,
+      "y" : self.element.y,
       "width" : self.element.__width__,
       "height": self.element.__height__
     }
@@ -231,4 +231,26 @@ class Shape():
 
     return {
       "bpmndi:BPMNShape" : base
+    }
+
+class Edge():
+  def __init__(self, flow):
+    self.flow = flow
+  
+  def as_dict(self):
+    return {
+      "bpmndi:BPMNEdge" : {
+        "@id": f"edge_{self.flow.id}",
+        "@bpmnElement": self.flow.id,
+        "di:waypoint": [
+          {
+            "@x": str(self.flow.source.x + self.flow.source.__width__),
+            "@y": str(self.flow.source.y + int(self.flow.source.__height__/2))
+          },
+          {
+            "@x": str(self.flow.target.x),
+            "@y": str(self.flow.target.y + int(self.flow.target.__height__/2))
+          }
+        ]
+      }
     }

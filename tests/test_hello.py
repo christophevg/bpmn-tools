@@ -6,7 +6,9 @@
 from bpmn_tools.diagrams import Definitions
 from bpmn_tools.diagrams import Process, Start, End, Task, Flow
 from bpmn_tools.diagrams import Collaboration, Participant
-from bpmn_tools.diagrams import Shape
+from bpmn_tools.diagrams import Shape, Edge
+
+import json
 
 def test_create_single_step_process():
   """
@@ -80,9 +82,9 @@ def test_create_definitions_with_process_and_collaboration():
     Create Definitions with both a single-step process and collaboration.
   """
   activities = [
-    Start(),
+    Start(id="start"),
     Task('Say "Hello!"', id="hello"),
-    End()
+    End(id="end")
   ]
 
   process = Process(id="process").extend(activities).extend([
@@ -184,5 +186,33 @@ def test_create_task_shape():
         "@height": "80"
       },
       "bpmndi:BPMNLabel": None
+    }
+  }
+
+def test_create_edge():
+  """
+    Create an edge for a flow between start and end
+  """
+
+  flow = Flow(source=Start(id="start"), target=End(id="end"))
+  edge = Edge(flow)
+  
+  result = edge.as_dict()
+  print(json.dumps(result, indent=2))
+  
+  assert result == {
+    "bpmndi:BPMNEdge": {
+      "@id": "edge_flow_start_end",
+      "@bpmnElement": "flow_start_end",
+      "di:waypoint": [
+        {
+          "@x": "36",
+          "@y": "18"
+        },
+        {
+          "@x": "0",
+          "@y": "18"
+        }
+      ]
     }
   }
