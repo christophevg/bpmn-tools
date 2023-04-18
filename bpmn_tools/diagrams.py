@@ -97,6 +97,8 @@ class Flow():
     }
 
 class Activity():
+  __labeled__ = False
+
   def __init__(self, id):
     self.id = id
     self.incoming = []
@@ -117,21 +119,28 @@ class Activity():
     return base
 
 class Start(Activity):
-  __tag__ = "startEvent"
+  __tag__    = "startEvent"
+  __width__  = 36
+  __height__ = 36
 
   def __init__(self, id="start"):
     super().__init__(id)
 
 class End(Activity):
   __tag__ = "endEvent"
+  __width__  = 36
+  __height__ = 36
 
   def __init__(self, id="end"):
     super().__init__(id)
 
 class Task(Activity):
-  __tag__ = "task"
+  __tag__     = "task"
+  __width__   = 100
+  __height__  = 80
+  __labeled__ = True
 
-  def __init__(self, name, id="task"):
+  def __init__(self, name="", id="task"):
     super().__init__(id)
     self.name = name
 
@@ -171,7 +180,7 @@ class Collaboration():
     }
 
 class Participant():
-  def __init__(self, name, process, id="participant"):
+  def __init__(self, name="", process=None, id="participant"):
     self.id     = id
     self.name    = name
     self.process = process
@@ -181,4 +190,45 @@ class Participant():
       "@id"        : self.id, 
       "@name"      : self.name,
       "@processRef": self.process.id
+    }
+
+class Shape():
+  def __init__(self, element, id=None, x=0, y=0, label=None):
+    self._id = id
+    self.element = element
+    self.x = x
+    self.y = y
+    self.label = label
+
+  @property
+  def id(self):
+    if self.id: return self.id
+    return f"shape_{self.element.id}"
+
+  @property
+  def bounds(self):
+    return {
+      "x" : self.x,
+      "y" : self.y,
+      "width" : self.element.__width__,
+      "height": self.element.__height__
+    }
+
+  def as_dict(self):
+    base = {
+      "@id": f"shape_{self.element.id}",
+      "@bpmnElement": self.element.id,
+      "dc:Bounds": {
+        "@x": str(self.bounds["x"]),
+        "@y": str(self.bounds["y"]),
+        "@width": str(self.bounds["width"]),
+        "@height": str(self.bounds["height"])
+      }
+    }
+    
+    if self.element.__labeled__:
+      base["bpmndi:BPMNLabel"] = self.label
+
+    return {
+      "bpmndi:BPMNShape" : base
     }
