@@ -11,6 +11,7 @@ class Definitions():
   def __init__(self, id="definitions"):
     self.id = id
     self._definitions = {}
+    self.diagrams = []
   
   def append(self, definition):
     try:
@@ -31,6 +32,11 @@ class Definitions():
         definition.as_dict()[f"bpmn:{name}"] for definition in definitions
       ]) for name, definitions in self._definitions.items()
     }
+    # add diagrams
+    diagrams = [ diagram.as_dict()["bpmndi:BPMNDiagram"] for diagram in self.diagrams ]
+    if diagrams:
+      base["bpmndi:BPMNDiagram"] = prune(diagrams)
+
     # add properties
     base["@id"] = self.id
     # add namespaces
@@ -50,6 +56,20 @@ class Process():
   def __init__(self, id="process"):
     self.id = id
     self._elements = {}
+
+  @property
+  def elements(self):
+    l = []
+    for es in self._elements.values():
+      l +=  es
+    return list(filter(lambda e: isinstance(e, Element), l )) 
+
+  @property
+  def flows(self):
+    l = []
+    for es in self._elements.values():
+      l +=  es
+    return list(filter(lambda e: isinstance(e, Flow), l))
   
   def append(self, element):
     try:
@@ -96,7 +116,7 @@ class Flow():
       "@targetRef": self.target.id
     }
 
-class Activity():
+class Element():
   __labeled__ = False
 
   def __init__(self, id, x=0, y=0):
@@ -105,6 +125,10 @@ class Activity():
     self.y = y
     self.incoming = []
     self.outgoing = []
+
+  @property
+  def shape_properties(self):
+    return {}
   
   def flow_to(self, next_element):
     Flow(self, next_element)
@@ -120,36 +144,67 @@ class Activity():
       base["bpmn:incoming"] = prune([ flow.id for flow in self.incoming ])
     return base
 
-class Start(Activity):
+class Start(Element):
   __tag__    = "startEvent"
   __width__  = 36
   __height__ = 36
 
-  def __init__(self, id="start"):
-    super().__init__(id)
+  def __init__(self, id="start", **kwargs):
+    super().__init__(id, **kwargs)
 
-class End(Activity):
+class End(Element):
   __tag__ = "endEvent"
   __width__  = 36
   __height__ = 36
 
-  def __init__(self, id="end"):
-    super().__init__(id)
+  def __init__(self, id="end", **kwargs):
+    super().__init__(id, **kwargs)
 
-class Task(Activity):
+class Task(Element):
   __tag__     = "task"
   __width__   = 100
   __height__  = 80
   __labeled__ = True
 
-  def __init__(self, name="", id="task"):
-    super().__init__(id)
+  def __init__(self, name="", id="task", **kwargs):
+    super().__init__(id, **kwargs)
     self.name = name
 
   def as_dict(self):
     base = super().as_dict()
     base["@name"] = self.name
     return base
+
+class Participant(Element):
+  def __init__(self, name="", process=None, id="participant", **kwargs):
+    super().__init__(id, **kwargs)
+    self.name       = name
+    self.process    = process
+    self.__width__  = 600
+    self.__height__ = 125
+
+  @property
+  def elements(self):
+    if not self.process: return []
+    return self.process.elements
+
+  @property
+  def flows(self):
+    if not self.process: return []
+    return self.process.flows
+
+  @property
+  def shape_properties(self):
+    return {
+      "@isHorizontal" : "true"
+    }
+
+  def as_dict(self):
+    return {
+      "@id"        : self.id, 
+      "@name"      : self.name,
+      "@processRef": self.process.id
+    }
 
 class Collaboration():
   __tag__ = "collaboration"
@@ -158,6 +213,20 @@ class Collaboration():
     self.id = id
     self.participants = []
   
+  @property
+  def elements(self):
+    l = self.participants.copy()
+    for participant in self.participants:
+      l.extend(participant.elements)
+    return l
+
+  @property
+  def flows(self):
+    l = []
+    for participant in self.participants:
+      l.extend(participant.flows)
+    return l
+
   def append(self, participant):
     self.participants.append(participant)
     return self
@@ -179,19 +248,6 @@ class Collaboration():
     base["@id"] = self.id
     return {
       f"bpmn:{self.__class__.__name__.lower()}" : base
-    }
-
-class Participant():
-  def __init__(self, name="", process=None, id="participant"):
-    self.id     = id
-    self.name    = name
-    self.process = process
-
-  def as_dict(self):
-    return {
-      "@id"        : self.id, 
-      "@name"      : self.name,
-      "@processRef": self.process.id
     }
 
 class Shape():
@@ -229,6 +285,8 @@ class Shape():
     if self.element.__labeled__:
       base["bpmndi:BPMNLabel"] = self.label
 
+    base.update(self.element.shape_properties)
+
     return {
       "bpmndi:BPMNShape" : base
     }
@@ -254,3 +312,37 @@ class Edge():
         ]
       }
     }
+
+class Plane():
+  def __init__(self, id="plane", element=None):
+    self._id     = id
+    self.element = element
+
+  @property
+  def id(self):
+    if self.element:
+      return f"plane_{self.element.id}"
+    else:
+      return self._id
+
+  def as_dict(self):
+    base = { "@id" : self.id }
+    if self.element:
+      base["@bpmnElement"] = self.element.id
+      shapes = [ Shape(element).as_dict()["bpmndi:BPMNShape"] for element in self.element.elements ]
+      if shapes:
+        base["bpmndi:BPMNShape"] = prune(shapes)
+      edges = [ Edge(flow).as_dict()["bpmndi:BPMNEdge"] for flow in self.element.flows ]
+      if edges:
+        base["bpmndi:BPMNEdge"] = prune(edges)
+    return { "bpmndi:BPMNPlane" : base }
+
+class Diagram():
+  def __init__(self, id="diagram", plane=None):
+    self.id      = id
+    self.plane   = plane if plane else Plane()
+
+  def as_dict(self):
+    base = { "@id" : self.id }
+    base.update(self.plane.as_dict())
+    return { "bpmndi:BPMNDiagram" : base }
