@@ -9,10 +9,10 @@ import xmltodict
 import json
 from difflib import unified_diff
 
-from bpmn_tools.diagrams import Definitions
-from bpmn_tools.diagrams import Process, Start, End, Task, Flow
-from bpmn_tools.diagrams import Collaboration, Participant
-from bpmn_tools.diagrams import Diagram, Plane, Shape, Edge
+from bpmn_tools.notation      import Definitions
+from bpmn_tools.collaboration import Collaboration, Participant
+from bpmn_tools.flow          import Process, Start, End, Task, Flow
+from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
 
 def show_diff(result, expected):
   def as_dict(obj):
