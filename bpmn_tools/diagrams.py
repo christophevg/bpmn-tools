@@ -4,99 +4,170 @@
 
 from .util import prune
 
-class Shape():
-  def __init__(self, element, id=None, label=None):
-    self._id = id
+from . import xml
+
+from .collaboration import Participant
+from .flow          import Process, Element, Flow
+
+class Bounds(xml.Element):
+  __tag__ = "dc:Bounds"
+  
+  def __init__(self, x=0, y=0, height=0, width=0, **kwargs):
+    if not "@x" in kwargs:
+      kwargs["@x"]      = str(x)
+    if not "@y" in kwargs:
+      kwargs["@y"]      = str(y)
+    if not "@height" in kwargs:
+      kwargs["@height"] = str(height)
+    if not "@width" in kwargs:
+      kwargs["@width"]  = str(width)
+    super().__init__(**kwargs)
+
+class Label(xml.Element):
+  __tag__ = "bpmndi:BPMNLabel"
+  
+  def __init__(self, label=None, **kwargs):
+    self.text = label
+    super().__init__(**kwargs)
+
+class Shape(xml.Element):
+  __tag__ = "bpmndi:BPMNShape"
+
+  def __init__(self, element=None, id=None, **kwargs):
     self.element = element
-    self.label = label
+    self.label   = None
+    super().__init__(**kwargs)
 
   @property
   def id(self):
-    if self.id: return self.id
     return f"shape_{self.element.id}"
 
   @property
-  def bounds(self):
-    return {
-      "x" : self.element.x,
-      "y" : self.element.y,
-      "width" : self.element.__width__,
-      "height": self.element.__height__
-    }
+  def _more_attributes(self):
+    more = {}
+    if self.element:
+      more.update({
+        "id"          : self.id,
+        "bpmnElement" : self.element.id
+      })
+      if self.element.__horizontal__:
+        more["isHorizontal"] = "true"
+    return more
 
-  def as_dict(self):
-    base = {
-      "@id": f"shape_{self.element.id}",
-      "@bpmnElement": self.element.id,
-      "dc:Bounds": {
-        "@x": str(self.bounds["x"]),
-        "@y": str(self.bounds["y"]),
-        "@width": str(self.bounds["width"]),
-        "@height": str(self.bounds["height"])
-      }
-    }
-    
-    if self.element.__labeled__:
-      base["bpmndi:BPMNLabel"] = self.label
+  @property
+  def _more_children(self):
+    more = []
+    if self.element:
+      more.append(
+        Bounds(
+          x=self.element.x,
+          y=self.element.y,
+          height=self.element.__height__,
+          width=self.element.__width__
+        )
+      )
+      if self.element.__labeled__:
+        more.append(Label(self.label))
+    return more
 
-    base.update(self.element.shape_properties)
-
-    return {
-      "bpmndi:BPMNShape" : base
-    }
-
-class Edge():
-  def __init__(self, flow):
-    self.flow = flow
+class WayPoint(xml.Element):
+  __tag__ = "di:waypoint"
   
-  def as_dict(self):
-    return {
-      "bpmndi:BPMNEdge" : {
-        "@id": f"edge_{self.flow.id}",
-        "@bpmnElement": self.flow.id,
-        "di:waypoint": [
-          {
-            "@x": str(self.flow.source.x + self.flow.source.__width__),
-            "@y": str(self.flow.source.y + int(self.flow.source.__height__/2))
-          },
-          {
-            "@x": str(self.flow.target.x),
-            "@y": str(self.flow.target.y + int(self.flow.target.__height__/2))
-          }
-        ]
-      }
-    }
+  def __init__(self, x=0, y=0, **kwargs):
+    if not "@x" in kwargs:
+      kwargs["@x"] = str(x)
+    if not "@y" in kwargs:
+      kwargs["@y"] = str(y)
+    super().__init__(**kwargs)
 
-class Plane():
-  def __init__(self, id="plane", element=None):
-    self._id     = id
-    self.element = element
+class Edge(xml.Element):
+  __tag__ = "bpmndi:BPMNEdge"
+
+  def __init__(self, flow=None, id=None, **kwargs):
+    self.flow = flow
+    super().__init__(**kwargs)
 
   @property
   def id(self):
+    return f"edge_{self.flow.id}"
+
+  @property
+  def _more_attributes(self):
+    if self.flow:
+      return {
+        "id"          : self.id,
+        "bpmnElement" : self.flow.id
+      }
+    return {}
+
+  @property
+  def _more_children(self):
+    more = []
+    if self.flow:
+      more.extend([
+        WayPoint(
+          x=self.flow.source.x + self.flow.source.__width__,
+          y=self.flow.source.y + int(self.flow.source.__height__/2)
+        ),
+        WayPoint(
+          x=self.flow.target.x,
+          y=self.flow.target.y + int(self.flow.target.__height__/2)
+        )
+      ])
+    return more
+
+class Plane(xml.Element):
+  __tag__ = "bpmndi:BPMNPlane"
+
+  def __init__(self, id="plane", element=None, **kwargs):
+    self._element = element
+    if self._element and "@bpmnElement" in kwargs:
+      if self._element.id != kwargs["@bpmnElement"]:
+        raise ValueError("got element and bpmnElement, with different ids")
+    if not "@id" in kwargs:
+      kwargs["@id"] = id
+    super().__init__(**kwargs)
+
+  @property
+  def element(self):
+    if self._element:
+      return self._element
+    if self.bpmnElement:
+      return self.find("id", self.bpmnElement)
+    return None
+
+  @property
+  def _more_attributes(self):
+    more = {}
     if self.element:
-      return f"plane_{self.element.id}"
+      more["bpmnElement"] = self.element.id
+      more["id"] = f"plane_{self.element.id}"
+    return more
+
+  @property
+  def _more_children(self):
+    more = []
+    if self.element:
+      for participant in self.element.children_oftype(Participant):
+        more.append(Shape(participant))
+        if participant.process:
+          for element in participant.process.children_oftype(Element):
+            more.append(Shape(element))
+          for flow in participant.process.children_oftype(Flow):
+            more.append(Edge(flow))
+    return more
+
+class Diagram(xml.Element):
+  __tag__ = "bpmndi:BPMNDiagram"
+
+  def __init__(self, id="diagram", plane=None, **kwargs):
+    self.plane = plane
+    kwargs["@id"] = id
+    super().__init__(**kwargs)
+
+  @property
+  def _more_children(self):
+    if self.plane:
+      return [ self.plane ]
     else:
-      return self._id
-
-  def as_dict(self):
-    base = { "@id" : self.id }
-    if self.element:
-      base["@bpmnElement"] = self.element.id
-      shapes = [ Shape(element).as_dict()["bpmndi:BPMNShape"] for element in self.element.elements ]
-      if shapes:
-        base["bpmndi:BPMNShape"] = prune(shapes)
-      edges = [ Edge(flow).as_dict()["bpmndi:BPMNEdge"] for flow in self.element.flows ]
-      if edges:
-        base["bpmndi:BPMNEdge"] = prune(edges)
-    return { "bpmndi:BPMNPlane" : base }
-
-class Diagram():
-  def __init__(self, id="diagram", plane=None):
-    self.id      = id
-    self.plane   = plane if plane else Plane()
-
-  def as_dict(self):
-    base = { "@id" : self.id }
-    base.update(self.plane.as_dict())
-    return { "bpmndi:BPMNDiagram" : base }
+      return [ Plane() ]

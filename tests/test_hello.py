@@ -6,26 +6,13 @@
 
 from pathlib import Path
 import xmltodict
-import json
-from difflib import unified_diff
 
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task, Flow
 from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
 
-def show_diff(result, expected):
-  def as_dict(obj):
-    return obj.as_dict()
-  result   = json.dumps(expected, indent=2, sort_keys=True, default=as_dict)
-  expected = json.dumps(result,   indent=2, sort_keys=True, default=as_dict)
-  diff = unified_diff(result.splitlines(keepends=True),
-                      expected.splitlines(keepends=True))
-  print("".join(diff), end="")
-
-def compare(result, expected):
-  show_diff(result, expected)
-  assert result == expected
+from bpmn_tools.util import compare
 
 def test_create_single_step_process():
   """
@@ -58,7 +45,7 @@ def test_create_single_step_process():
     Flow(source=activities[1], target=activities[2])
   ])
 
-  compare(process.as_dict(), {
+  compare(process.as_dict(with_tag=True), {
     "bpmn:process": {
       "@id": "process",
       "bpmn:startEvent": {
@@ -93,7 +80,7 @@ def test_create_single_step_process():
 def test_create_single_participant_collaboration():
   """
     Create a single participant collaboration for Process(id="process")
-  
+
     <bpmn:collaboration id="collaboration">
       <bpmn:participant id="participant" name="lane" processRef="process" />
     </bpmn:collaboration>
@@ -101,8 +88,8 @@ def test_create_single_participant_collaboration():
   collaboration = Collaboration(id="collaboration").append(
     Participant("participant", Process(id="process"), id="participant")
   )
-  
-  compare(collaboration.as_dict(), {
+
+  compare(collaboration.as_dict(with_tag=True), {
     "bpmn:collaboration": {
       "@id": "collaboration",
       "bpmn:participant": {
@@ -116,7 +103,7 @@ def test_create_single_participant_collaboration():
 def test_create_definitions_with_process_and_collaboration():
   """
     Create Definitions with both a single-step process and collaboration.
-  
+
     <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
                       xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
                       xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
@@ -152,17 +139,17 @@ def test_create_definitions_with_process_and_collaboration():
     Flow(source=activities[0], target=activities[1]),
     Flow(source=activities[1], target=activities[2])
   ])
-  
+
   collaboration = Collaboration(id="collaboration").append(
     Participant("participant", process, id="participant")
   )
-  
+
   definitions = Definitions(id="definitions").extend([
     process,
     collaboration
   ])
-  
-  compare(definitions.as_dict(), {
+
+  compare(definitions.as_dict(with_tag=True), {
     "bpmn:definitions": {
       "@xmlns:bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL",
       "@xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
@@ -219,8 +206,8 @@ def test_create_start_shape():
   """
 
   shape = Shape(Start(id="start"))
-  
-  compare(shape.as_dict(), {
+
+  compare(shape.as_dict(with_tag=True), {
     "bpmndi:BPMNShape": {
       "@id": "shape_start",
       "@bpmnElement": "start",
@@ -236,7 +223,7 @@ def test_create_start_shape():
 def test_create_task_shape():
   """
     Create a shape for a Task element, with default bounds
-  
+
     <bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
       <dc:Bounds x="270" y="77" width="100" height="80" />
       <bpmndi:BPMNLabel />
@@ -244,8 +231,8 @@ def test_create_task_shape():
   """
 
   shape = Shape(Task(id="hello"))
-  
-  compare(shape.as_dict(), {
+
+  compare(shape.as_dict(with_tag=True), {
     "bpmndi:BPMNShape": {
       "@id": "shape_hello",
       "@bpmnElement": "hello",
@@ -261,7 +248,7 @@ def test_create_task_shape():
 
 def test_create_edge():
   """
-    Create an edge for a flow between start and 
+    Create an edge for a flow between start and
 
     <bpmndi:BPMNEdge id="edge_flow_start_hello" bpmnElement="flow_start_hello">
       <di:waypoint x="215" y="117" />
@@ -271,8 +258,8 @@ def test_create_edge():
 
   flow = Flow(source=Start(id="start"), target=Task(id="hello"))
   edge = Edge(flow)
-  
-  compare(edge.as_dict(), {
+
+  compare(edge.as_dict(with_tag=True), {
     "bpmndi:BPMNEdge": {
       "@id": "edge_flow_start_hello",
       "@bpmnElement": "flow_start_hello",
@@ -292,16 +279,16 @@ def test_create_edge():
 def test_empty_diagram():
   """
     An empty diagram, always contains a plane.
-  
+
     <bpmndi:BPMNDiagram id="diagram">
       <bpmndi:BPMNPlane id="plane">
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
   """
-  
+
   diagram = Diagram(id="diagram")
 
-  compare(diagram.as_dict(), {
+  compare(diagram.as_dict(with_tag=True), {
     "bpmndi:BPMNDiagram": {
       "@id": "diagram",
       "bpmndi:BPMNPlane": {
@@ -313,7 +300,7 @@ def test_empty_diagram():
 def test_plane_for_collaboration_with_one_participant_without_a_process():
   """
     A plane for a collaboration with on participant.
-  
+
     <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
       <bpmndi:BPMNShape id="participant_di" bpmnElement="participant" isHorizontal="true">
         <dc:Bounds x="129" y="57" width="600" height="123" />
@@ -326,7 +313,7 @@ def test_plane_for_collaboration_with_one_participant_without_a_process():
   )
   plane = Plane(id="plane", element=collaboration)
 
-  compare(plane.as_dict(), {
+  compare(plane.as_dict(with_tag=True), {
     "bpmndi:BPMNPlane": {
       "@id": "plane_collaboration",
       "@bpmnElement": "collaboration",
@@ -344,40 +331,6 @@ def test_plane_for_collaboration_with_one_participant_without_a_process():
     }
   })
 
-def test_participants_elements_and_flows():
-  activities = [
-    Start(id="start"),
-    Task('Say "Hello!"', id="hello"),
-    End(id="end")
-  ]
-  
-  flows = [
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[1], target=activities[2])
-  ]
-
-  process = Process(id="process").extend(activities).extend(flows)
-
-  participant = Participant("participant", process, id="participant")
-  
-  compare(participant.elements, activities)
-  compare(participant.flows, flows)
-
-def test_collaboration_passing_through_elements ():
-  activities = [
-    Start(id="start"),
-    Task('Say "Hello!"', id="hello"),
-    End(id="end")
-  ]
-  
-  process = Process(id="process").extend(activities)
-
-  participant = Participant("participant", process, id="participant")
-  
-  collaboration = Collaboration(id="collaboration").append(participant)
-  
-  compare(collaboration.elements, [ participant ] + activities)
-  
 def test_hello():
   with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
     expected = xmltodict.parse(fp.read())
@@ -402,11 +355,13 @@ def test_hello():
     collaboration,
   ])
 
-  definitions.diagrams.append(
+  definitions.append(
     Diagram(
       id="diagram",
       plane=Plane(id="plane", element=collaboration)
     )
   )
 
-  compare(definitions.as_dict(), expected)
+  result = definitions.as_dict(with_tag=True)
+  
+  compare(result, expected)

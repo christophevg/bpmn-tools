@@ -2,56 +2,21 @@
   Classes representing the different parts of a BPMN file.
 """
 
+from . import xml
+
 from .util import prune
 
-class Process():
-  __tag__ = "process"
-
-  def __init__(self, id="process"):
-    self.id = id
-    self._elements = {}
-
-  @property
-  def elements(self):
-    l = []
-    for es in self._elements.values():
-      l +=  es
-    return list(filter(lambda e: isinstance(e, Element), l )) 
-
-  @property
-  def flows(self):
-    l = []
-    for es in self._elements.values():
-      l +=  es
-    return list(filter(lambda e: isinstance(e, Flow), l))
+class Process(xml.Element):
+  __tag__ = "bpmn:process"
   
-  def append(self, element):
-    try:
-      self._elements[element.__tag__].append(element)
-    except KeyError:
-      self._elements[element.__tag__] = [ element ]
-    return self
+  def __init__(self, id="process", **kwargs):
+    if not "@id" in kwargs:
+      kwargs["@id"] = "process"
+    super().__init__(**kwargs)
 
-  def extend(self, elements):
-    for element in elements:
-      self.append(element)
-    return self
-
-  def as_dict(self):
-    # compile elements
-    base = {
-      f"bpmn:{name}" : prune([
-        element.as_dict() for element in elements
-      ]) for name, elements in self._elements.items()
-    }
-    # add properties
-    base["@id"] = self.id
-    return {
-      f"bpmn:{self.__class__.__name__.lower()}" : base
-    }
-
-class Flow():
-  __tag__ = "sequenceFlow"
+class Flow(xml.Element):
+  __tag__ = "bpmn:sequenceFlow"
+  __labeled__ = False
 
   def __init__(self, source=None, target=None):
     self.source = source
@@ -70,61 +35,72 @@ class Flow():
       "@targetRef": self.target.id
     }
 
-class Element():
-  __labeled__ = False
-
-  def __init__(self, id, x=0, y=0):
-    self.id = id
-    self.x = x
-    self.y = y
-    self.incoming = []
-    self.outgoing = []
-
-  @property
-  def shape_properties(self):
-    return {}
+class Incoming(xml.Element):
+  __tag__ = "bpmn:incoming"
   
-  def flow_to(self, next_element):
-    Flow(self, next_element)
-    return self
-  
-  def as_dict(self):
-    base = {
-      "@id": self.id
-    }
-    if self.outgoing:
-      base["bpmn:outgoing"] = prune([ flow.id for flow in self.outgoing ])
-    if self.incoming:
-      base["bpmn:incoming"] = prune([ flow.id for flow in self.incoming ])
-    return base
+  def __init__(self, flow=None, **kwargs):
+    super().__init__(**kwargs)
+    self.flow = flow
+    if self.flow:
+      self.text = self.flow.id
 
-class Start(Element):
-  __tag__    = "startEvent"
-  __width__  = 36
-  __height__ = 36
+class Outgoing(xml.Element):
+  __tag__ = "bpmn:outgoing"
 
-  def __init__(self, id="start", **kwargs):
-    super().__init__(id, **kwargs)
+  def __init__(self, flow=None, **kwargs):
+    super().__init__(**kwargs)
+    self.flow = flow
+    if self.flow:
+      self.text = self.flow.id
 
-class End(Element):
-  __tag__ = "endEvent"
-  __width__  = 36
-  __height__ = 36
-
-  def __init__(self, id="end", **kwargs):
-    super().__init__(id, **kwargs)
-
-class Task(Element):
-  __tag__     = "task"
+class Element(xml.Element):
   __width__   = 100
   __height__  = 80
   __labeled__ = True
 
-  def __init__(self, name="", id="task", **kwargs):
-    super().__init__(id, **kwargs)
-    self.name = name
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    self.incoming = []
+    self.outgoing = []
+    self.x = 0
+    self.y = 0
 
-  def as_dict(self):
-    base = super().as_dict()
-    base["@name"] = self.name
-    return base
+  @property
+  def _more_children(self):
+    more = []
+    if self.incoming:
+      more.extend([ Incoming(flow) for flow in self.incoming ])
+    if self.outgoing:
+      more.extend([ Outgoing(flow) for flow in self.outgoing ])
+    return more
+
+class Event(Element):
+  __width__  = 36
+  __height__ = 36
+  __labeled__ = False
+
+class Start(Event):
+  __tag__    = "bpmn:startEvent"
+
+  def __init__(self, id="start", **kwargs):
+    if not "@id" in kwargs:
+      kwargs["@id"] = id
+    super().__init__(**kwargs)
+
+class End(Event):
+  __tag__ = "bpmn:endEvent"
+
+  def __init__(self, id="end", **kwargs):
+    if not "@id" in kwargs:
+      kwargs["@id"] = "end"
+    super().__init__(**kwargs)
+
+class Task(Element):
+  __tag__     = "bpmn:task"
+
+  def __init__(self, name="", id="task", **kwargs):
+    if not "@id" in kwargs:
+      kwargs["@id"] = id
+    if not "@name" in kwargs:
+      kwargs["@name"] = name
+    super().__init__(**kwargs)
