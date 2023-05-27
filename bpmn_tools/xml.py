@@ -5,42 +5,18 @@ hierarchy and can reproduce the dictionary.
 
 The class can be overridden to create classes dealing with specialized Elements.
 
-An ElementVisitor allows for accessing the entire Element-hierarchy.
+A Visitor allows for accessing the entire Element-hierarchy.
 
 """
 
 class Element():
-  __tag__ = "Element"
+  __tag__     = "Element"
+
   def __init__(self, **kwargs):
-    """
-      Accepts an xmltodict value:
-      kwargs = {
-        "@attribute" : "value",
-        "single_element_tag" : { ... },
-        "multiple_element_tag : [
-          { ... }
-        ]
-      }
-    """
     self._children   = []
     self._parent     = None
     self._attributes = {}
     self.text        = None
-
-    for key, value in kwargs.items():
-      if key[0] == "@":
-        self._attributes[key[1:]] = value
-      elif key == "#text":
-        self.text = value
-      else:
-        if type(value) != list:
-          value = [ value ]
-        for definition in value:
-          if definition is None:
-            definition = {}
-          elif type(definition) is str:
-            definition = { "#text" : definition }
-          self.append(Element.from_dict({ key : definition } ))
 
   def __repr__(self):
     label = f"{self.__class__.__name__}"
@@ -50,11 +26,17 @@ class Element():
       label += f" : {self.text}"
     return label
 
-  def __getattr__(self, name):
+  def __setitem__(self, name, value):
+    self._attributes[name] = value
+
+  def __getitem__(self, name):
     try:
       return self._attributes[name]
     except KeyError:
       return None
+
+  def __getattr__(self, name):
+    return self[name]
 
   @property
   def root(self):
@@ -90,20 +72,12 @@ class Element():
     return self
 
   @property
-  def _more_attributes(self):
-    return {}
-  
-  @property
   def attributes(self):
-    return { **self._attributes, **self._more_attributes }
-
-  @property
-  def _more_children(self):
-    return []
+    return self._attributes
 
   @property
   def children(self):
-    return self._children + self._more_children
+    return self._children
 
   def children_oftype(self, cls):
     return [ child for child in self._children if isinstance(child, cls) ]
@@ -142,11 +116,36 @@ class Element():
       return definition
   
   @classmethod
-  def from_dict(cls, d):
-    for element_type, element_definition in d.items():
-      element = Element(**element_definition)
-      element.__tag__ = element_type
-      return element
+  def from_dict(cls, d, classes=None, depth=0):
+    assert len(d) == 1
+    element_type, element_definition = list(d.items())[0]
+    try:
+      element_class = mapping[element_type]
+    except:
+      element_class = Element
+    element = element_class()
+    element.__tag__ = element_type
+    
+    assert len(element._children) == 0
+
+    for key, value in element_definition.items():
+      if key[0] == "@":
+        element._attributes[key[1:]] = value
+      elif key == "#text":
+        element.text = value
+      else:
+        if type(value) != list:
+          value = [ value ]
+        for definition in value:
+          if definition is None:
+            definition = {}
+          elif type(definition) is str:
+            definition = { "#text" : definition }
+          child = Element.from_dict({ key : definition }, classes=classes, depth=depth+1 )
+          assert child != element
+          element.append(child)
+    # returns from within the outer for loop, so after first (and only)
+    return element
 
   def accept(self, visitor):
     with visitor:

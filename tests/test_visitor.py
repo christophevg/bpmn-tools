@@ -13,8 +13,8 @@ def test_visiting_hello():
 
     class MyVisitor(Visitor):
       def visit(self, visited):
-        if visited.id:
-          visitations.append(visited.id)
+        if visited["id"]:
+          visitations.append(visited["id"])
 
     tree.accept(MyVisitor())
 

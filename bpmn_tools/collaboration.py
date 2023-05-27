@@ -12,24 +12,26 @@ class Participant(xml.Element):
   __width__      = 600
   __horizontal__ = True
 
-  def __init__(self, name="participant", process=None, id="participant", **kwargs):
-    self.name = name
+  def __init__(self, name="participant", process=None, id="participant"):
+    super().__init__()
+    self["id"]   = id
+    self["name"] = name
     self.process = process
-    kwargs["@id"] = id
-    super().__init__(**kwargs)
     self.x = 0
     self.y = 0
   
   @property
-  def _more_attributes(self):
-    return {
-      "name" : self.name,
-      "processRef" : self.process.id
-    }
+  def attributes(self):
+    attributes = super().attributes
+    if self.process:
+      attributes.update({
+        "processRef" : self.process["id"]
+      })
+    return attributes
 
 class Collaboration(xml.Element):
   __tag__ = "bpmn:collaboration"
 
-  def __init__(self, id="collaboration", **kwargs):
-    kwargs["@id"] = id
-    super().__init__(**kwargs)
+  def __init__(self, id="collaboration"):
+    super().__init__()
+    self["id"] = id
