@@ -11,5 +11,3 @@ def test_hello_round_trip():
   tree = Element.from_dict(expected)
   result = tree.as_dict(with_tag=True)
   compare(result, expected)
-  # print(json.dumps(result, indent=2, sort_keys=True))
-  # assert False
