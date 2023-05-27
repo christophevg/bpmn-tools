@@ -1,7 +1,7 @@
-from bpmn_tools.diagrams import Process, Start, End, Task, Flow
-from bpmn_tools.diagrams import Collaboration, Participant
-from bpmn_tools.diagrams import Definitions
-from bpmn_tools.diagrams import Diagram, Plane, Shape, Edge
+from bpmn_tools.flow          import Process, Start, End, Task, Flow
+from bpmn_tools.collaboration import Collaboration, Participant
+from bpmn_tools.notation      import Definitions
+from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
 
 import xmltodict
 
@@ -25,11 +25,11 @@ definitions = Definitions(id="definitions").extend([
   collaboration,
 ])
 
-definitions.diagrams.append(
+definitions.append(
   Diagram(
     id="diagram",
     plane=Plane(id="plane", element=collaboration)
   )
 )
 
-print(xmltodict.unparse(definitions.as_dict(), pretty=True))
+print(xmltodict.unparse(definitions.as_dict(with_tag=True), pretty=True))
