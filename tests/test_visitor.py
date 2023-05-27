@@ -2,7 +2,8 @@ from pathlib import Path
 import xmltodict
 import json
 
-from bpmn_tools.xml import Element, Visitor
+from bpmn_tools.xml     import Element
+from bpmn_tools.visitor import Visitor
 
 def test_visiting_hello():
   with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:

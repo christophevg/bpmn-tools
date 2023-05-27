@@ -6,9 +6,9 @@ from colorama import Fore
 from colorama import Style
 colorama_init()
 
-from bpmn_tools.xml import Element, Visitor, PrintingVisitor, visiting
-from bpmn_tools     import classes
-
+from bpmn_tools          import classes
+from bpmn_tools.xml      import Element
+from bpmn_tools.visitor  import Visitor, PrintingVisitor, visiting
 from bpmn_tools.diagrams import Diagram, Plane, Shape
 
 with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
