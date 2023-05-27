@@ -125,23 +125,20 @@ class Element():
   
   @classmethod
   def from_dict(cls, d, classes=None, depth=0):
-    assert len(d) == 1
     element_type, element_definition = list(d.items())[0]
     element_class = cls.mapped_class(element_type, classes)
     element = element_class()
     element.__tag__ = element_type
     
-    assert len(element._children) == 0
-
-    for key, value in element_definition.items():
+    for key, defintions in element_definition.items():
       if key[0] == "@":
-        element._attributes[key[1:]] = value
+        element._attributes[key[1:]] = defintions
       elif key == "#text":
-        element.text = value
+        element.text = defintions
       else:
-        if type(value) != list:
-          value = [ value ]
-        for definition in value:
+        if type(defintions) != list:
+          defintions = [ defintions ]
+        for definition in defintions:
           if definition is None:
             definition = {}
           elif type(definition) is str:
@@ -149,7 +146,7 @@ class Element():
           child = Element.from_dict({ key : definition }, classes=classes, depth=depth+1 )
           assert child != element
           element.append(child)
-    # returns from within the outer for loop, so after first (and only)
+
     return element
 
   def accept(self, visitor):
@@ -157,6 +154,39 @@ class Element():
       visitor.visit(self)
       for child in self.children:
         child.accept(visitor)
+
+# decorator based visitor, inspired by https://stackoverflow.com/a/28398903
+
+def _qualname(obj):
+  """Get the fully-qualified name of an object (including module)."""
+  return obj.__module__ + '.' + obj.__qualname__
+
+def _declaring_class(obj):
+  """Get the name of the class that declared an object."""
+  name = _qualname(obj)
+  return name[:name.rfind('.')]
+
+_methods = {}
+
+def _visitor_impl(self, arg):
+  """Actual visitor method implementation."""
+  try:
+    method = _methods[(_qualname(type(self)), type(arg))]
+    return method(self, arg)
+  except KeyError:
+    pass
+  return Visitor.visit(self, arg) 
+
+def visiting(arg_types):
+  """Decorator that creates a visitor method."""
+  if type(arg_types) != list:
+    arg_types = [ arg_types ]
+  def decorator(fn):
+    declaring_class = _declaring_class(fn)
+    for arg_type in arg_types:
+      _methods[(declaring_class, arg_type)] = fn
+    return _visitor_impl
+  return decorator
 
 class Visitor:
   def __init__(self):
@@ -169,5 +199,9 @@ class Visitor:
   def __exit__(self, exc_type, exc_value, exc_tb):
     self.depth -= 1
 
+  def visit(self, visited):
+    pass
+
+class PrintingVisitor(Visitor):
   def visit(self, visited):
     print(f"{'   '*self.depth}{visited}")

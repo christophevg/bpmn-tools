@@ -1,9 +1,15 @@
 from pathlib import Path
 import xmltodict
-import json
 
-from bpmn_tools.xml import Element, Visitor
+from colorama import init as colorama_init
+from colorama import Fore
+from colorama import Style
+colorama_init()
+
+from bpmn_tools.xml import Element, Visitor, PrintingVisitor, visiting
 from bpmn_tools     import classes
+
+from bpmn_tools.diagrams import Diagram, Plane, Shape
 
 with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
   xml = xmltodict.parse(fp.read())
@@ -16,10 +22,10 @@ with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as
   tree = Element.from_dict(xml, classes=classes)
 
   # default Visitor
-  tree.accept(Visitor())
+  tree.accept(PrintingVisitor())
 
   # custom Handler
-  class MyVisitor(Visitor):
+  class MyVisitor(PrintingVisitor):
     def visit(self, visited):
       if visited.id:
         print(f"{'   '*self.depth}{visited.id}")
@@ -27,3 +33,16 @@ with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as
         super().visit(visited)
 
   tree.accept(MyVisitor())
+
+  # using visitor with class-specific visiting functions
+  
+  class ShapeVisitor(Visitor):
+    @visiting(Shape)
+    def visit(self, shape):
+      print(f"{'    '*(self.depth-1)}{Fore.GREEN}{shape}{Style.RESET_ALL}")
+
+    @visiting([ Diagram, Plane ])
+    def visit(self, visited):
+      print(f"{'   '*(self.depth-1)}{Fore.BLUE}{visited}{Style.RESET_ALL}")
+
+  tree.accept(ShapeVisitor())
