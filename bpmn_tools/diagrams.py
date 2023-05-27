@@ -31,12 +31,20 @@ class Shape(xml.Element):
 
   def __init__(self, element=None, id=None):
     super().__init__()
-    self.element = element
-    self.label   = None
+    self._element = element
+    self.label    = None
 
   @property
   def id(self):
     return f"shape_{self.element['id']}"
+
+  @property
+  def element(self):
+    if self._element:
+      return self._element
+    if self["bpmnElement"]:
+      return self.root.find("id", self["bpmnElement"])
+    return None
 
   @property
   def attributes(self):
@@ -79,26 +87,34 @@ class Edge(xml.Element):
 
   def __init__(self, flow=None, id=None):
     super().__init__()
-    self.flow = flow
+    self._flow = flow
+
+  @property
+  def flow(self):
+    if self._flow:
+      return self._flow
+    if self["bpmnElement"]:
+      return self.root.find("id", self["bpmnElement"])
+    return None
 
   def __getitem__(self, name):
     if name == "id":
       return f"edge_{self.flow['id']}"
-    return super()[name]
+    return super().__getitem__(name)
 
   @property
   def attributes(self):
-    attributes = super().attributes
+    attributes = super().attributes.copy()
     if self.flow:
       attributes.update({
-        "id"          : self.id,
+        "id"          : self["id"],
         "bpmnElement" : self.flow["id"]
       })
     return attributes
 
   @property
   def children(self):
-    children = super().children
+    children = super().children.copy()
     if self.flow:
       children = [
         WayPoint(
@@ -125,12 +141,12 @@ class Plane(xml.Element):
     if self._element:
       return self._element
     if self["bpmnElement"]:
-      return self.find("id", self["bpmnElement"])
+      return self.root.find("id", self["bpmnElement"])
     return None
 
   @property
   def attributes(self):
-    attributes = super().attributes
+    attributes = super().attributes.copy()
     if self.element:
       attributes.update({
         "bpmnElement" : self.element["id"],
@@ -140,6 +156,7 @@ class Plane(xml.Element):
 
   @property
   def children(self):
+    children = super().children.copy()
     children = []
     if self.element:
       for participant in self.element.children_oftype(Participant):
@@ -156,9 +173,17 @@ class Diagram(xml.Element):
 
   def __init__(self, id="diagram", plane=None):
     super().__init__()
-    self.plane = plane
-    self["id"] = id
+    self._plane = plane
+    self["id"]  = id
+
+  @property
+  def plane(self):
+    if self._plane:
+      return self._plane
+    if self._children:
+      return self._children[0]
+    return Plane()
 
   @property
   def children(self):
-    return [ self.plane if self.plane else Plane() ]
+    return [ self.plane ]

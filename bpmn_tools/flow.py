@@ -19,19 +19,37 @@ class Flow(xml.Element):
 
   def __init__(self, source=None, target=None):
     super().__init__()
-    self.source = source
-    self.target = target
-    self.source.outgoing.append(self)
-    self.target.incoming.append(self)
+    self._source = source
+    self._target = target
+    if self._source:
+      self._source.outgoing.append(self)
+    if self._target:
+      self._target.incoming.append(self)
+
+  @property
+  def source(self):
+    if self._source:
+      return self._source
+    elif self["sourceRef"]:
+      return self.root.find("id", self["sourceRef"])
+    raise Exception(f"no source found on {self}")
+
+  @property
+  def target(self):
+    if self._target:
+      return self._target
+    elif self["targetRef"]:
+      return self.root.find("id", self["targetRef"])
+    raise Exception(f"no target found on {self}")
 
   def __getitem__(self, name):
     if name == "id":
       return f"flow_{self.source['id']}_{self.target['id']}"
-    return super()[name]
+    return super().__getitem__(name)
 
   @property
   def attributes(self):
-    attributes = super().attributes
+    attributes = super().attributes.copy()
     attributes.update({
       "id"       : self["id"],
       "sourceRef": self.source["id"],

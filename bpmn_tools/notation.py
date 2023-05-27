@@ -13,7 +13,7 @@ class Definitions(Element):
 
   @property
   def attributes(self):
-    attributes = super().attributes
+    attributes = super().attributes.copy()
     attributes.update({
       "xmlns:bpmn"  : "http://www.omg.org/spec/BPMN/20100524/MODEL",
       "xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",

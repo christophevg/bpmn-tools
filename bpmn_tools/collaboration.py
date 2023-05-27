@@ -16,13 +16,21 @@ class Participant(xml.Element):
     super().__init__()
     self["id"]   = id
     self["name"] = name
-    self.process = process
+    self._process = process
     self.x = 0
     self.y = 0
   
   @property
+  def process(self):
+    if self._process:
+      return self._process
+    elif self["processRef"]:
+      return self.root.find("id", self["processRef"])
+    return None
+  
+  @property
   def attributes(self):
-    attributes = super().attributes
+    attributes = super().attributes.copy()
     if self.process:
       attributes.update({
         "processRef" : self.process["id"]

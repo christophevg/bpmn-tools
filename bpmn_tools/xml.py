@@ -48,14 +48,14 @@ class Element():
   def find(self, key, value):
     # do I have the key=value attribute?
     try:
-      if self.attributes[key] == value:
-        return self.attrbutes[key]
+      if self._attributes[key] == value:
+        return self
     except KeyError:
       pass
     
     # recurse down children
     for child in self._children:
-      match = child.find(id)
+      match = child.find(key, value)
       if match:
         return match
 
@@ -115,14 +115,19 @@ class Element():
     else:
       return definition
   
+  @staticmethod
+  def mapped_class(tag, classes):
+    if classes:
+      for clazz in classes:
+        if clazz.__tag__ == tag:
+          return clazz
+    return Element
+  
   @classmethod
   def from_dict(cls, d, classes=None, depth=0):
     assert len(d) == 1
     element_type, element_definition = list(d.items())[0]
-    try:
-      element_class = mapping[element_type]
-    except:
-      element_class = Element
+    element_class = cls.mapped_class(element_type, classes)
     element = element_class()
     element.__tag__ = element_type
     
