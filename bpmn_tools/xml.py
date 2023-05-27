@@ -1,9 +1,11 @@
 """
 
-Generic Element class that accepts an xmltodict dictionary and builds an Element
-hierarchy back and forth.
+Class that accepts an xmltodict-style dictionary, builds a generic Element
+hierarchy and can reproduce the dictionary.
 
-The class can be overridden to create classes dealing with specific elements.
+The class can be overridden to create classes dealing with specialized Elements.
+
+An ElementVisitor allows for accessing the entire Element-hierarchy.
 
 """
 
@@ -39,6 +41,14 @@ class Element():
           elif type(definition) is str:
             definition = { "#text" : definition }
           self.append(Element.from_dict({ key : definition } ))
+
+  def __repr__(self):
+    label = f"{self.__class__.__name__}"
+    if self.attributes:
+      label += f"({self.attributes})"
+    if self.text:
+      label += f" : {self.text}"
+    return label
 
   def __getattr__(self, name):
     try:
@@ -137,3 +147,23 @@ class Element():
       element = Element(**element_definition)
       element.__tag__ = element_type
       return element
+
+  def accept(self, visitor):
+    with visitor:
+      visitor.visit(self)
+      for child in self.children:
+        child.accept(visitor)
+
+class Visitor:
+  def __init__(self):
+    self.depth = -1
+
+  def __enter__(self):
+    self.depth += 1
+    return self
+
+  def __exit__(self, exc_type, exc_value, exc_tb):
+    self.depth -= 1
+
+  def visit(self, visited):
+    print(f"{'   '*self.depth}{visited}")
