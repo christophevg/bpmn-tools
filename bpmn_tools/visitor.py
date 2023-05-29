@@ -20,10 +20,8 @@ def _visitor_impl(self, arg):
     pass
   return Visitor.visit(self, arg) 
 
-def visiting(arg_types):
+def visiting(*arg_types):
   """Decorator that creates a visitor method."""
-  if type(arg_types) != list:
-    arg_types = [ arg_types ]
   def decorator(fn):
     declaring_class = _declaring_class(fn)
     for arg_type in arg_types:

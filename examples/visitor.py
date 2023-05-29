@@ -41,7 +41,7 @@ with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as
     def visit(self, shape):
       print(f"{'    '*(self.depth-1)}{Fore.GREEN}{shape}{Style.RESET_ALL}")
 
-    @visiting([ Diagram, Plane ])
+    @visiting(Diagram, Plane)
     def visit(self, visited):
       print(f"{'   '*(self.depth-1)}{Fore.BLUE}{visited}{Style.RESET_ALL}")
 
