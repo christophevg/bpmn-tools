@@ -63,4 +63,4 @@ Use `bpmn-to-image` to visualize the generated XML, because "what (sane) human b
 
 Et voila...
 
-![hello](examples/hello.png)
+![hello](../examples/hello.png)
