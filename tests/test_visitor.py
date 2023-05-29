@@ -6,7 +6,7 @@ from bpmn_tools.xml     import Element
 from bpmn_tools.visitor import Visitor
 
 def test_visiting_hello():
-  with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
+  with open(Path(__file__).resolve().parent / "hello.bpmn") as fp:
     xml = xmltodict.parse(fp.read())
     tree = Element.from_dict(xml)
 

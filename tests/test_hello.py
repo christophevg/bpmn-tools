@@ -332,7 +332,7 @@ def test_plane_for_collaboration_with_one_participant_without_a_process():
   })
 
 def test_hello():
-  with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
+  with open(Path(__file__).resolve().parent / "hello.bpmn") as fp:
     expected = xmltodict.parse(fp.read())
 
   activities = [
