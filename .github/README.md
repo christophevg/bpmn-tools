@@ -54,7 +54,7 @@ Definitions({'id': 'definitions', 'xmlns:bpmn': 'http://www.omg.org/spec/BPMN/20
 2937
 ```
 
-Use `bpmn-to-image` to visualize the generated XML, because "what (sane) human being wants to read XML 😉?"...
+Use `bpmn-to-image` to visualize the generated XML, because "what (sane) human being wants to read XML?" 😉
 
 ```console
 % npm install -g bpmn-to-image
@@ -63,4 +63,4 @@ Use `bpmn-to-image` to visualize the generated XML, because "what (sane) human b
 
 Et voila...
 
-![hello](../examples/hello.png)
+![Hello BPMN](https://raw.githubusercontent.com/christophevg/bpmn-tools/master/examples/hello.png)
