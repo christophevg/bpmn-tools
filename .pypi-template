@@ -18,6 +18,7 @@ package_title: BPMN Tools
 requires:
 - fire
 - xmltodict
+- colorama
 scripts: []
 your_author_name: Christophe VG
 your_email_address: contact@christophe.vg
@@ -26,3 +27,4 @@ your_name: Christophe VG
 skip:
 - tests
 - (package_module_name)
+- .github/README.md

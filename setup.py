@@ -20,6 +20,7 @@ CLASSIFIERS      = [
 INSTALL_REQUIRES = [
   "fire",
   "xmltodict",
+  "colorama",
   
 ]
 ENTRY_POINTS = {
