@@ -89,6 +89,15 @@ class Element(xml.Element):
     self.outgoing = []
     self.x = 0
     self.y = 0
+  def append(self, child):
+    if type(child) == Incoming:
+      self.incoming.append(child)
+    elif type(child) == Outgoing:
+      self.outgoing.append(child)
+    else:
+      raise ValueError("Element expects only incoming or outgoing flows")
+    child._parent = self
+    return self
 
   @property
   def children(self):
