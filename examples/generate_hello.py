@@ -15,34 +15,39 @@ from bpmn_tools.flow          import Process, Start, End, Task, Flow
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
+from bpmn_tools.layout        import simple
 
 import xmltodict
 
 activities = [
   Start(id="start"),
   Task('Say "Hello!"', id="hello"),
+  Task('Wait for response...', id="wait"),
   End(id="end")
 ]
 
 process = Process(id="process").extend(activities).extend([
   Flow(source=activities[0], target=activities[1]),
-  Flow(source=activities[1], target=activities[2])
+  Flow(source=activities[1], target=activities[2]),
+  Flow(source=activities[2], target=activities[3])
 ])
 
 collaboration = Collaboration(id="collaboration").append(
   Participant("lane", process, id="participant")
 )
 
-definitions = Definitions(id="definitions").extend([
+model = Definitions(id="definitions").extend([
   process,
   collaboration,
 ])
 
-definitions.append(
+model.append(
   Diagram(
     id="diagram",
     plane=Plane(id="plane", element=collaboration)
   )
 )
 
-print(xmltodict.unparse(definitions.as_dict(with_tag=True), pretty=True))
+simple.layout(model)
+
+print(xmltodict.unparse(model.as_dict(with_tag=True), pretty=True))

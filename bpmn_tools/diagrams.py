@@ -66,8 +66,8 @@ class Shape(xml.Element):
         Bounds(
           x      = self.element.x,
           y      = self.element.y,
-          height = self.element.__height__,
-          width  = self.element.__width__
+          height = self.element.height,
+          width  = self.element.width
         )
       ]
       if self.element.__labeled__:
@@ -118,12 +118,12 @@ class Edge(xml.Element):
     if self.flow:
       children = [
         WayPoint(
-          x=self.flow.source.x + self.flow.source.__width__,
-          y=self.flow.source.y + int(self.flow.source.__height__/2)
+          x=self.flow.source.x + self.flow.source.width,
+          y=self.flow.source.y + int(self.flow.source.height/2)
         ),
         WayPoint(
           x=self.flow.target.x,
-          y=self.flow.target.y + int(self.flow.target.__height__/2)
+          y=self.flow.target.y + int(self.flow.target.height/2)
         )
       ]
     return children

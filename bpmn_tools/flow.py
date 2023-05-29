@@ -76,8 +76,6 @@ class Outgoing(xml.Element):
       self.text = self.flow["id"]
 
 class Element(xml.Element):
-  __width__   = 100
-  __height__  = 80
   __labeled__ = True
 
   def __init__(self, id=None):
@@ -87,8 +85,11 @@ class Element(xml.Element):
     self["id"] = id
     self.incoming = []
     self.outgoing = []
-    self.x = 0
-    self.y = 0
+    self.x      = 0
+    self.y      = 0
+    self.width  = 100
+    self.height = 80
+
   def append(self, child):
     if type(child) == Incoming:
       self.incoming.append(child)
@@ -109,9 +110,11 @@ class Element(xml.Element):
     return children
 
 class Event(Element):
-  __width__  = 36
-  __height__ = 36
   __labeled__ = False
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    self.width  = 36
+    self.height = 36
 
 class Start(Event):
   __tag__    = "bpmn:startEvent"
