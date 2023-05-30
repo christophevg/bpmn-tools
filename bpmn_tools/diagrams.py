@@ -161,6 +161,8 @@ class Plane(xml.Element):
     super().__init__()
     self._element = element
     self["id"] = id
+    self._shapes = []
+    self._edges  = []
 
   @property
   def element(self):
@@ -180,10 +182,18 @@ class Plane(xml.Element):
       })
     return attributes
 
+  def append(self, child):
+    if isinstance(child, Shape):
+      self._shapes.append(child)
+    elif isinstance(child, Edge):
+      self._edges.append(child)
+    else:
+      super().append(child)
+    return self
+
   @property
   def children(self):
     children = super().children.copy()
-    children = [] # FIXME: absort shapes on append
     if self.element:
       for participant in self.element.children_oftype(Participant):
         children.append(Shape(participant))
