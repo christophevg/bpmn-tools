@@ -28,3 +28,4 @@ skip:
 - tests
 - (package_module_name)
 - .github/README.md
+- Makefile

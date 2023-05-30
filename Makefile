@@ -40,5 +40,6 @@ lint:
 
 clean:
 	find . -type f -name "*.backup" | xargs rm
+	rm -rf build bpmn_tools.egg-info dist
 
 .PHONY: dist docs
