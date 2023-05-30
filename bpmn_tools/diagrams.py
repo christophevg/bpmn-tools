@@ -157,7 +157,7 @@ class Plane(xml.Element):
   @property
   def children(self):
     children = super().children.copy()
-    children = []
+    children = [] # FIXME: absort shapes on append
     if self.element:
       for participant in self.element.children_oftype(Participant):
         children.append(Shape(participant))
