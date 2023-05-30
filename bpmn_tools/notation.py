@@ -18,6 +18,8 @@ class Definitions(Element):
       "xmlns:bpmn"  : "http://www.omg.org/spec/BPMN/20100524/MODEL",
       "xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
       "xmlns:dc"    : "http://www.omg.org/spec/DD/20100524/DC",
-      "xmlns:di"    : "http://www.omg.org/spec/DD/20100524/DI"
+      "xmlns:di"    : "http://www.omg.org/spec/DD/20100524/DI",
+      "xmlns:bioc"  : "http://bpmn.io/schema/bpmn/biocolor/1.0",
+      "xmlns:color" : "http://www.omg.org/spec/BPMN/non-normative/color/1.0"
     })
     return attributes

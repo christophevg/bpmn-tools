@@ -8,6 +8,7 @@ from . import xml
 
 from .collaboration import Participant
 from .flow          import Process, Element, Flow, MessageFlow
+from .colors        import Colored
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
@@ -56,6 +57,8 @@ class Shape(xml.Element):
       })
       if self.element.__horizontal__:
         attributes["isHorizontal"] = "true"
+      if isinstance(self.element, Colored):
+        attributes.update(self.element.__color_scheme__)
     return attributes
 
   @property

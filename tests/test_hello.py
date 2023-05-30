@@ -151,6 +151,8 @@ def test_create_definitions_with_process_and_collaboration():
 
   compare(definitions.as_dict(with_tag=True), {
     "bpmn:definitions": {
+      "@xmlns:bioc": "http://bpmn.io/schema/bpmn/biocolor/1.0",
+      "@xmlns:color": "http://www.omg.org/spec/BPMN/non-normative/color/1.0",
       "@xmlns:bpmn": "http://www.omg.org/spec/BPMN/20100524/MODEL",
       "@xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
       "@xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",

@@ -1,2 +1,2 @@
-- add color on shape
+- parse shape attributes
 - add multi-lane support

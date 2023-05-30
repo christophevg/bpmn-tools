@@ -92,7 +92,10 @@ class Element():
     return self._children
 
   def children_oftype(self, cls):
-    return [ child for child in self.children if isinstance(child, cls) ]
+    return [
+      child for child in self.children \
+      if isinstance(child, cls) or isinstance(child.wrapped, cls)
+    ]
 
   def as_dict(self, with_tag=False):
     # collect attributes
@@ -131,8 +134,11 @@ class Element():
   def mapped_class(tag, classes):
     if classes:
       for clazz in classes:
-        if clazz.__tag__ == tag:
-          return clazz
+        try:
+          if clazz.__tag__ == tag:
+            return clazz
+        except AttributeError:
+          pass
     return Element
   
   @classmethod
