@@ -1,5 +1,6 @@
 from difflib import unified_diff
 import json
+import xmltodict
 
 def prune(lst):
   if len(lst) == 1:
@@ -17,5 +18,7 @@ def show_diff(result, expected):
   print("".join(diff), end="")
 
 def compare(result, expected):
+  print(json.dumps(result, indent=2))
+  print(xmltodict.unparse(result, pretty=True))
   show_diff(result, expected)
   assert result == expected
