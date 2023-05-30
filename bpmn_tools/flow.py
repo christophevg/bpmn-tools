@@ -127,6 +127,15 @@ class Task(Element):
     super().__init__(**kwargs)
     self["name"] = name
 
+class UserTask(Task):
+  __tag__ = "bpmn:userTask"
+
+class ScriptTask(Task):
+  __tag__ = "bpmn:scriptTask"
+
+class ServiceTask(Task):
+  __tag__ = "bpmn:serviceTask"
+
 class FlowNodeRef(xml.Element):
   __tag__ = "bpmn:flowNodeRef"
 

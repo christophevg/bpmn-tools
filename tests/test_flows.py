@@ -3,7 +3,7 @@ from pathlib import Path
 
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
-from bpmn_tools.flow          import Process, Start, End, Task
+from bpmn_tools.flow          import Process, Start, End, Task, UserTask, ScriptTask
 from bpmn_tools.flow          import Flow, FlowNodeRef, Lane, LaneSet
 from bpmn_tools.flow          import MessageFlow
 from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
@@ -20,14 +20,14 @@ def test_diagram_with_lane():
 
   activities_lane1 = [
     Start(id="start"),
-    Task('Say "Hello!"', id="hello"),
+    UserTask('Say "Hello!"', id="hello"),
     End(id="end")
   ]
 
   activities_lane2 = [
-    Task('Hear "Hello!"', id="hear"),
-    Task('Also Hear "Hello!"', id="hear2"),
-    Task('Also Also Hear "Hello!"', id="hear3"),
+    ScriptTask('Hear "Hello!"', id="hear"),
+    ScriptTask('Also Hear "Hello!"', id="hear2"),
+    ScriptTask('Also Also Hear "Hello!"', id="hear3"),
   ]
 
   lane2 = Lane("lane 2", id="lane2").extend(activities_lane2)

@@ -10,15 +10,15 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1swpilo</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="Activity_0ita2lt" name="Placeholder Business Process">
-      <bpmn:incoming>Flow_1swpilo</bpmn:incoming>
-      <bpmn:outgoing>Flow_063qr1n</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1swpilo" sourceRef="StartEvent_1" targetRef="Activity_0ita2lt" />
     <bpmn:endEvent id="Event_19h6g3p">
       <bpmn:incoming>Flow_063qr1n</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_063qr1n" sourceRef="Activity_0ita2lt" targetRef="Event_19h6g3p" />
+    <bpmn:userTask id="Activity_0ita2lt" name="Placeholder Business Process">
+      <bpmn:incoming>Flow_1swpilo</bpmn:incoming>
+      <bpmn:outgoing>Flow_063qr1n</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmn:process id="Process_156bqk2" isExecutable="false">
     <bpmn:laneSet id="LaneSet_1512l27">
@@ -27,8 +27,8 @@
         <bpmn:flowNodeRef>Activity_1nczmrn</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:task id="Activity_0qlr33f" name="UI Process 1" />
-    <bpmn:task id="Activity_1nczmrn" name="UI Process 2" />
+    <bpmn:scriptTask id="Activity_0qlr33f" name="UI Process 1" />
+    <bpmn:serviceTask id="Activity_1nczmrn" name="UI Process 2" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1kukjrl">
@@ -39,12 +39,11 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="192" y="132" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ita2lt_di" bpmnElement="Activity_0ita2lt" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="280" y="110" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_19h6g3p_di" bpmnElement="Event_19h6g3p">
         <dc:Bounds x="432" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02a74yv_di" bpmnElement="Activity_0ita2lt" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="280" y="110" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1swpilo_di" bpmnElement="Flow_1swpilo">
         <di:waypoint x="228" y="150" />
@@ -62,13 +61,11 @@
         <dc:Bounds x="159" y="240" width="570" height="120" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0qlr33f_di" bpmnElement="Activity_0qlr33f">
+      <bpmndi:BPMNShape id="Activity_0kl5ir5_di" bpmnElement="Activity_0qlr33f">
         <dc:Bounds x="280" y="260" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1nczmrn_di" bpmnElement="Activity_1nczmrn">
+      <bpmndi:BPMNShape id="Activity_105vot7_di" bpmnElement="Activity_1nczmrn">
         <dc:Bounds x="430" y="260" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1lhk35p_di" bpmnElement="Flow_1lhk35p">
         <di:waypoint x="330" y="190" />

@@ -6,27 +6,27 @@
 		<bpmn:startEvent id="start">
 			<bpmn:outgoing>flow_start_hello</bpmn:outgoing>
 		</bpmn:startEvent>
-		<bpmn:task id="hello" name='Say "Hello!"'>
+		<bpmn:userTask id="hello" name='Say "Hello!"'>
 			<bpmn:incoming>flow_start_hello</bpmn:incoming>
 			<bpmn:outgoing>flow_hello_end</bpmn:outgoing>
 			<bpmn:outgoing>flow_hello_hear</bpmn:outgoing>
 			<bpmn:outgoing>flow_hello_hear2</bpmn:outgoing>
 			<bpmn:outgoing>flow_hello_hear3</bpmn:outgoing>
-		</bpmn:task>
+		</bpmn:userTask>
 		<bpmn:endEvent id="end">
 			<bpmn:incoming>flow_hello_end</bpmn:incoming>
 		</bpmn:endEvent>
 	</bpmn:process>
 	<bpmn:process id="process2">
-		<bpmn:task id="hear" name='Hear "Hello!"'>
+		<bpmn:scriptTask id="hear" name='Hear "Hello!"'>
 			<bpmn:incoming>flow_hello_hear</bpmn:incoming>
-		</bpmn:task>
-		<bpmn:task id="hear2" name='Also Hear "Hello!"'>
+		</bpmn:scriptTask>
+		<bpmn:scriptTask id="hear2" name='Also Hear "Hello!"'>
 			<bpmn:incoming>flow_hello_hear2</bpmn:incoming>
-		</bpmn:task>
-		<bpmn:task id="hear3" name='Also Also Hear "Hello!"'>
+		</bpmn:scriptTask>
+		<bpmn:scriptTask id="hear3" name='Also Also Hear "Hello!"'>
 			<bpmn:incoming>flow_hello_hear3</bpmn:incoming>
-		</bpmn:task>
+		</bpmn:scriptTask>
 		<bpmn:laneSet id="LaneSet_process2">
 			<bpmn:lane id="lane2" name="lane 2">
 				<bpmn:flowNodeRef>hear</bpmn:flowNodeRef>

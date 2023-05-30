@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 
 import json
 
-from bpmn_tools.flow          import Process, Start, End, Task
+from bpmn_tools.flow          import Process, Start, End
+from bpmn_tools.flow          import Task, UserTask, ServiceTask, ScriptTask
 from bpmn_tools.collaboration import Participant
 from bpmn_tools.visitor       import Visitor, visiting
 
@@ -44,7 +45,7 @@ class LayoutVisitor(Visitor):
     self.current_process["end"] = event
     self._analyse_element (event)
 
-  @visiting(Task)
+  @visiting(Task, UserTask, ServiceTask, ScriptTask)
   def visit(self, task):
     self._analyse_element(task)
 
