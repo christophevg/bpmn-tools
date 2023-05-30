@@ -7,7 +7,7 @@ from .util import prune
 from . import xml
 
 from .collaboration import Participant
-from .flow          import Process, Element, Flow
+from .flow          import Process, Element, Flow, MessageFlow
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
@@ -116,16 +116,39 @@ class Edge(xml.Element):
   def children(self):
     children = super().children.copy()
     if self.flow:
-      children = [
-        WayPoint(
-          x=self.flow.source.x + self.flow.source.width,
-          y=self.flow.source.y + int(self.flow.source.height/2)
-        ),
-        WayPoint(
-          x=self.flow.target.x,
-          y=self.flow.target.y + int(self.flow.target.height/2)
-        )
-      ]
+      if type(self.flow) == Flow:
+        children = [
+          WayPoint(
+            x=self.flow.source.x + self.flow.source.width,
+            y=self.flow.source.y + int(self.flow.source.height/2)
+          ),
+          WayPoint(
+            x=self.flow.target.x,
+            y=self.flow.target.y + int(self.flow.target.height/2)
+          )
+        ]
+      elif type(self.flow) == MessageFlow:
+        half_way_dist = int((self.flow.source.y + self.flow.source.height - self.flow.target.y) / 2)
+        children = [
+          WayPoint(
+            x=self.flow.source.x + int(self.flow.source.width/2),
+            y=self.flow.source.y + self.flow.source.height
+          ),
+          WayPoint(
+            x=self.flow.source.x + int(self.flow.source.width/2),
+            y=self.flow.source.y + self.flow.source.height - half_way_dist
+          ),
+          WayPoint(
+            x=self.flow.target.x + int(self.flow.target.width/2),
+            y=self.flow.target.y + half_way_dist
+          ),
+          WayPoint(
+            x=self.flow.target.x + int(self.flow.target.width/2),
+            y=self.flow.target.y
+          )
+        ]
+      else:
+        raise ValueError("unsupported flow type: {type(self.flow)}")
     return children
 
 class Plane(xml.Element):
@@ -168,6 +191,8 @@ class Plane(xml.Element):
             children.append(Shape(element))
           for flow in participant.process.children_oftype(Flow):
             children.append(Edge(flow))
+      for flow in self.element.children_oftype(MessageFlow):
+        children.append(Edge(flow))
     return children
 
 class Diagram(xml.Element):

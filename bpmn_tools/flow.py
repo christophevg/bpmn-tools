@@ -23,7 +23,8 @@ class Flow(IdentifiedElement):
     if self._source:
       return self._source
     elif self["sourceRef"]:
-      return self.root.find("id", self["sourceRef"])
+      obj = self.root.find("id", self["sourceRef"])
+      if obj: return obj
     raise Exception(f"no source found on {self}")
 
   @property
@@ -31,7 +32,8 @@ class Flow(IdentifiedElement):
     if self._target:
       return self._target
     elif self["targetRef"]:
-      return self.root.find("id", self["targetRef"])
+      obj = self.root.find("id", self["targetRef"])
+      if obj: return obj
     raise Exception(f"no target found on {self}")
 
   def __getitem__(self, name):
@@ -48,6 +50,9 @@ class Flow(IdentifiedElement):
       "targetRef": self.target["id"]      
     })
     return attributes
+
+class MessageFlow(Flow):
+  __tag__ = "bpmn:messageFlow"
 
 class Incoming(xml.Element):
   __tag__ = "bpmn:incoming"
