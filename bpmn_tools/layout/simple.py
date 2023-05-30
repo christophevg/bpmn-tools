@@ -57,17 +57,26 @@ class LayoutVisitor(Visitor):
     self._current_process = process
     if not self._current_process.id in self.processes:
       self.processes[self._current_process.id] = {
-        "start"       : None,
+        "process"     : self._current_process,
+        "height"      : 0,
         "elements"    : {},
+        "start"       : None,
+        "steps"       : {},
         "end"         : None
       }
 
   def _analyse_element(self, element):
-    logger.info(f"analysing element: {element}")
-    if element.outgoing:
-      self.current_process["elements"][element.id] = [
-        outgoing.target for outgoing in element.outgoing
-      ]
+    # keep index of all elements
+    self.current_process["elements"][element.id] = element
+    # record steps
+    self.current_process["steps"][element.id] = [
+      outgoing.target.id for outgoing in element.outgoing
+    ]
+    # track heighest element
+    self.current_process["height"] = max([
+      self.current_process["height"],
+      element.height
+    ])
 
   def layout(self):
     """
@@ -89,22 +98,39 @@ class LayoutVisitor(Visitor):
       left = START
       self.process_participant[process].x = left
       self.process_participant[process].y = top
+      for lane in analysis["process"].laneset.lanes:
+        lane.x = left + HEADER
+        lane.y = top
+        
       left += HEADER + PADDING
-      max_heigth = max([step[0].height for step in analysis["elements"].values()])
       top += PADDING
       for step in self._order(analysis):
         step.x = left
-        step.y = top + (max_heigth-step.height) / 2
+        step.y = top + (analysis["height"]-step.height) / 2
         left += step.width + SPACING
-      self.process_participant[process].width = left - START
+      width = left - START
+      self.process_participant[process].width = width
+      for lane in analysis["process"].laneset.lanes:
+        lane.width  = width - HEADER
+      top += self.process_participant[process].height
 
   def _order(self, analysis):
-    step = analysis["start"]
-    end  = analysis["end"]
-    yield step
-    while step != end:
-      step = analysis["elements"][step.id][0]
+    if analysis["start"] and analysis["end"]:
+      # follow from start to end
+      step = analysis["start"]
+      end  = analysis["end"]
       yield step
+      while step != end:
+        step = analysis["elements"][analysis["steps"][step.id][0]]
+        yield step
+    else:
+      # just return the elements
+      if analysis["start"]:
+        yield analysis["start"]
+      for element in analysis["elements"].values():
+        yield element
+      if analysis["end"]:
+        yield analysis["end"]
 
   @property
   def report(self):
@@ -118,5 +144,6 @@ def layout(model):
   visitor = LayoutVisitor()
   
   visitor.analyze(model)
+  print(json.dumps(visitor.report, indent=2, default=str))
   logger.debug(json.dumps(visitor.report, indent=2, default=str))
   visitor.layout()

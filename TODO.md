@@ -1,5 +1,4 @@
 - add color on shape
-- add lane sets
 - add message flows
 - add stereotypes tasks (userTask, scriptTast,...)
 - implement layouter

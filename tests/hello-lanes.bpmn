@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI">
+	<bpmn:process id="process1">
+		<bpmn:sequenceFlow id="flow_start_hello" sourceRef="start" targetRef="hello"></bpmn:sequenceFlow>
+		<bpmn:sequenceFlow id="flow_hello_end" sourceRef="hello" targetRef="end"></bpmn:sequenceFlow>
+		<bpmn:startEvent id="start">
+			<bpmn:outgoing>flow_start_hello</bpmn:outgoing>
+		</bpmn:startEvent>
+		<bpmn:task id="hello" name='Say "Hello!"'>
+			<bpmn:incoming>flow_start_hello</bpmn:incoming>
+			<bpmn:outgoing>flow_hello_end</bpmn:outgoing>
+		</bpmn:task>
+		<bpmn:endEvent id="end">
+			<bpmn:incoming>flow_hello_end</bpmn:incoming>
+		</bpmn:endEvent>
+	</bpmn:process>
+	<bpmn:process id="process2">
+		<bpmn:task id="hear" name='Hear "Hello!"'></bpmn:task>
+		<bpmn:laneSet id="LaneSet_process2">
+			<bpmn:lane id="lane2" name="lane 2">
+				<bpmn:flowNodeRef>hear</bpmn:flowNodeRef>
+			</bpmn:lane>
+		</bpmn:laneSet>
+	</bpmn:process>
+	<bpmn:collaboration id="collaboration">
+		<bpmn:participant id="participant1" name="participant1" processRef="process1"></bpmn:participant>
+		<bpmn:participant id="participant2" name="participant2" processRef="process2"></bpmn:participant>
+	</bpmn:collaboration>
+	<bpmndi:BPMNDiagram id="diagram">
+		<bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+			<bpmndi:BPMNShape id="shape_participant1" bpmnElement="participant1" isHorizontal="true">
+				<dc:Bounds x="160" y="80" height="125" width="317"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_start" bpmnElement="start">
+				<dc:Bounds x="215" y="127.0" height="36" width="36"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
+				<dc:Bounds x="281" y="105.0" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_end" bpmnElement="end">
+				<dc:Bounds x="411" y="127.0" height="36" width="36"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_participant2" bpmnElement="participant2" isHorizontal="true">
+				<dc:Bounds x="160" y="230" height="125" width="185"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_lane2" bpmnElement="lane2" isHorizontal="true">
+				<dc:Bounds x="190" y="230" height="125" width="155"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_hear" bpmnElement="hear">
+				<dc:Bounds x="215" y="255.0" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="edge_flow_start_hello" bpmnElement="flow_start_hello">
+				<di:waypoint x="251" y="145.0"></di:waypoint>
+				<di:waypoint x="281" y="145.0"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_hello_end" bpmnElement="flow_hello_end">
+				<di:waypoint x="381" y="145.0"></di:waypoint>
+				<di:waypoint x="411" y="145.0"></di:waypoint>
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</bpmn:definitions>

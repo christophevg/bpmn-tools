@@ -162,6 +162,8 @@ class Plane(xml.Element):
       for participant in self.element.children_oftype(Participant):
         children.append(Shape(participant))
         if participant.process:
+          for lane in participant.process.laneset.lanes:
+            children.append(Shape(lane))
           for element in participant.process.children_oftype(Element):
             children.append(Shape(element))
           for flow in participant.process.children_oftype(Flow):

@@ -9,6 +9,10 @@ A Visitor allows for accessing the entire Element-hierarchy.
 
 """
 
+import random
+import string
+
+
 class Element():
   __tag__     = "Element"
 
@@ -16,7 +20,15 @@ class Element():
     self._children   = []
     self._parent     = None
     self._attributes = {}
-    self.text        = None
+    self._text       = None
+
+  @property
+  def text(self):
+    return self._text
+  
+  @text.setter
+  def text(self, value):
+    self._text = value
 
   def __repr__(self):
     label = f"{self.__class__.__name__}"
@@ -54,7 +66,7 @@ class Element():
       pass
     
     # recurse down children
-    for child in self._children:
+    for child in self.children:
       match = child.find(key, value)
       if match:
         return match
@@ -80,7 +92,7 @@ class Element():
     return self._children
 
   def children_oftype(self, cls):
-    return [ child for child in self._children if isinstance(child, cls) ]
+    return [ child for child in self.children if isinstance(child, cls) ]
 
   def as_dict(self, with_tag=False):
     # collect attributes
@@ -130,6 +142,9 @@ class Element():
     element = element_class()
     element.__tag__ = element_type
     
+    if type(element_definition) == str:
+      element_definition = { "#text" : element_definition }
+    
     for key, defintions in element_definition.items():
       if key[0] == "@":
         element._attributes[key[1:]] = defintions
@@ -154,3 +169,11 @@ class Element():
       visitor.visit(self)
       for child in self.children:
         child.accept(visitor)
+
+class IdentifiedElement(Element):
+  def __init__(self, id=None, **kwargs):
+    super().__init__(**kwargs)
+    if id is None:
+      random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+      id = f"{self.__class__.__name__.lower()}_{random_str}"
+    self["id"] = id
