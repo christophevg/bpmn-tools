@@ -1,10 +1,2 @@
 - add color on shape
-- implement layouter
-  - begin with start event
-    - follow all flows to tasks and build a tree like structure
-      S -> T -> T
-        -> T -> T
-             -> T
-        -> T    |
-                V
-                T
+- add multi-lane support
