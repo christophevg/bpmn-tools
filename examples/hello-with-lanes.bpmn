@@ -26,6 +26,7 @@
 		<bpmn:scriptTask id="hear2" name='Also Hear "Hello!"'>
 			<bpmn:incoming>flow_hello_hear2</bpmn:incoming>
 			<bpmn:outgoing>flow_hear2_wait</bpmn:outgoing>
+			<bpmn:outgoing>flow_hear2_support</bpmn:outgoing>
 		</bpmn:scriptTask>
 		<bpmn:scriptTask id="hear3" name='Also Also Hear "Hello!"'></bpmn:scriptTask>
 		<bpmn:laneSet id="LaneSet_process2">
@@ -36,11 +37,18 @@
 			</bpmn:lane>
 		</bpmn:laneSet>
 	</bpmn:process>
+	<bpmn:process id="process3">
+		<bpmn:serviceTask id="support" name="Support hearing">
+			<bpmn:incoming>flow_hear2_support</bpmn:incoming>
+		</bpmn:serviceTask>
+	</bpmn:process>
 	<bpmn:collaboration id="collaboration">
 		<bpmn:participant id="participant1" name="participant1" processRef="process1"></bpmn:participant>
 		<bpmn:participant id="participant2" name="participant2" processRef="process2"></bpmn:participant>
+		<bpmn:participant id="participant3" name="participant3" processRef="process3"></bpmn:participant>
 		<bpmn:messageFlow id="flow_hello_hear2" sourceRef="hello" targetRef="hear2"></bpmn:messageFlow>
 		<bpmn:messageFlow id="flow_hear2_wait" sourceRef="hear2" targetRef="wait"></bpmn:messageFlow>
+		<bpmn:messageFlow id="flow_hear2_support" sourceRef="hear2" targetRef="support"></bpmn:messageFlow>
 	</bpmn:collaboration>
 	<bpmndi:BPMNDiagram id="diagram">
 		<bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
@@ -79,6 +87,13 @@
 				<dc:Bounds x="475" y="255" height="80" width="100"></dc:Bounds>
 				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
 			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_participant3" bpmnElement="participant3" isHorizontal="true">
+				<dc:Bounds x="160" y="380" height="125" width="185"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_support" bpmnElement="support" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+				<dc:Bounds x="215" y="405" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
 			<bpmndi:BPMNEdge id="edge_flow_start_hello" bpmnElement="flow_start_hello">
 				<di:waypoint x="251" y="145"></di:waypoint>
 				<di:waypoint x="281" y="145"></di:waypoint>
@@ -102,6 +117,12 @@
 				<di:waypoint x="395" y="220"></di:waypoint>
 				<di:waypoint x="461" y="220"></di:waypoint>
 				<di:waypoint x="461" y="185"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_hear2_support" bpmnElement="flow_hear2_support">
+				<di:waypoint x="395" y="335"></di:waypoint>
+				<di:waypoint x="395" y="370"></di:waypoint>
+				<di:waypoint x="265" y="370"></di:waypoint>
+				<di:waypoint x="265" y="405"></di:waypoint>
 			</bpmndi:BPMNEdge>
 		</bpmndi:BPMNPlane>
 	</bpmndi:BPMNDiagram>

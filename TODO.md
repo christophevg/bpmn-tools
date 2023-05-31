@@ -1,2 +1,0 @@
-- parse shape attributes
-- add multi-lane support
