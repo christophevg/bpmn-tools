@@ -48,14 +48,14 @@
 				<dc:Bounds x="160" y="80" height="125" width="317"></dc:Bounds>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_start" bpmnElement="start">
-				<dc:Bounds x="215" y="127.0" height="36" width="36"></dc:Bounds>
+				<dc:Bounds x="215" y="127" height="36" width="36"></dc:Bounds>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
-				<dc:Bounds x="281" y="105.0" height="80" width="100"></dc:Bounds>
+				<dc:Bounds x="281" y="105" height="80" width="100"></dc:Bounds>
 				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_end" bpmnElement="end">
-				<dc:Bounds x="411" y="127.0" height="36" width="36"></dc:Bounds>
+				<dc:Bounds x="411" y="127" height="36" width="36"></dc:Bounds>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_participant2" bpmnElement="participant2" isHorizontal="true">
 				<dc:Bounds x="160" y="230" height="125" width="445"></dc:Bounds>
@@ -64,42 +64,42 @@
 				<dc:Bounds x="190" y="230" height="125" width="415"></dc:Bounds>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_hear" bpmnElement="hear">
-				<dc:Bounds x="215" y="255.0" height="80" width="100"></dc:Bounds>
+				<dc:Bounds x="215" y="255" height="80" width="100"></dc:Bounds>
 				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_hear2" bpmnElement="hear2">
-				<dc:Bounds x="345" y="255.0" height="80" width="100"></dc:Bounds>
+				<dc:Bounds x="345" y="255" height="80" width="100"></dc:Bounds>
 				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="shape_hear3" bpmnElement="hear3">
-				<dc:Bounds x="475" y="255.0" height="80" width="100"></dc:Bounds>
+				<dc:Bounds x="475" y="255" height="80" width="100"></dc:Bounds>
 				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNEdge id="edge_flow_start_hello" bpmnElement="flow_start_hello">
-				<di:waypoint x="251" y="145.0"></di:waypoint>
-				<di:waypoint x="281" y="145.0"></di:waypoint>
+				<di:waypoint x="251" y="145"></di:waypoint>
+				<di:waypoint x="281" y="145"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_hello_end" bpmnElement="flow_hello_end">
-				<di:waypoint x="381" y="145.0"></di:waypoint>
-				<di:waypoint x="411" y="145.0"></di:waypoint>
+				<di:waypoint x="381" y="145"></di:waypoint>
+				<di:waypoint x="411" y="145"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_hello_hear" bpmnElement="flow_hello_hear">
-				<di:waypoint x="331" y="185.0"></di:waypoint>
-				<di:waypoint x="331" y="220.0"></di:waypoint>
-				<di:waypoint x="265" y="220.0"></di:waypoint>
-				<di:waypoint x="265" y="255.0"></di:waypoint>
+				<di:waypoint x="331" y="185"></di:waypoint>
+				<di:waypoint x="331" y="220"></di:waypoint>
+				<di:waypoint x="265" y="220"></di:waypoint>
+				<di:waypoint x="265" y="255"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_hello_hear2" bpmnElement="flow_hello_hear2">
-				<di:waypoint x="331" y="185.0"></di:waypoint>
-				<di:waypoint x="331" y="220.0"></di:waypoint>
-				<di:waypoint x="395" y="220.0"></di:waypoint>
-				<di:waypoint x="395" y="255.0"></di:waypoint>
+				<di:waypoint x="331" y="185"></di:waypoint>
+				<di:waypoint x="331" y="220"></di:waypoint>
+				<di:waypoint x="395" y="220"></di:waypoint>
+				<di:waypoint x="395" y="255"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_hello_hear3" bpmnElement="flow_hello_hear3">
-				<di:waypoint x="331" y="185.0"></di:waypoint>
-				<di:waypoint x="331" y="220.0"></di:waypoint>
-				<di:waypoint x="525" y="220.0"></di:waypoint>
-				<di:waypoint x="525" y="255.0"></di:waypoint>
+				<di:waypoint x="331" y="185"></di:waypoint>
+				<di:waypoint x="331" y="220"></di:waypoint>
+				<di:waypoint x="525" y="220"></di:waypoint>
+				<di:waypoint x="525" y="255"></di:waypoint>
 			</bpmndi:BPMNEdge>
 		</bpmndi:BPMNPlane>
 	</bpmndi:BPMNDiagram>

@@ -145,6 +145,6 @@ def layout(model):
   visitor = LayoutVisitor()
   
   visitor.analyze(model)
-  print(json.dumps(visitor.report, indent=2, default=str))
+  # print(json.dumps(visitor.report, indent=2, default=str))
   logger.debug(json.dumps(visitor.report, indent=2, default=str))
   visitor.layout()

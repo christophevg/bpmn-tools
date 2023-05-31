@@ -1,3 +1,29 @@
+{
+  "process": {
+    "process": "Process({'id': 'process'})",
+    "height": 80,
+    "elements": {
+      "start": "Start({'id': 'start'})",
+      "hello": "Task({'id': 'hello', 'name': 'Say \"Hello!\"'})",
+      "wait": "Task({'id': 'wait', 'name': 'Wait for response...'})",
+      "end": "End({'id': 'end'})"
+    },
+    "start": "Start({'id': 'start'})",
+    "steps": {
+      "start": [
+        "hello"
+      ],
+      "hello": [
+        "wait"
+      ],
+      "wait": [
+        "end"
+      ],
+      "end": []
+    },
+    "end": "End({'id': 'end'})"
+  }
+}
 <?xml version="1.0" encoding="utf-8"?>
 <bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0">
 	<bpmn:process id="process">

@@ -7,6 +7,11 @@ tag:
 	@pyenv local $$(basename ${CURDIR})
 	@pyenv version
 
+examples:
+	PYTHONPATH=. python examples/generate_hello.py | tee examples/hello.bpmn
+	(cd $@; bpmn-to-image hello.bpmn:hello.png)
+	PYTHONPATH=. python examples/visitor.py
+
 requirements: .python-version requirements.txt
 	@pip install --upgrade -r requirements.txt > /dev/null
 
@@ -42,4 +47,4 @@ clean:
 	find . -type f -name "*.backup" | xargs rm
 	rm -rf build bpmn_tools.egg-info dist
 
-.PHONY: dist docs
+.PHONY: dist docs examples

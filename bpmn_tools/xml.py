@@ -57,7 +57,17 @@ class Element():
     else:
       return self
 
-  def find(self, key, value):
+  def find(self, key, value, skip=None, stack=None):
+    if stack is None:
+      stack = []
+
+    if self in stack:
+      logger.warn("avoided recursion")
+      return None
+
+    if self is skip:
+      return None
+
     # do I have the key=value attribute?
     try:
       if self._attributes[key] == value:
@@ -67,7 +77,7 @@ class Element():
     
     # recurse down children
     for child in self.children:
-      match = child.find(key, value)
+      match = child.find(key, value, skip=skip, stack=stack+[self])
       if match:
         return match
 

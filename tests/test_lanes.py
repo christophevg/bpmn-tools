@@ -2,8 +2,6 @@ import xmltodict
 import json
 from pathlib import Path
 
-from bpmn_tools               import classes
-
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task
@@ -24,7 +22,7 @@ def compare_with_roundtrip(obj1, expected):
   
   # xml -> obj
   
-  obj2 = Element.from_dict(d1, classes=classes)
+  obj2 = Definitions.from_dict(d1)
   
   d2 = obj2.as_dict(with_tag=True)
   print("*" * 20, "round 2" , "*" * 20)
@@ -172,6 +170,3 @@ def test_diagram_with_lane():
   simple.layout(definitions)
 
   compare(definitions.as_dict(with_tag=True), expected)
-  
-  # TODO: first implement extraction of x, y, height, width from Shape->Element
-  # compare_with_roundtrip(definitions, expected)

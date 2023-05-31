@@ -8,17 +8,16 @@ from . import xml
 
 from .collaboration import Participant
 from .flow          import Process, Element, Flow, MessageFlow
-from .colors        import Colored
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
   
   def __init__(self, x=0, y=0, height=0, width=0):
     super().__init__()
-    self["x"] = str(x)
-    self["y"] = str(y)
-    self["height"] = str(height)
-    self["width"] = str(width)
+    self["x"]      = str(int(x))
+    self["y"]      = str(int(y))
+    self["height"] = str(int(height))
+    self["width"]  = str(int(width))
 
 class Label(xml.Element):
   __tag__ = "bpmndi:BPMNLabel"
@@ -34,6 +33,15 @@ class Shape(xml.Element):
     super().__init__()
     self._element = element
     self.label    = None
+    self._bounds  = None
+
+  def append(self, child):
+    if isinstance(child, Bounds):
+      self._bounds = child
+      child._parent = self
+    else:
+      super().append(child)
+    return self
 
   @property
   def id(self):
@@ -44,7 +52,7 @@ class Shape(xml.Element):
     if self._element:
       return self._element
     if self["bpmnElement"]:
-      return self.root.find("id", self["bpmnElement"])
+      return self.root.find("id", self["bpmnElement"], skip=self)
     return None
 
   @property
@@ -57,7 +65,7 @@ class Shape(xml.Element):
       })
       if self.element.__horizontal__:
         attributes["isHorizontal"] = "true"
-      if isinstance(self.element, Colored):
+      if self.element.__color_scheme__:
         attributes.update(self.element.__color_scheme__)
     return attributes
 
@@ -82,8 +90,8 @@ class WayPoint(xml.Element):
   
   def __init__(self, x=0, y=0):
     super().__init__()
-    self["x"] = str(x)
-    self["y"] = str(y)
+    self["x"] = str(int(x))
+    self["y"] = str(int(y))
 
 class Edge(xml.Element):
   __tag__ = "bpmndi:BPMNEdge"
@@ -97,7 +105,7 @@ class Edge(xml.Element):
     if self._flow:
       return self._flow
     if self["bpmnElement"]:
-      return self.root.find("id", self["bpmnElement"])
+      return self.root.find("id", self["bpmnElement"], skip=self)
     return None
 
   def __getitem__(self, name):
@@ -169,7 +177,7 @@ class Plane(xml.Element):
     if self._element:
       return self._element
     if self["bpmnElement"]:
-      return self.root.find("id", self["bpmnElement"])
+      return self.root.find("id", self["bpmnElement"], skip=self)
     return None
 
   @property
@@ -185,8 +193,10 @@ class Plane(xml.Element):
   def append(self, child):
     if isinstance(child, Shape):
       self._shapes.append(child)
+      child._parent = self
     elif isinstance(child, Edge):
       self._edges.append(child)
+      child._parent = self
     else:
       super().append(child)
     return self

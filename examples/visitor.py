@@ -6,7 +6,7 @@ from colorama import Fore
 from colorama import Style
 colorama_init()
 
-from bpmn_tools          import classes
+from bpmn_tools.notation import Definitions
 from bpmn_tools.xml      import Element
 from bpmn_tools.visitor  import Visitor, PrintingVisitor, visiting
 from bpmn_tools.diagrams import Diagram, Plane, Shape
@@ -19,7 +19,7 @@ with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as
   generic_tree.accept(Visitor())
 
   # provide classes to specialize Elements
-  tree = Element.from_dict(xml, classes=classes)
+  tree = Definitions.from_dict(xml)
 
   # default Visitor
   tree.accept(PrintingVisitor())

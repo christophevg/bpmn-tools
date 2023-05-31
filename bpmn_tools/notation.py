@@ -2,14 +2,86 @@
   Classes representing the different parts of a BPMN file.
 """
 
-from .xml import Element
+import sys, inspect
 
-class Definitions(Element):
+from bpmn_tools import collaboration, flow, diagrams
+
+from bpmn_tools.collaboration import Collaboration
+from bpmn_tools.flow          import Process, Task
+from bpmn_tools.diagrams      import Diagram, Shape, Edge
+
+def get_classes(module):
+  return [
+    c[1] for c in inspect.getmembers(sys.modules[module], inspect.isclass)
+  ]
+
+from bpmn_tools.xml import Element, IdentifiedElement
+
+class Definitions(IdentifiedElement):
   __tag__ = "bpmn:definitions"
 
-  def __init__(self, id="definitions"):
-    super().__init__()
-    self["id"] = id
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.processes      = []
+    self.collaborations = []
+    self.diagrams       = []
+
+  @classmethod
+  def from_dict(cls, d):
+    classes = get_classes("bpmn_tools.notation") + \
+              get_classes("bpmn_tools.collaboration") + \
+              get_classes("bpmn_tools.flow") + \
+              get_classes("bpmn_tools.diagrams")
+    definitions = Element.from_dict(d, classes=classes)
+    if isinstance(definitions, Definitions):
+      for diagram in definitions.diagrams:
+        for shape in diagram.plane._shapes:
+          if shape._bounds:
+            element = definitions.find("id", shape["bpmnElement"])
+            if element:
+              element.x      = int(float(shape._bounds.x))
+              element.y      = int(float(shape._bounds.y))
+              element.width  = int(float(shape._bounds.width))
+              element.height = int(float(shape._bounds.height))
+              color_scheme   = {}
+              for k, v in shape._attributes.items():
+                if k in [
+                  "bioc:stroke",
+                  "bioc:fill",
+                  "color:background-color",
+                  "color:border-color"
+                ]:
+                  color_scheme[k] = v
+              if color_scheme:
+                element.__color_scheme__ = color_scheme
+            else:
+              raise ValueError(f"diagram shape ({shape}) has no element")
+    return definitions
+
+  def append(self, child):
+    if isinstance(child, Process):
+      self.processes.append(child)
+      child._parent = self
+    elif isinstance(child, Collaboration):
+      self.collaborations.append(child)
+      child._parent = self
+    elif isinstance(child, Diagram):
+      self.diagrams.append(child)
+      child._parent = self
+    else:
+      super().append(child)
+    return self
+
+  def element(self, id):
+    for process in self.processes:
+      match = process.find("id", id)
+      if match:
+        return match
+    return None
+    
+  @property
+  def children(self):
+    return super().children + self.processes + self.collaborations + self.diagrams
 
   @property
   def attributes(self):

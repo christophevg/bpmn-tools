@@ -91,8 +91,10 @@ class Element(IdentifiedElement):
   def append(self, child):
     if type(child) == Incoming:
       self.incoming.append(child)
+      child._parent = self
     elif type(child) == Outgoing:
       self.outgoing.append(child)
+      child._parent = self
     else:
       raise ValueError("Element expects only incoming or outgoing flows")
     child._parent = self
@@ -144,10 +146,18 @@ class FlowNodeRef(xml.Element):
     self._ref = ref
 
   @property
+  def process(self):
+    return self._parent.process()
+
+  @property
   def ref(self):
     if self._ref:
       return self._ref
-    return self.root.find("id", super().text)
+    try:
+      return self.process.element(super().text)
+    except TypeError:
+      pass
+    return None
     
   @xml.Element.text.getter
   def text(self):
@@ -173,6 +183,10 @@ class Lane(IdentifiedElement):
     self.width  = 570
 
   @property
+  def process(self):
+    return self._parent.process
+
+  @property
   def elements(self):
     # deref references
     return [ ref.ref for ref in self.refs if ref.ref ] # FIXME: ref.ref is None
@@ -180,8 +194,12 @@ class Lane(IdentifiedElement):
   def append(self, child):
     if isinstance(child, FlowNodeRef):       # "native" ref
       self.refs.append(child)
+      child._parent = self
     elif isinstance(child, Element):
-      self.refs .append(FlowNodeRef(child))  # wrap it
+      wrapped = FlowNodeRef(child)
+      child._parent = wrapped
+      wrapped._parent = self
+      self.refs.append(wrapped)  # wrap it
     else:
       super().append(child) # something else
     return self
@@ -197,9 +215,14 @@ class LaneSet(IdentifiedElement):
     super().__init__(*args, **kwargs)
     self.lanes = []
   
+  @property
+  def process(self):
+    return self._parent
+  
   def append(self, child):
     if isinstance(child, Lane):
       self.lanes.append(child)
+      child._parent = self
     else:
       super().append(child)
     return self
@@ -219,6 +242,12 @@ class Process(IdentifiedElement):
     self.laneset = LaneSet(id=f"LaneSet_{self['id']}")
     self._elements = []
   
+  def element(self, id):
+    for element in self._elements:
+      if element["id"] == id:
+        return element
+    return None
+  
   @property
   def elements(self):
     elems = self._elements  # direct elements
@@ -233,10 +262,13 @@ class Process(IdentifiedElement):
   def append(self, child):
     if isinstance(child, Element):
       self._elements.append(child)
+      child._parent = self
     elif isinstance(child, LaneSet):
       self.laneset = child
+      child._parent = self
     elif isinstance(child, Lane):
       self.laneset.append(child)
+      child._parent = self
     else:
       super().append(child) # generic child handling
     return self
