@@ -139,25 +139,35 @@ class Edge(xml.Element):
           )
         ]
       elif type(self.flow) == MessageFlow:
-        half_way_dist = int((self.flow.source.y + self.flow.source.height - self.flow.target.y) / 2)
+        if self.flow.source.y < self.flow.target.y:
+          top     = self.flow.source
+          bottom  = self.flow.target
+          reverse = False
+        else:
+          top     = self.flow.target
+          bottom  = self.flow.source
+          reverse = True
+        half_way_dist = int((top.y + top.height - bottom.y) / 2)
         children = [
           WayPoint(
-            x=self.flow.source.x + int(self.flow.source.width/2),
-            y=self.flow.source.y + self.flow.source.height
+            x=top.x + int(top.width/2),
+            y=top.y + top.height
           ),
           WayPoint(
-            x=self.flow.source.x + int(self.flow.source.width/2),
-            y=self.flow.source.y + self.flow.source.height - half_way_dist
+            x=top.x + int(top.width/2),
+            y=top.y + top.height - half_way_dist
           ),
           WayPoint(
-            x=self.flow.target.x + int(self.flow.target.width/2),
-            y=self.flow.target.y + half_way_dist
+            x=bottom.x + int(bottom.width/2),
+            y=bottom.y + half_way_dist
           ),
           WayPoint(
-            x=self.flow.target.x + int(self.flow.target.width/2),
-            y=self.flow.target.y
+            x=bottom.x + int(bottom.width/2),
+            y=bottom.y
           )
         ]
+        if reverse:
+          children.reverse()
       else:
         raise ValueError("unsupported flow type: {type(self.flow)}")
     return children
