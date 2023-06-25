@@ -129,6 +129,18 @@ class Task(Element):
     super().__init__(**kwargs)
     self["name"] = name
 
+  @property
+  def process(self):
+    return self._parent
+
+  @property
+  def lane(self):
+    for lane in self.process.laneset.lanes:
+      for ref in lane.refs:
+        if ref.ref == self:
+          return lane
+    return None
+
 class UserTask(Task):
   __tag__ = "bpmn:userTask"
 
@@ -147,7 +159,7 @@ class FlowNodeRef(xml.Element):
 
   @property
   def process(self):
-    return self._parent.process()
+    return self._parent.process
 
   @property
   def ref(self):
@@ -246,6 +258,14 @@ class Process(IdentifiedElement):
     for element in self._elements:
       if element["id"] == id:
         return element
+    return None
+  
+  @property
+  def participant(self):
+    for collaboration in self._parent.collaborations:
+      participant = collaboration.find("processRef", self.id)
+      if participant:
+        return participant
     return None
   
   @property
