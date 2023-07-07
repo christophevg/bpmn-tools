@@ -116,14 +116,16 @@ class LayoutVisitor(Visitor):
       top += self.process_participant[process].height
 
   def _order(self, analysis):
-    if analysis["start"] and analysis["end"]:
-      # follow from start to end
+    if analysis["start"]:
+      # follow from start to ...
       step = analysis["start"]
-      end  = analysis["end"]
       yield step
-      while step != end:
-        step = analysis["elements"][analysis["steps"][step.id][0]]
-        yield step
+      while True:
+        try:
+          step = analysis["elements"][analysis["steps"][step.id][0]]
+          yield step
+        except:
+          break
     else:
       # just return the elements
       if analysis["start"]:
