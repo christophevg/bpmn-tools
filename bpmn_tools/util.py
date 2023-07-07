@@ -18,7 +18,10 @@ def show_diff(result, expected):
   print("".join(diff), end="")
 
 def compare(result, expected):
+  print("=" * 20, "result dict", "=" * 20)
   print(json.dumps(result, indent=2))
+  print("=" * 20, "result XML", "=" * 20)
   print(xmltodict.unparse(result, pretty=True))
+  print("=" * 20, "diff", "=" * 20)
   show_diff(result, expected)
   assert result == expected
