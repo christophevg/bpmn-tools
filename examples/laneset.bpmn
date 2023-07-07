@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0">
+	<bpmn:process id="process_T1L9WQVH">
+		<bpmn:sequenceFlow id="flow_usertask_JMQNGQMR_scripttask_FD3SBG5M" sourceRef="usertask_JMQNGQMR" targetRef="scripttask_FD3SBG5M"></bpmn:sequenceFlow>
+		<bpmn:sequenceFlow id="flow_scripttask_FD3SBG5M_scripttask_TLJKRZZC" sourceRef="scripttask_FD3SBG5M" targetRef="scripttask_TLJKRZZC"></bpmn:sequenceFlow>
+		<bpmn:userTask id="usertask_JMQNGQMR" name='Say "Hello!"'>
+			<bpmn:outgoing>flow_usertask_JMQNGQMR_scripttask_FD3SBG5M</bpmn:outgoing>
+			<bpmn:outgoing>flow_usertask_JMQNGQMR_usertask_MJCTL4UF</bpmn:outgoing>
+		</bpmn:userTask>
+		<bpmn:scriptTask id="scripttask_FD3SBG5M" name='Hear own "Hello!"'>
+			<bpmn:incoming>flow_usertask_JMQNGQMR_scripttask_FD3SBG5M</bpmn:incoming>
+			<bpmn:outgoing>flow_scripttask_FD3SBG5M_scripttask_TLJKRZZC</bpmn:outgoing>
+		</bpmn:scriptTask>
+		<bpmn:scriptTask id="scripttask_TLJKRZZC" name="Ignore">
+			<bpmn:incoming>flow_scripttask_FD3SBG5M_scripttask_TLJKRZZC</bpmn:incoming>
+		</bpmn:scriptTask>
+		<bpmn:laneSet id="LaneSet_process_T1L9WQVH">
+			<bpmn:lane id="lane_AI1Z00IQ" name="lane 1">
+				<bpmn:flowNodeRef>usertask_JMQNGQMR</bpmn:flowNodeRef>
+			</bpmn:lane>
+			<bpmn:lane id="lane_YGYX7RW0" name="lane 2">
+				<bpmn:flowNodeRef>scripttask_FD3SBG5M</bpmn:flowNodeRef>
+				<bpmn:flowNodeRef>scripttask_TLJKRZZC</bpmn:flowNodeRef>
+			</bpmn:lane>
+		</bpmn:laneSet>
+	</bpmn:process>
+	<bpmn:process id="process_QGSDLHI0">
+		<bpmn:sequenceFlow id="flow_usertask_MJCTL4UF_usertask_M4IDQSF7" sourceRef="usertask_MJCTL4UF" targetRef="usertask_M4IDQSF7"></bpmn:sequenceFlow>
+		<bpmn:userTask id="usertask_MJCTL4UF" name='Hear "Hello!"'>
+			<bpmn:incoming>flow_usertask_JMQNGQMR_usertask_MJCTL4UF</bpmn:incoming>
+			<bpmn:outgoing>flow_usertask_MJCTL4UF_usertask_M4IDQSF7</bpmn:outgoing>
+		</bpmn:userTask>
+		<bpmn:userTask id="usertask_M4IDQSF7" name="Respond">
+			<bpmn:incoming>flow_usertask_MJCTL4UF_usertask_M4IDQSF7</bpmn:incoming>
+		</bpmn:userTask>
+	</bpmn:process>
+	<bpmn:collaboration id="collaboration">
+		<bpmn:participant id="p1" name="participant 1" processRef="process_T1L9WQVH"></bpmn:participant>
+		<bpmn:participant id="p2" name="participant 2" processRef="process_QGSDLHI0"></bpmn:participant>
+		<bpmn:messageFlow id="flow_usertask_JMQNGQMR_usertask_MJCTL4UF" sourceRef="usertask_JMQNGQMR" targetRef="usertask_MJCTL4UF"></bpmn:messageFlow>
+	</bpmn:collaboration>
+	<bpmndi:BPMNDiagram id="diagram">
+		<bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+			<bpmndi:BPMNShape id="shape_p1" bpmnElement="p1" isHorizontal="true">
+				<dc:Bounds x="160" y="80" height="250" width="445"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_lane_AI1Z00IQ" bpmnElement="lane_AI1Z00IQ" isHorizontal="true">
+				<dc:Bounds x="190" y="80" height="125" width="415"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_lane_YGYX7RW0" bpmnElement="lane_YGYX7RW0" isHorizontal="true">
+				<dc:Bounds x="190" y="205" height="125" width="415"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_usertask_JMQNGQMR" bpmnElement="usertask_JMQNGQMR">
+				<dc:Bounds x="215" y="105" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_scripttask_FD3SBG5M" bpmnElement="scripttask_FD3SBG5M">
+				<dc:Bounds x="345" y="230" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_scripttask_TLJKRZZC" bpmnElement="scripttask_TLJKRZZC">
+				<dc:Bounds x="475" y="230" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_p2" bpmnElement="p2" isHorizontal="true">
+				<dc:Bounds x="160" y="355" height="125" width="315"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_usertask_MJCTL4UF" bpmnElement="usertask_MJCTL4UF">
+				<dc:Bounds x="215" y="380" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_usertask_M4IDQSF7" bpmnElement="usertask_M4IDQSF7">
+				<dc:Bounds x="345" y="380" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="edge_flow_usertask_JMQNGQMR_scripttask_FD3SBG5M" bpmnElement="flow_usertask_JMQNGQMR_scripttask_FD3SBG5M">
+				<di:waypoint x="265" y="185"></di:waypoint>
+				<di:waypoint x="265" y="207"></di:waypoint>
+				<di:waypoint x="395" y="208"></di:waypoint>
+				<di:waypoint x="395" y="230"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_scripttask_FD3SBG5M_scripttask_TLJKRZZC" bpmnElement="flow_scripttask_FD3SBG5M_scripttask_TLJKRZZC">
+				<di:waypoint x="445" y="270"></di:waypoint>
+				<di:waypoint x="475" y="270"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_usertask_MJCTL4UF_usertask_M4IDQSF7" bpmnElement="flow_usertask_MJCTL4UF_usertask_M4IDQSF7">
+				<di:waypoint x="315" y="420"></di:waypoint>
+				<di:waypoint x="345" y="420"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_usertask_JMQNGQMR_usertask_MJCTL4UF" bpmnElement="flow_usertask_JMQNGQMR_usertask_MJCTL4UF">
+				<di:waypoint x="265" y="185"></di:waypoint>
+				<di:waypoint x="265" y="282"></di:waypoint>
+				<di:waypoint x="265" y="283"></di:waypoint>
+				<di:waypoint x="265" y="380"></di:waypoint>
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</bpmn:definitions>

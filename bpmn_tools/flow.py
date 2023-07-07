@@ -247,6 +247,12 @@ class Lane(IdentifiedElement):
   def children(self):
     return super().children + self.refs
 
+  def has_child(self, child):
+    for ref in self.refs:
+      if ref.ref == child:
+        return True
+    return False
+
 class LaneSet(IdentifiedElement):
   __tag__ = "bpmn:laneSet"
 
@@ -272,6 +278,12 @@ class LaneSet(IdentifiedElement):
   @property
   def children(self):
     return super().children + self.lanes
+
+  def lane_of(self, child):
+    for lane in self.lanes:
+      if lane.has_child(child):
+        return lane
+    return None
 
 class Process(IdentifiedElement):
   __tag__ = "bpmn:process"

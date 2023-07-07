@@ -104,16 +104,29 @@ class LayoutVisitor(Visitor):
       left = START
       self.process_participant[process].x = left
       self.process_participant[process].y = top
-      for lane in analysis["process"].laneset.lanes:
-        lane.x = left + HEADER
-        lane.y = top
-        
+
+      if analysis["process"].laneset.lanes:
+        lanes_height = 0
+        for lane in analysis["process"].laneset.lanes:
+          lane.x = left + HEADER
+          lane.y = top + lanes_height
+          lanes_height += lane.height
+        self.process_participant[process].height = lanes_height
+      else:
+        pass
+
       left += HEADER + PADDING
       top += PADDING
+
       for step in self._order(analysis):
         step.x = left
-        step.y = top + (analysis["height"]-step.height) / 2
+        lane = analysis["process"].laneset.lane_of(step)
+        if lane:
+          step.y = PADDING + lane.y + (analysis["height"]-step.height) / 2
+        else:
+          step.y = top + (analysis["height"]-step.height) / 2
         left += step.width + SPACING
+
       width = left - START
       self.process_participant[process].width = width
       for lane in analysis["process"].laneset.lanes:

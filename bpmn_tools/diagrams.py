@@ -127,7 +127,9 @@ class Edge(xml.Element):
   def children(self):
     children = super().children.copy()
     if self.flow:
-      if type(self.flow) == Flow:
+      below = self.flow.target.y > (self.flow.source.y + self.flow.source.height)
+      above = (self.flow.target.y + self.flow.target.height) < self.flow.source.y
+      if not (above or below): 
         children = [
           WayPoint(
             x=self.flow.source.x + self.flow.source.width,
@@ -138,7 +140,7 @@ class Edge(xml.Element):
             y=self.flow.target.y + int(self.flow.target.height/2)
           )
         ]
-      elif type(self.flow) == MessageFlow:
+      else:
         if self.flow.source.y < self.flow.target.y:
           top     = self.flow.source
           bottom  = self.flow.target
@@ -168,8 +170,6 @@ class Edge(xml.Element):
         ]
         if reverse:
           children.reverse()
-      else:
-        raise ValueError("unsupported flow type: {type(self.flow)}")
     return children
 
 class Plane(xml.Element):
