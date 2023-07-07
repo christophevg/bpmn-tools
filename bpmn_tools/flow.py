@@ -109,15 +109,42 @@ class Element(IdentifiedElement):
       children.extend([ flow for flow in self.outgoing ])
     return children
 
+class MessageEventDefinition(IdentifiedElement):
+  __tag__ = "bpmn:messageEventDefinition"
+
 class Event(Element):
   __labeled__ = False
-  def __init__(self, **kwargs):
+
+  def __init__(self, name=None, message=False, **kwargs):
     super().__init__(**kwargs)
-    self.width  = 36
-    self.height = 36
+    self.width   = 36
+    self.height  = 36
+    if name:
+      self["name"] = name
+    self.message = message
+
+  def append(self, child):
+    if type(child) == MessageEventDefinition:
+      self.message = True
+    else:
+      super().append(child) # something else
+    return self
+
+  @property
+  def children(self):
+    children = super().children
+    if self.message:
+      children.append(MessageEventDefinition(id=f"MessageEventDefinition_{self['id']}"))
+    return children
 
 class Start(Event):
   __tag__    = "bpmn:startEvent"
+
+class IntermediateThrow(Event):
+  __tag__ = "bpmn:intermediateThrowEvent"
+
+class IntermediateCatch(Event):
+  __tag__ = "bpmn:intermediateCatchEvent"
 
 class End(Event):
   __tag__ = "bpmn:endEvent"

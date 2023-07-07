@@ -42,3 +42,7 @@ def test_hello_lanes_with_message():
 def test_hello_colors():
   with open(Path(__file__).resolve().parent / "hello-colors.bpmn") as fp:
     compare_with_roundtrip(fp.read())
+
+def test_message_events():
+  with open(Path(__file__).resolve().parent / "message-events.bpmn") as fp:
+    compare_with_roundtrip(fp.read())
