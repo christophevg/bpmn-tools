@@ -88,6 +88,18 @@ class Element(IdentifiedElement):
     self.width  = 100
     self.height = 80
 
+  @property
+  def process(self):
+    return self._parent
+
+  @property
+  def lane(self):
+    for lane in self.process.laneset.lanes:
+      for ref in lane.refs:
+        if ref.ref == self:
+          return lane
+    return None
+
   def append(self, child):
     if type(child) == Incoming:
       self.incoming.append(child)
@@ -155,18 +167,6 @@ class Task(Element):
   def __init__(self, name="", **kwargs):
     super().__init__(**kwargs)
     self["name"] = name
-
-  @property
-  def process(self):
-    return self._parent
-
-  @property
-  def lane(self):
-    for lane in self.process.laneset.lanes:
-      for ref in lane.refs:
-        if ref.ref == self:
-          return lane
-    return None
 
 class UserTask(Task):
   __tag__ = "bpmn:userTask"
