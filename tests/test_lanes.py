@@ -170,3 +170,16 @@ def test_diagram_with_lane():
   simple.layout(definitions)
 
   compare(definitions.as_dict(with_tag=True), expected)
+
+def test_process_of_element_in_lane():
+  """
+    tests if a task in a lane's process is actually the process
+  """
+  task = Task("task")
+  process = Process().append(task)
+  assert task.process == process
+
+  task = Task("task")
+  lane = Lane("lane").append(task)
+  process = Process().append(lane)
+  assert task.process == process

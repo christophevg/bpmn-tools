@@ -90,7 +90,12 @@ class Element(IdentifiedElement):
 
   @property
   def process(self):
-    return self._parent
+    if isinstance(self._parent, Process):
+      return self._parent
+    if isinstance(self._parent, FlowNodeRef):
+      # process -> (laneset) -> lane -> FlowNodeRef -> self
+      return self._parent._parent._parent
+    raise Exception("this should not happen ;-)")
 
   @property
   def lane(self):
