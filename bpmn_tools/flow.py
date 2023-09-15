@@ -17,23 +17,33 @@ class Flow(IdentifiedElement):
       self._source.outgoing.append(Outgoing(self))
     if self._target:
       self._target.incoming.append(Incoming(self))
+    self._resolving_source = False
+    self._resolving_target = False
 
   @property
   def source(self):
     if self._source:
       return self._source
     elif self["sourceRef"]:
-      obj = self.root.find("id", self["sourceRef"])
-      if obj: return obj
-    raise Exception(f"no source found on {self}")
+      if not self._resolving_source:
+        self._resolving_source = True
+        obj = self.root.find("id", self["sourceRef"])
+        if obj:
+          self._resolving_source = False
+          return obj
+    raise Exception(f"sourceRef {self['sourceRef']} not found.")
 
   @property
   def target(self):
     if self._target:
       return self._target
     elif self["targetRef"]:
-      obj = self.root.find("id", self["targetRef"])
-      if obj: return obj
+      if not self._resolving_target:
+        self._resolving_target = True
+        obj = self.root.find("id", self["targetRef"])
+        if obj:
+          self._resolving_target = False
+          return obj
     raise Exception(f"no target found on {self}")
 
   def __getitem__(self, name):

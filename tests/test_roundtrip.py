@@ -50,3 +50,11 @@ def test_message_events():
 def test_intermediate_timer_event():
   with open(Path(__file__).resolve().parent / "intermediate-timer-event.bpmn") as fp:
     compare_with_roundtrip(fp.read())
+
+def test_bad_ref_triggering_recursion():
+  try:
+    with open(Path(__file__).resolve().parent / "bad-ref-triggering-recursion.bpmn") as fp:
+      compare_with_roundtrip(fp.read())
+    assert False, "expected exception on Acvitivy_BADREF"
+  except:
+    pass
