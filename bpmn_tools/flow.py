@@ -108,10 +108,8 @@ class Element(IdentifiedElement):
   def append(self, child):
     if type(child) == Incoming:
       self.incoming.append(child)
-      child._parent = self
     elif type(child) == Outgoing:
       self.outgoing.append(child)
-      child._parent = self
     else:
       raise ValueError("Element expects only incoming or outgoing flows")
     child._parent = self
