@@ -46,3 +46,7 @@ def test_hello_colors():
 def test_message_events():
   with open(Path(__file__).resolve().parent / "message-events.bpmn") as fp:
     compare_with_roundtrip(fp.read())
+
+def test_intermediate_timer_event():
+  with open(Path(__file__).resolve().parent / "intermediate-timer-event.bpmn") as fp:
+    compare_with_roundtrip(fp.read())

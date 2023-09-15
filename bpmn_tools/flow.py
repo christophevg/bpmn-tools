@@ -141,6 +141,8 @@ class Event(Element):
   def append(self, child):
     if type(child) == MessageEventDefinition:
       self.message = True
+    elif type(child) == TimerEventDefinition:
+      self.timer   = True
     else:
       super().append(child) # something else
     return self
@@ -150,6 +152,8 @@ class Event(Element):
     children = super().children
     if self.message:
       children.append(MessageEventDefinition(id=f"MessageEventDefinition_{self['id']}"))
+    if self.timer:
+      children.append(TimerEventDefinition(id=f"TimerEventDefinition_{self['id']}"))
     return children
 
 class Start(Event):
@@ -160,6 +164,9 @@ class IntermediateThrow(Event):
 
 class IntermediateCatch(Event):
   __tag__ = "bpmn:intermediateCatchEvent"
+
+class TimerEventDefinition(Element):
+  __tag__ = "bpmn:timerEventDefinition"
 
 class End(Event):
   __tag__ = "bpmn:endEvent"
