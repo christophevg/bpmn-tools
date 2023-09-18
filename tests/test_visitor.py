@@ -1,6 +1,5 @@
 from pathlib import Path
 import xmltodict
-import json
 
 from bpmn_tools.xml     import Element
 from bpmn_tools.visitor import Visitor

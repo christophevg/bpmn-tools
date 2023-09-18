@@ -2,12 +2,10 @@
   Classes representing the different parts of a BPMN file.
 """
 
-from .util import prune
-
 from . import xml
 
 from .collaboration import Participant
-from .flow          import Process, Element, Flow, MessageFlow
+from .flow          import Element, Flow, MessageFlow
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"

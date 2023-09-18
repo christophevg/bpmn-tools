@@ -4,12 +4,13 @@ import xmltodict
 from colorama import init as colorama_init
 from colorama import Fore
 from colorama import Style
-colorama_init()
 
 from bpmn_tools.notation import Definitions
 from bpmn_tools.xml      import Element
 from bpmn_tools.visitor  import Visitor, PrintingVisitor, visiting
 from bpmn_tools.diagrams import Diagram, Plane, Shape
+
+colorama_init()
 
 with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as fp:
   xml = xmltodict.parse(fp.read())
@@ -42,7 +43,7 @@ with open(Path(__file__).resolve().parent / ".." / "examples" / "hello.bpmn") as
       print(f"{'    '*(self.depth-1)}{Fore.GREEN}{shape}{Style.RESET_ALL}")
 
     @visiting(Diagram, Plane)
-    def visit(self, visited):
+    def visit(self, visited): # noqa
       print(f"{'   '*(self.depth-1)}{Fore.BLUE}{visited}{Style.RESET_ALL}")
 
   tree.accept(ShapeVisitor())

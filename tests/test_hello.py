@@ -309,7 +309,7 @@ def test_plane_for_collaboration_with_one_participant_without_a_process():
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
-  """
+  """ # noqa
   collaboration = Collaboration(id="collaboration").append(
     Participant("participant", None, id="participant")
   )

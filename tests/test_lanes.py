@@ -1,16 +1,13 @@
 import xmltodict
-import json
 from pathlib import Path
 
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task
 from bpmn_tools.flow          import Flow, FlowNodeRef, Lane, LaneSet
-from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
+from bpmn_tools.diagrams      import Diagram, Plane
 
 from bpmn_tools.layout        import simple
-
-from bpmn_tools.xml           import Element
 
 from bpmn_tools.util import compare
 
@@ -39,7 +36,7 @@ def test_flow_node_ref():
 
   r2 = compare_with_roundtrip(r1, { "bpmn:flowNodeRef" : a.id })
   
-  assert r2.ref  == None
+  assert r2.ref  is None
   assert r2.text == a.id
 
 def test_lane():

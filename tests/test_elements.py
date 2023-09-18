@@ -1,6 +1,5 @@
 from pathlib import Path
 import xmltodict
-import json
 
 from bpmn_tools.notation import Definitions
 

@@ -2,20 +2,19 @@
   Classes representing the different parts of a BPMN file.
 """
 
-import sys, inspect
-
-from bpmn_tools import collaboration, flow, diagrams
+import sys
+import inspect
 
 from bpmn_tools.collaboration import Collaboration
-from bpmn_tools.flow          import Process, Task
-from bpmn_tools.diagrams      import Diagram, Shape, Edge
+from bpmn_tools.flow          import Process
+from bpmn_tools.diagrams      import Diagram
+
+from bpmn_tools.xml import Element, IdentifiedElement
 
 def get_classes(module):
   return [
     c[1] for c in inspect.getmembers(sys.modules[module], inspect.isclass)
   ]
-
-from bpmn_tools.xml import Element, IdentifiedElement
 
 class Definitions(IdentifiedElement):
   __tag__ = "bpmn:definitions"

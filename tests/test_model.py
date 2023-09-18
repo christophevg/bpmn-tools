@@ -1,4 +1,3 @@
-from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task
 from bpmn_tools.flow          import Flow
 

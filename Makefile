@@ -7,27 +7,37 @@ tag:
 	@pyenv local $$(basename ${CURDIR})
 	@pyenv version
 
-examples: examples/hello.png examples/hello-with-lanes.png
-	PYTHONPATH=. python examples/visitor.py
-
-examples/%.png: examples/%.bpmn
-	bpmn-to-image $<:$@
-
-examples/%.bpmn: examples/generate-%.py FORCE
-	PYTHONPATH=. python $< | tee $@
+# dependencies targets
 
 requirements: .python-version requirements.txt
 	@pip install --upgrade -r requirements.txt > /dev/null
 
-upgrade: requirements
+upgrade:
 	@pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 
-test: requirements
+# functional targets
+
+test: lint
 	tox
 
-dist: requirements
-	rm -rf $@
+coverage: test
+	coverage report
+
+lint:
+	ruff --select=E9,F63,F7,F82 --target-version=py37 .
+	ruff --target-version=py37 .
+
+docs: requirements
+	cd docs; make html
+	open docs/_build/html/index.html
+
+# packaging targets
+
+dist: dist-clean
 	python setup.py sdist bdist_wheel
+
+dist-clean:
+	rm -rf dist build *.egg-info
 
 publish-test: dist
 	twine upload --repository testpypi dist/*
@@ -35,22 +45,11 @@ publish-test: dist
 publish: dist
 	twine upload dist/*
 
-coverage: test
-	coverage report
-
-docs: requirements
-	cd docs; make html
-	open docs/_build/html/index.html
-
-PROJECT:=`find . -name '__init__.py' -maxdepth 2 | xargs dirname | grep -v docs`
-
-lint:
-	@PYTHONPATH=. pylint ${PROJECT} | tee lint.txt
-
 clean:
 	find . -type f -name "*.backup" | xargs rm
-	rm -rf build bpmn_tools.egg-info dist
 
-FORCE: ;
+.PHONY: dist docs
 
-.PHONY: dist docs FORCE
+# include optional a personal/local touch
+
+-include Makefile.mak

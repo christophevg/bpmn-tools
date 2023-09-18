@@ -4,6 +4,7 @@ dist
 *.pyc
 build
 .coverage
+coverage.lcov
 .tox
 docs/_build
 *.backup

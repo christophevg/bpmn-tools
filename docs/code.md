@@ -1,8 +1,6 @@
 # Generated Code Documentation
 
-```eval_rst
-.. automodule:: pypi_template
-
-.. automodule:: pypi_template.module
-   :members:
+```{autodoc2-object} pypi_template.module
+render_plugin = "myst"
+no_index = true
 ```

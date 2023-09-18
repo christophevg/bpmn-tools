@@ -3,14 +3,12 @@ from pathlib import Path
 
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
-from bpmn_tools.flow          import Process, Start, End, Task, UserTask, ScriptTask
-from bpmn_tools.flow          import Flow, FlowNodeRef, Lane, LaneSet
+from bpmn_tools.flow          import Process, Start, End, UserTask, ScriptTask
+from bpmn_tools.flow          import Flow, Lane
 from bpmn_tools.flow          import MessageFlow
-from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
+from bpmn_tools.diagrams      import Diagram, Plane
 
 from bpmn_tools.layout        import simple
-
-from bpmn_tools.xml           import Element
 
 from bpmn_tools.util import compare
 

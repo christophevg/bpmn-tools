@@ -1,7 +1,16 @@
 import logging
-logger = logging.getLogger(__name__)
 
 import os
+
+from bpmn_tools.flow          import Process, Start, IntermediateThrow, Task, Flow
+from bpmn_tools.collaboration import Collaboration, Participant
+from bpmn_tools.notation      import Definitions
+from bpmn_tools.diagrams      import Diagram, Plane
+from bpmn_tools.layout        import simple
+
+import xmltodict
+
+logger = logging.getLogger(__name__)
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL") or "DEBUG"
 FORMAT    = "[%(name)s] [%(levelname)s] %(message)s"
@@ -10,14 +19,6 @@ DATEFMT   = "%Y-%m-%d %H:%M:%S %z"
 logging.basicConfig(level=LOG_LEVEL, format=FORMAT, datefmt=DATEFMT)
 formatter = logging.Formatter(FORMAT, DATEFMT)
 logging.getLogger().handlers[0].setFormatter(formatter)
-
-from bpmn_tools.flow          import Process, Start, End, IntermediateThrow, Task, Flow
-from bpmn_tools.collaboration import Collaboration, Participant
-from bpmn_tools.notation      import Definitions
-from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
-from bpmn_tools.layout        import simple
-
-import xmltodict
 
 activities = [
   Start(id="start"),

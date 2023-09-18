@@ -3,8 +3,8 @@ import xmltodict
 
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
-from bpmn_tools.flow          import Process, Start, End, Task, Flow
-from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
+from bpmn_tools.flow          import Process, Task, Flow
+from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.colors        import Red, Orange, Green, Blue
 from bpmn_tools.layout        import simple
 

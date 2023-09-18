@@ -334,7 +334,7 @@ class Process(IdentifiedElement):
     if len(self.laneset) > 0:
       for lane in self.laneset.lanes:
         for element in lane.elements:
-          if not element in elems:
+          if element not in elems:
             elems.append(element)
     return elems
   

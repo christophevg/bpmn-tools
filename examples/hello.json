@@ -1,0 +1,26 @@
+{
+  "process": {
+    "process": "Process({'id': 'process'})",
+    "height": 80,
+    "elements": {
+      "start": "Start({'id': 'start'})",
+      "hello": "Task({'id': 'hello', 'name': 'Say \"Hello!\"'})",
+      "wait": "Task({'id': 'wait', 'name': 'Wait for response...'})",
+      "end": "End({'id': 'end'})"
+    },
+    "start": "Start({'id': 'start'})",
+    "steps": {
+      "start": [
+        "hello"
+      ],
+      "hello": [
+        "wait"
+      ],
+      "wait": [
+        "end"
+      ],
+      "end": []
+    },
+    "end": "End({'id': 'end'})"
+  }
+}

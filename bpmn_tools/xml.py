@@ -9,9 +9,12 @@ A Visitor allows for accessing the entire Element-hierarchy.
 
 """
 
+import logging
+
 import random
 import string
 
+logger = logging.getLogger(__name__)
 
 class Element():
   __tag__     = "Element"
@@ -158,7 +161,7 @@ class Element():
     element = element_class()
     element.__tag__ = element_type
     
-    if type(element_definition) == str:
+    if isinstance(element_definition, str):
       element_definition = { "#text" : element_definition }
     
     for key, defintions in element_definition.items():
@@ -167,14 +170,16 @@ class Element():
       elif key == "#text":
         element.text = defintions
       else:
-        if type(defintions) != list:
+        if not isinstance(defintions, list):
           defintions = [ defintions ]
         for definition in defintions:
           if definition is None:
             definition = {}
-          elif type(definition) is str:
+          elif isinstance(definition, str):
             definition = { "#text" : definition }
-          child = Element.from_dict({ key : definition }, classes=classes, depth=depth+1 )
+          child = Element.from_dict(
+            { key : definition }, classes=classes, depth=depth+1
+           )
           assert child != element
           element.append(child)
 

@@ -1,7 +1,17 @@
 import logging
-logger = logging.getLogger(__name__)
 
 import os
+
+from bpmn_tools.flow          import Process, Flow, Lane
+from bpmn_tools.flow          import UserTask, ScriptTask, MessageFlow
+from bpmn_tools.collaboration import Collaboration, Participant
+from bpmn_tools.notation      import Definitions
+from bpmn_tools.diagrams      import Diagram, Plane
+from bpmn_tools.layout        import simple
+
+import xmltodict
+
+logger = logging.getLogger(__name__)
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL") or "WARN"
 FORMAT    = "[%(name)s] [%(levelname)s] %(message)s"
@@ -10,15 +20,6 @@ DATEFMT   = "%Y-%m-%d %H:%M:%S %z"
 logging.basicConfig(level=LOG_LEVEL, format=FORMAT, datefmt=DATEFMT)
 formatter = logging.Formatter(FORMAT, DATEFMT)
 logging.getLogger().handlers[0].setFormatter(formatter)
-
-from bpmn_tools.flow          import Process, Start, End, Task, Flow, Lane, UserTask, ScriptTask, ServiceTask, MessageFlow
-from bpmn_tools.collaboration import Collaboration, Participant
-from bpmn_tools.notation      import Definitions
-from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
-from bpmn_tools.colors        import Green, Red, Blue
-from bpmn_tools.layout        import simple
-
-import xmltodict
 
 
 hello = UserTask('Say "Hello!"')

@@ -4,6 +4,8 @@ import xmltodict
 from bpmn_tools.notation  import Definitions
 from bpmn_tools.util      import compare
 
+folder = Path(__file__).resolve().parent
+
 def compare_with_roundtrip(xml1):
   # xml -> obj
   d1 = xmltodict.parse(xml1)
@@ -28,33 +30,33 @@ def compare_with_roundtrip(xml1):
   compare(d2g, d1)
 
 def test_hello():
-  with open(Path(__file__).resolve().parent / "hello.bpmn") as fp:
+  with open(folder / "hello.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_hello_lanes():
-  with open(Path(__file__).resolve().parent / "hello-lanes.bpmn") as fp:
+  with open(folder / "hello-lanes.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_hello_lanes_with_message():
-  with open(Path(__file__).resolve().parent / "hello-lanes-with-message.bpmn") as fp:
+  with open(folder / "hello-lanes-with-message.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_hello_colors():
-  with open(Path(__file__).resolve().parent / "hello-colors.bpmn") as fp:
+  with open(folder / "hello-colors.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_message_events():
-  with open(Path(__file__).resolve().parent / "message-events.bpmn") as fp:
+  with open(folder / "message-events.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_intermediate_timer_event():
-  with open(Path(__file__).resolve().parent / "intermediate-timer-event.bpmn") as fp:
+  with open(folder / "intermediate-timer-event.bpmn") as fp:
     compare_with_roundtrip(fp.read())
 
 def test_bad_ref_triggering_recursion():
   try:
-    with open(Path(__file__).resolve().parent / "bad-ref-triggering-recursion.bpmn") as fp:
+    with open(folder / "bad-ref-triggering-recursion.bpmn") as fp:
       compare_with_roundtrip(fp.read())
     assert False, "expected exception on Acvitivy_BADREF"
-  except:
+  except Exception:
     pass

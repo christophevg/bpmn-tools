@@ -5,7 +5,6 @@
 """
 
 import logging
-logger = logging.getLogger(__name__)
 
 import json
 
@@ -14,6 +13,8 @@ from bpmn_tools.flow          import IntermediateCatch, IntermediateThrow
 from bpmn_tools.flow          import Task, UserTask, ServiceTask, ScriptTask
 from bpmn_tools.collaboration import Participant
 from bpmn_tools.visitor       import Visitor, visiting
+
+logger = logging.getLogger(__name__)
 
 class LayoutVisitor(Visitor):
   def __init__(self):
@@ -27,31 +28,31 @@ class LayoutVisitor(Visitor):
     return self
     
   @visiting(Process)
-  def visit(self, process):
+  def visit(self, process): # noqa
     logger.info(f"detecting elements in process: {process}")
     self.current_process = process
 
-  @visiting(Participant)
-  def visit(self, participant):
+  @visiting(Participant) 
+  def visit(self, participant): # noqa
     logger.info(f"found participant: {participant}")
     self.process_participant[participant.process.id] = participant
   
   @visiting(Start)
-  def visit(self, event):
+  def visit(self, event): # noqa
     self.current_process["start"] = event
     self._analyse_element(event)
 
   @visiting(IntermediateThrow, IntermediateCatch)
-  def visit(self, event):
+  def visit(self, event): # noqa
     self._analyse_element(event)
 
   @visiting(End)
-  def visit(self, event):
+  def visit(self, event): # noqa
     self.current_process["end"] = event
     self._analyse_element (event)
 
   @visiting(Task, UserTask, ServiceTask, ScriptTask)
-  def visit(self, task):
+  def visit(self, task): # noqa
     self._analyse_element(task)
 
   @property
@@ -61,7 +62,7 @@ class LayoutVisitor(Visitor):
   @current_process.setter
   def current_process(self, process):
     self._current_process = process
-    if not self._current_process.id in self.processes:
+    if self._current_process.id not in self.processes:
       self.processes[self._current_process.id] = {
         "process"     : self._current_process,
         "height"      : 0,
@@ -93,7 +94,7 @@ class LayoutVisitor(Visitor):
       task(x,y)  = (160+15+25+36+50,               80+25)             (width=100, height=80)
       task(x,y)  = (160+15+25+36+50+100+50,        80+25)             (width=100, height=80)
       start(x,y) = (160+15+25+36+50+100+50+100+50, 80+25+((80-36)/2)  (width,height=36)
-    """
+    """ # noqa
     START   = 160
     HEADER  = 30
     PADDING = 25
@@ -142,7 +143,7 @@ class LayoutVisitor(Visitor):
         try:
           step = analysis["elements"][analysis["steps"][step.id][0]]
           yield step
-        except:
+        except Exception:
           break
     else:
       # just return the elements

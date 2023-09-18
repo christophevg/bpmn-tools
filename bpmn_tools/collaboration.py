@@ -2,8 +2,6 @@
   Classes representing the different parts of a BPMN file.
 """
 
-from .util import prune
-
 from . import xml
 
 class Participant(xml.Element):
