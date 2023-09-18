@@ -181,6 +181,8 @@ class TimerEventDefinition(Element):
 class End(Event):
   __tag__ = "bpmn:endEvent"
 
+# Tasks
+
 class Task(Element):
   __tag__     = "bpmn:task"
 
@@ -191,11 +193,24 @@ class Task(Element):
 class UserTask(Task):
   __tag__ = "bpmn:userTask"
 
+class ServiceTask(Task):
+  __tag__ = "bpmn:serviceTask"
+
+class SendTask(Task):
+  __tag__ = "bpmn:sendTask"
+
+class ReceiveTask(Task):
+  __tag__ = "bpmn:receiveTask"
+
+class ManualTask(Task):
+  __tag__ = "bpmn:manualTask"
+
+class BusinessRuleTask(Task):
+  __tag__ = "bpmn:businessRuleTask"
+
 class ScriptTask(Task):
   __tag__ = "bpmn:scriptTask"
 
-class ServiceTask(Task):
-  __tag__ = "bpmn:serviceTask"
 
 class FlowNodeRef(xml.Element):
   __tag__ = "bpmn:flowNodeRef"
