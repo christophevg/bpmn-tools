@@ -147,22 +147,21 @@ class Edge(xml.Element):
           top     = self.flow.target
           bottom  = self.flow.source
           reverse = True
-        half_way_dist = int((top.y + top.height - bottom.y) / 2)
         children = [
-          WayPoint(
+          WayPoint(                               # bottom middle exit 
             x=top.x + int(top.width/2),
             y=top.y + top.height
           ),
           WayPoint(
-            x=top.x + int(top.width/2),
-            y=top.y + top.height - half_way_dist
+            x=top.x + int(top.width/2),           # straight down to 17px
+            y=bottom.y - 17
+          ),
+          WayPoint(                               # left/right to bottom
+            x=bottom.x + int(bottom.width/2),
+            y=bottom.y - 17
           ),
           WayPoint(
-            x=bottom.x + int(bottom.width/2),
-            y=bottom.y + half_way_dist
-          ),
-          WayPoint(
-            x=bottom.x + int(bottom.width/2),
+            x=bottom.x + int(bottom.width/2),     # top middle entry
             y=bottom.y
           )
         ]

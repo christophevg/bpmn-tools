@@ -4,17 +4,12 @@
   The tests build towards a complete support to construct the hello.bpmn example
 """
 
-from pathlib import Path
-import xmltodict
-
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task, Flow
 from bpmn_tools.diagrams      import Diagram, Plane, Shape, Edge
 
-from bpmn_tools.util import compare
-
-def test_create_single_step_process():
+def test_create_single_step_process(compare):
   """
     Create a single-step process.
     (start) -> (task: Say "Hello!") -> (end)
@@ -77,7 +72,7 @@ def test_create_single_step_process():
     }
   })
 
-def test_create_single_participant_collaboration():
+def test_create_single_participant_collaboration(compare):
   """
     Create a single participant collaboration for Process(id="process")
 
@@ -100,7 +95,7 @@ def test_create_single_participant_collaboration():
     }
   })
 
-def test_create_definitions_with_process_and_collaboration():
+def test_create_definitions_with_process_and_collaboration(compare):
   """
     Create Definitions with both a single-step process and collaboration.
 
@@ -198,7 +193,7 @@ def test_create_definitions_with_process_and_collaboration():
     }
   })
 
-def test_create_start_shape():
+def test_create_start_shape(compare):
   """
     Create a shape for a Start element, with default bounds
 
@@ -222,7 +217,7 @@ def test_create_start_shape():
     }
   })
 
-def test_create_task_shape():
+def test_create_task_shape(compare):
   """
     Create a shape for a Task element, with default bounds
 
@@ -248,7 +243,7 @@ def test_create_task_shape():
     }
   })
 
-def test_create_edge():
+def test_create_edge(compare):
   """
     Create an edge for a flow between start and
 
@@ -278,7 +273,7 @@ def test_create_edge():
     }
   })
 
-def test_empty_diagram():
+def test_empty_diagram(compare):
   """
     An empty diagram, always contains a plane.
 
@@ -299,7 +294,7 @@ def test_empty_diagram():
     }
   })
 
-def test_plane_for_collaboration_with_one_participant_without_a_process():
+def test_plane_for_collaboration_with_one_participant_without_a_process(compare):
   """
     A plane for a collaboration with on participant.
 
@@ -333,10 +328,7 @@ def test_plane_for_collaboration_with_one_participant_without_a_process():
     }
   })
 
-def test_hello():
-  with open(Path(__file__).resolve().parent / "hello.bpmn") as fp:
-    expected = xmltodict.parse(fp.read())
-
+def test_hello(compare_model_to_file):
   activities = [
     Start(id="start"),
     Task('Say "Hello!"', id="hello"),
@@ -364,6 +356,4 @@ def test_hello():
     )
   )
 
-  result = definitions.as_dict(with_tag=True)
-  
-  compare(result, expected)
+  compare_model_to_file(definitions, "hello.bpmn", save_to="hello-latest.bpmn")

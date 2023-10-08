@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0">
+	<bpmn:process id="process1">
+		<bpmn:sequenceFlow id="flow_step1_step2" sourceRef="step1" targetRef="step2"></bpmn:sequenceFlow>
+		<bpmn:sequenceFlow id="flow_step1_step3" sourceRef="step1" targetRef="step3"></bpmn:sequenceFlow>
+		<bpmn:sequenceFlow id="flow_step1_step4" sourceRef="step1" targetRef="step4"></bpmn:sequenceFlow>
+		<bpmn:task id="step1" name="step 1">
+			<bpmn:outgoing>flow_step1_step2</bpmn:outgoing>
+			<bpmn:outgoing>flow_step1_step3</bpmn:outgoing>
+			<bpmn:outgoing>flow_step1_step4</bpmn:outgoing>
+			<bpmn:outgoing>flow_step1_step5</bpmn:outgoing>
+		</bpmn:task>
+		<bpmn:task id="step2" name="step 2">
+			<bpmn:incoming>flow_step1_step2</bpmn:incoming>
+		</bpmn:task>
+		<bpmn:task id="step3" name="step 3">
+			<bpmn:incoming>flow_step1_step3</bpmn:incoming>
+		</bpmn:task>
+		<bpmn:task id="step4" name="step 4">
+			<bpmn:incoming>flow_step1_step4</bpmn:incoming>
+		</bpmn:task>
+	</bpmn:process>
+	<bpmn:process id="process2">
+		<bpmn:task id="step5" name="step 5">
+			<bpmn:incoming>flow_step1_step5</bpmn:incoming>
+		</bpmn:task>
+	</bpmn:process>
+	<bpmn:collaboration id="collaboration">
+		<bpmn:participant id="participant_process1" name="process 1" processRef="process1"></bpmn:participant>
+		<bpmn:participant id="participant_process2" name="process 2" processRef="process2"></bpmn:participant>
+		<bpmn:messageFlow id="flow_step1_step5" sourceRef="step1" targetRef="step5"></bpmn:messageFlow>
+	</bpmn:collaboration>
+	<bpmndi:BPMNDiagram id="diagram">
+		<bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+			<bpmndi:BPMNShape id="shape_participant_process1" bpmnElement="participant_process1" isHorizontal="true">
+				<dc:Bounds x="160" y="80" height="125" width="575"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_step1" bpmnElement="step1">
+				<dc:Bounds x="215" y="105" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_step2" bpmnElement="step2">
+				<dc:Bounds x="345" y="105" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_step3" bpmnElement="step3">
+				<dc:Bounds x="475" y="105" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_step4" bpmnElement="step4">
+				<dc:Bounds x="605" y="105" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_participant_process2" bpmnElement="participant_process2" isHorizontal="true">
+				<dc:Bounds x="160" y="230" height="125" width="185"></dc:Bounds>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape id="shape_step5" bpmnElement="step5">
+				<dc:Bounds x="215" y="255" height="80" width="100"></dc:Bounds>
+				<bpmndi:BPMNLabel></bpmndi:BPMNLabel>
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge id="edge_flow_step1_step2" bpmnElement="flow_step1_step2">
+				<di:waypoint x="315" y="145"></di:waypoint>
+				<di:waypoint x="345" y="145"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_step1_step3" bpmnElement="flow_step1_step3">
+				<di:waypoint x="315" y="145"></di:waypoint>
+				<di:waypoint x="475" y="145"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_step1_step4" bpmnElement="flow_step1_step4">
+				<di:waypoint x="315" y="145"></di:waypoint>
+				<di:waypoint x="605" y="145"></di:waypoint>
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge id="edge_flow_step1_step5" bpmnElement="flow_step1_step5">
+				<di:waypoint x="265" y="185"></di:waypoint>
+				<di:waypoint x="265" y="238"></di:waypoint>
+				<di:waypoint x="265" y="238"></di:waypoint>
+				<di:waypoint x="265" y="255"></di:waypoint>
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</bpmn:definitions>

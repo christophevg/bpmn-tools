@@ -1,6 +1,3 @@
-import xmltodict
-from pathlib import Path
-
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, Task
@@ -9,7 +6,7 @@ from bpmn_tools.diagrams      import Diagram, Plane
 
 from bpmn_tools.layout        import simple
 
-from bpmn_tools.util import compare
+from tests.conftest import compare
 
 def compare_with_roundtrip(obj1, expected):
   # obj -> xml
@@ -123,10 +120,7 @@ def test_process_with_default_laneset():
     }
   })
 
-def test_diagram_with_lane():
-  with open(Path(__file__).resolve().parent / "hello-lanes.bpmn") as fp:
-    expected = xmltodict.parse(fp.read())
-
+def test_diagram_with_lane(compare_model_to_file):
   activities_lane1 = [
     Start(id="start"),
     Task('Say "Hello!"', id="hello"),
@@ -166,7 +160,7 @@ def test_diagram_with_lane():
 
   simple.layout(definitions)
 
-  compare(definitions.as_dict(with_tag=True), expected)
+  compare_model_to_file(definitions, "hello-lanes.bpmn")
 
 def test_process_of_element_in_lane():
   """

@@ -1,6 +1,3 @@
-import xmltodict
-from pathlib import Path
-
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Start, End, UserTask, ScriptTask
@@ -10,12 +7,7 @@ from bpmn_tools.diagrams      import Diagram, Plane
 
 from bpmn_tools.layout        import simple
 
-from bpmn_tools.util import compare
-
-def test_diagram_with_lane():
-  with open(Path(__file__).resolve().parent / "hello-lanes-with-message.bpmn") as fp:
-    expected = xmltodict.parse(fp.read())
-
+def test_diagram_with_lane(compare_model_to_file):
   activities_lane1 = [
     Start(id="start"),
     UserTask('Say "Hello!"', id="hello"),
@@ -60,8 +52,11 @@ def test_diagram_with_lane():
 
   simple.layout(definitions)
 
-  compare(definitions.as_dict(with_tag=True), expected)
+  compare_model_to_file(
+    definitions,
+    "hello-lanes-with-message.bpmn",
+    save_to="hello-lanes-with-message-latest.bpmn"
+  )
   
   # TODO: first implement extraction of x, y, height, width from Shape->Element
   # compare_with_roundtrip(definitions, expected)
-  

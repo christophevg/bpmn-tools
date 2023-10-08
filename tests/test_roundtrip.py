@@ -1,62 +1,40 @@
+import pytest
+
 from pathlib import Path
 import xmltodict
 
 from bpmn_tools.notation  import Definitions
-from bpmn_tools.util      import compare
 
-folder = Path(__file__).resolve().parent
+from tests.conftest import compare_model_to_file
 
-def compare_with_roundtrip(xml1):
-  # xml -> obj
-  d1 = xmltodict.parse(xml1)
-  obj1 = Definitions.from_dict(d1)
-
-  # obj -> xml
-  d1g = obj1.as_dict(with_tag=True)
-  
-  # ensure that generated dict equals original parsed dict
-  compare(d1g, d1)
-  
-  xml2 = xmltodict.unparse(d1g)
+def perform_roundtrip_test(filepath):
+  """
+  given a filename, the BPMN XML is 
+  1. loaded as a dict
+  2. used to construct a Definitions object
+  3. of which the XML rendering is compared to the original
+  """
+  xml = filepath.read_text()
 
   # xml -> obj
-  d2 = xmltodict.parse(xml2)
+  as_dict = xmltodict.parse(xml)
+  model   = Definitions.from_dict(as_dict)
   
-  compare(d2, d1)
-  
-  obj2 = Definitions.from_dict(d2)
-  d2g = obj2.as_dict(with_tag=True)
-  
-  compare(d2g, d1)
+  # ensure that rebuild model from parsed xml is still equal
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
 
-def test_hello():
-  with open(folder / "hello.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
+folder = Path(__file__).resolve().parent / "models" 
+models = [ str(filepath.name) for filepath in folder.glob("*.bpmn") ]
 
-def test_hello_lanes():
-  with open(folder / "hello-lanes.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
-
-def test_hello_lanes_with_message():
-  with open(folder / "hello-lanes-with-message.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
-
-def test_hello_colors():
-  with open(folder / "hello-colors.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
-
-def test_message_events():
-  with open(folder / "message-events.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
-
-def test_intermediate_timer_event():
-  with open(folder / "intermediate-timer-event.bpmn") as fp:
-    compare_with_roundtrip(fp.read())
-
-def test_bad_ref_triggering_recursion():
-  try:
-    with open(folder / "bad-ref-triggering-recursion.bpmn") as fp:
-      compare_with_roundtrip(fp.read())
-    assert False, "expected exception on Acvitivy_BADREF"
-  except Exception:
-    pass
+@pytest.mark.parametrize("filename", models)
+def test_all_reference_models(filename):
+  filepath = folder / filename
+  if not filepath.stem.endswith("-latest") and "goal" not in filepath.stem:
+    if filepath.stem.startswith("bad-"):
+      try:
+        perform_roundtrip_test(filepath)
+        assert False, f"expected exception: {filepath.stem}"
+      except Exception:
+        pass
+    else:
+      perform_roundtrip_test(filepath)

@@ -52,26 +52,26 @@
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_Event_02nwk1r_Activity_182ggg5" bpmnElement="flow_Event_02nwk1r_Activity_182ggg5">
 				<di:waypoint x="320" y="118"></di:waypoint>
-				<di:waypoint x="320" y="142"></di:waypoint>
-				<di:waypoint x="320" y="143"></di:waypoint>
+				<di:waypoint x="320" y="150"></di:waypoint>
+				<di:waypoint x="320" y="150"></di:waypoint>
 				<di:waypoint x="320" y="167"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_Activity_182ggg5_Event_0tb4nc4" bpmnElement="flow_Activity_182ggg5_Event_0tb4nc4">
 				<di:waypoint x="320" y="167"></di:waypoint>
-				<di:waypoint x="320" y="143"></di:waypoint>
-				<di:waypoint x="430" y="142"></di:waypoint>
+				<di:waypoint x="320" y="150"></di:waypoint>
+				<di:waypoint x="430" y="150"></di:waypoint>
 				<di:waypoint x="430" y="118"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_Activity_182ggg5_Event_1dohy26" bpmnElement="flow_Activity_182ggg5_Event_1dohy26">
 				<di:waypoint x="320" y="247"></di:waypoint>
-				<di:waypoint x="320" y="274"></di:waypoint>
-				<di:waypoint x="320" y="275"></di:waypoint>
+				<di:waypoint x="320" y="285"></di:waypoint>
+				<di:waypoint x="320" y="285"></di:waypoint>
 				<di:waypoint x="320" y="302"></di:waypoint>
 			</bpmndi:BPMNEdge>
 			<bpmndi:BPMNEdge id="edge_flow_Activity_182ggg5_Event_0dy4lun" bpmnElement="flow_Activity_182ggg5_Event_0dy4lun">
 				<di:waypoint x="320" y="247"></di:waypoint>
-				<di:waypoint x="320" y="274"></di:waypoint>
-				<di:waypoint x="430" y="275"></di:waypoint>
+				<di:waypoint x="320" y="285"></di:waypoint>
+				<di:waypoint x="430" y="285"></di:waypoint>
 				<di:waypoint x="430" y="302"></di:waypoint>
 			</bpmndi:BPMNEdge>
 		</bpmndi:BPMNPlane>

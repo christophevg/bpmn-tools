@@ -1,6 +1,3 @@
-from pathlib import Path
-import xmltodict
-
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Task, Flow
@@ -8,12 +5,7 @@ from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.colors        import Red, Orange, Green, Blue
 from bpmn_tools.layout        import simple
 
-from bpmn_tools.util import compare
-
-def test_colors():
-  with open(Path(__file__).resolve().parent / "hello-colors.bpmn") as fp:
-    expected = xmltodict.parse(fp.read())
-    
+def test_colors(compare_model_to_file):
   activities = [
     Red(Task('Red"',    id="red")),
     Green(Task('Green', id="green")),
@@ -43,6 +35,4 @@ def test_colors():
   
   simple.layout(definitions)
 
-  result = definitions.as_dict(with_tag=True)
-  
-  compare(result, expected)
+  compare_model_to_file(definitions, "hello-colors.bpmn")

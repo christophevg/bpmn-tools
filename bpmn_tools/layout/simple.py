@@ -26,6 +26,7 @@ class LayoutVisitor(Visitor):
   
   def analyze(self, model):
     model.accept(self)
+    logger.debug(json.dumps(self.processes, indent=2, default=str))
     return self
     
   @visiting(Process)
@@ -137,37 +138,32 @@ class LayoutVisitor(Visitor):
       top += self.process_participant[process].height
 
   def _order(self, analysis):
-    if analysis["start"]:
-      # follow from start to ...
-      step = analysis["start"]
+    """
+    yield all elements in order:
+      - start with any start element and recurse
+      - loop over _all_ elements and recurse
+      - only yielding each element once
+    """
+    handled = []
+    def recurse(step):
+      nonlocal handled
+      if step in handled:
+          return
+      handled.append(step)
       yield step
-      while True:
+      for next_step in analysis["steps"][step.id]:
         try:
-          step = analysis["elements"][analysis["steps"][step.id][0]]
-          yield step
-        except Exception:
-          break
-    else:
-      # just return the elements
-      if analysis["start"]:
-        yield analysis["start"]
-      for element in analysis["elements"].values():
-        yield element
-      if analysis["end"]:
-        yield analysis["end"]
+          yield from recurse(analysis["elements"][next_step])
+        except KeyError:
+          pass
 
-  @property
-  def report(self):
-    return self.processes
-    return {
-      process : list(self._order(analysis)) \
-      for process, analysis in self.processes.items()
-    }
+    # give priority to start-driven processes
+    if analysis["start"]:
+      yield from recurse(analysis["start"])
+
+    # re-iterate all elements to cover loose ends
+    for element in analysis["elements"].values():
+      yield from recurse(element)
 
 def layout(model):
-  visitor = LayoutVisitor()
-  
-  visitor.analyze(model)
-  # print(json.dumps(visitor.report, indent=2, default=str))
-  logger.debug(json.dumps(visitor.report, indent=2, default=str))
-  visitor.layout()
+  LayoutVisitor().analyze(model).layout()
