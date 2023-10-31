@@ -1,5 +1,5 @@
 """
-  Support for Extensions, with support for Camunda Properties
+  Support for Extensions, with support for Zeebe Properties
 
   <bpmn:collaboration id="...">
     <bpmn:extensionElements>
@@ -17,8 +17,6 @@ from . import xml
 class ExtensionElements(xml.Element):
   __tag__ = "bpmn:extensionElements"
 
-class CamundaProperties(xml.Element):
-  __tag__ = "zeebe:properties"
 
 class ZeebeProperties(xml.Element):
   __tag__ = "zeebe:properties"
