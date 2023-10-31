@@ -28,5 +28,5 @@ def test_minimal_extensions_setup(compare_model_to_file):
   )
 
   compare_model_to_file(
-    definitions, "extensions.bpmn", save_to="extensions-lastest.bpmn"
+    definitions, "extensions.bpmn", save_to="extensions-latest.bpmn"
   )

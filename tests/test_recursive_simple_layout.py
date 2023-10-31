@@ -48,5 +48,5 @@ def test_recursive_simple_layout(compare_model_to_file):
   compare_model_to_file(
     definitions,
     "recursive_simple_layout.bpmn",
-    save_to="recursive_simple_layout-lastest.bpmn"
+    save_to="recursive_simple_layout-latest.bpmn"
   )
