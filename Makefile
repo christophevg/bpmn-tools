@@ -11,6 +11,7 @@ tag:
 
 requirements: requirements.txt
 	@pip install --upgrade -r $< > /dev/null
+	@if [ -f requirements.local.txt ]; then pip install --upgrade -r requirements.local.txt > /dev/null; fi
 
 upgrade:
 	@pip list --outdated | tail +3 | cut -d " " -f 1 | xargs -n1 pip install -U
