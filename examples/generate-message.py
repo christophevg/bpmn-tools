@@ -2,7 +2,8 @@ import logging
 
 import os
 
-from bpmn_tools.flow          import Process, Start, IntermediateThrow, Task, Flow
+from bpmn_tools.flow          import Process, Start, Task, Flow
+from bpmn_tools.flow          import IntermediateThrow, EventDefinitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.diagrams      import Diagram, Plane
@@ -23,7 +24,7 @@ logging.getLogger().handlers[0].setFormatter(formatter)
 activities = [
   Start(id="start"),
   Task("Generate Message", id="generate"),
-  IntermediateThrow(id="end", message=True, name="an Event")
+  IntermediateThrow(id="end", definition=EventDefinitions.SIGNAL, name="an Event")
 ]
 
 process = Process(id="process").extend(activities).extend([

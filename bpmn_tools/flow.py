@@ -2,6 +2,8 @@
   Classes representing the different parts of a BPMN file.
 """
 
+from enum import Enum 
+
 from .    import xml
 from .xml import IdentifiedElement
 
@@ -137,33 +139,41 @@ class Element(IdentifiedElement):
 class MessageEventDefinition(IdentifiedElement):
   __tag__ = "bpmn:messageEventDefinition"
 
+class TimerEventDefinition(IdentifiedElement):
+  __tag__ = "bpmn:timerEventDefinition"
+
+class SignalEventDefinition(IdentifiedElement):
+  __tag__ = "bpmn:signalEventDefinition"
+
+class EventDefinitions(Enum):
+  MESSAGE = MessageEventDefinition
+  TIMER   = TimerEventDefinition
+  SIGNAL  = SignalEventDefinition
+
 class Event(Element):
   __labeled__ = False
 
-  def __init__(self, name=None, message=False, **kwargs):
+  def __init__(self, name=None, definition=None, **kwargs):
     super().__init__(**kwargs)
     self.width   = 36
     self.height  = 36
     if name:
       self["name"] = name
-    self.message = message
+    self.definition = definition
 
   def append(self, child):
-    if type(child) == MessageEventDefinition:
-      self.message = True
-    elif type(child) == TimerEventDefinition:
-      self.timer   = True
-    else:
+    try:
+      self.definition = EventDefinitions(child.__class__)
+    except Exception:
       super().append(child) # something else
     return self
 
   @property
   def children(self):
     children = super().children
-    if self.message:
-      children.append(MessageEventDefinition(id=f"MessageEventDefinition_{self['id']}"))
-    if self.timer:
-      children.append(TimerEventDefinition(id=f"TimerEventDefinition_{self['id']}"))
+    if self.definition:
+      cls = self.definition.value
+      children.append(cls(id=f"{cls.__name__}_{self['id']}"))
     return children
 
 class Start(Event):
@@ -174,9 +184,6 @@ class IntermediateThrow(Event):
 
 class IntermediateCatch(Event):
   __tag__ = "bpmn:intermediateCatchEvent"
-
-class TimerEventDefinition(Element):
-  __tag__ = "bpmn:timerEventDefinition"
 
 class End(Event):
   __tag__ = "bpmn:endEvent"
