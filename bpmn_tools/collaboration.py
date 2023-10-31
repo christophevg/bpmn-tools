@@ -4,6 +4,8 @@
 
 from . import xml
 
+from .extensions import Extension, ExtensionElements
+
 class Participant(xml.Element):
   __tag__        = "bpmn:participant"
   __horizontal__ = True
@@ -41,3 +43,23 @@ class Collaboration(xml.Element):
   def __init__(self, id="collaboration"):
     super().__init__()
     self["id"] = id
+    self.extension_groups = {}
+  
+  def append(self, child):
+    if isinstance(child, Extension):
+      group = child.__extension_group__
+      try:
+        self.extension_groups[group].append(child)
+      except KeyError:
+        self.extension_groups[group] = group().append(child)
+    else:
+      super().append(child)
+    return self
+  
+  @property
+  def children(self):
+    children = []
+    if self.extension_groups:
+      children.append(ExtensionElements().extend(self.extension_groups.values()))
+    children.extend(super().children.copy())
+    return children
