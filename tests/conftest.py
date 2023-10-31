@@ -3,7 +3,8 @@ import pytest
 from pathlib import Path
 from difflib import unified_diff
 import json
-import xmltodict
+
+from bpmn_tools.util import model2xml, sanitize_xml
 
 def compare_strings(result, expected):
   # print to std, which shows up in test output when assertion fails
@@ -23,12 +24,13 @@ def compare_to_file(result, filename, save_to=None):
     (Path(__file__).parent / "models" / save_to).write_text(result)
   try:
     expected = (Path(__file__).parent / "models" / filename).read_text()
+    expected = sanitize_xml(expected)
   except FileNotFoundError:
     expected = ""
   compare_strings(result, expected)
 
 def compare_model_to_file(model, filename, save_to=None):
-  xml = xmltodict.unparse(model.as_dict(with_tag=True), pretty=True)
+  xml = model2xml(model)
   compare_to_file(xml, filename, save_to)
   return xml
 

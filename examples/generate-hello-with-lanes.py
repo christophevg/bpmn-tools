@@ -10,7 +10,7 @@ from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.colors        import Green, Red, Blue
 from bpmn_tools.layout        import simple
 
-import xmltodict
+from bpmn_tools.util          import model2xml
 
 logger = logging.getLogger(__name__)
 
@@ -75,4 +75,4 @@ definitions.append(
 
 simple.layout(definitions)
 
-print(xmltodict.unparse(definitions.as_dict(with_tag=True), pretty=True))
+print(model2xml(definitions))

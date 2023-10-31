@@ -8,7 +8,7 @@ from bpmn_tools.notation      import Definitions
 from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.layout        import simple
 
-import xmltodict
+from bpmn_tools.util          import model2xml
 
 logger = logging.getLogger(__name__)
 
@@ -49,4 +49,4 @@ model.append(
 
 simple.layout(model)
 
-print(xmltodict.unparse(model.as_dict(with_tag=True), pretty=True))
+print(model2xml(model))
