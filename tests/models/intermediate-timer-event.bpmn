@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="https://camunda.org/schema/zeebe/1.0">
-	<bpmn:process id="Process_15v7xeh" isExecutable="true">
-		<bpmn:intermediateCatchEvent id="Event_0f6ada4">
-			<bpmn:timerEventDefinition id="TimerEventDefinition_Event_0f6ada4"></bpmn:timerEventDefinition>
-		</bpmn:intermediateCatchEvent>
-	</bpmn:process>
-	<bpmn:collaboration id="Collaboration_0aj36r1">
-		<bpmn:participant id="Participant_0gs21iu" name="participant" processRef="Process_15v7xeh"></bpmn:participant>
-	</bpmn:collaboration>
-	<bpmndi:BPMNDiagram id="BPMNDiagram_1">
-		<bpmndi:BPMNPlane id="plane_Collaboration_0aj36r1" bpmnElement="Collaboration_0aj36r1">
-			<bpmndi:BPMNShape id="shape_Participant_0gs21iu" bpmnElement="Participant_0gs21iu" isHorizontal="true">
-				<dc:Bounds x="160" y="80" height="120" width="300"></dc:Bounds>
-			</bpmndi:BPMNShape>
-			<bpmndi:BPMNShape id="shape_Event_0f6ada4" bpmnElement="Event_0f6ada4">
-				<dc:Bounds x="240" y="122" height="36" width="36"></dc:Bounds>
-			</bpmndi:BPMNShape>
-		</bpmndi:BPMNPlane>
-	</bpmndi:BPMNDiagram>
+  <bpmn:process id="Process_15v7xeh" isExecutable="true">
+    <bpmn:intermediateCatchEvent id="Event_0f6ada4">
+      <bpmn:timerEventDefinition id="TimerEventDefinition_Event_0f6ada4"/>
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:collaboration id="Collaboration_0aj36r1">
+    <bpmn:participant id="Participant_0gs21iu" name="participant" processRef="Process_15v7xeh"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="plane_Collaboration_0aj36r1" bpmnElement="Collaboration_0aj36r1">
+      <bpmndi:BPMNShape id="shape_Participant_0gs21iu" bpmnElement="Participant_0gs21iu" isHorizontal="true">
+        <dc:Bounds x="160" y="80" height="120" width="300"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Event_0f6ada4" bpmnElement="Event_0f6ada4">
+        <dc:Bounds x="240" y="122" height="36" width="36"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="https://camunda.org/schema/zeebe/1.0">
-	<bpmn:process id="process"></bpmn:process>
-	<bpmn:collaboration id="collaboration">
-		<bpmn:extensionElements>
-			<camunda:properties>
-				<camunda:property name="name 1" value="value 1"></camunda:property>
-				<camunda:property name="name 2" value="value 2"></camunda:property>
-			</camunda:properties>
-		</bpmn:extensionElements>
-		<bpmn:participant id="participant" name="lane" processRef="process"></bpmn:participant>
-	</bpmn:collaboration>
-	<bpmndi:BPMNDiagram id="diagram">
-		<bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
-			<bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
-				<dc:Bounds x="0" y="0" height="125" width="600"></dc:Bounds>
-			</bpmndi:BPMNShape>
-		</bpmndi:BPMNPlane>
-	</bpmndi:BPMNDiagram>
+  <bpmn:process id="process"/>
+  <bpmn:collaboration id="collaboration">
+    <bpmn:extensionElements>
+      <camunda:properties>
+        <camunda:property name="name 1" value="value 1"/>
+        <camunda:property name="name 2" value="value 2"/>
+      </camunda:properties>
+    </bpmn:extensionElements>
+    <bpmn:participant id="participant" name="lane" processRef="process"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="0" y="0" height="125" width="600"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
 </bpmn:definitions>
