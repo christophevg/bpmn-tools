@@ -58,3 +58,21 @@ def test_minimal_zeebe_properies_extension(compare_model_to_file):
     definitions, "extensions-zeebe.bpmn", save_to="extensions-zeebe-latest.bpmn"
   )
 
+def test_extensions_access():
+  process = Process(id="process")
+
+  collaboration = Collaboration(id="collaboration").append(
+    Participant("lane", process, id="participant")
+  ).extend([
+    CamundaPropertyExtension("camunda name 1", "value 1"),
+    CamundaPropertyExtension("camunda name 2", "value 2"),
+    ZeebePropertyExtension("zeebe name 1", "value 1"),
+    ZeebePropertyExtension("zeebe name 2", "value 2")
+  ])
+  
+  assert collaboration.extension_properties == {
+    "camunda name 1" : "value 1",
+    "camunda name 2" : "value 2",
+    "zeebe name 1"   : "value 1",
+    "zeebe name 2"   : "value 2"
+  }

@@ -4,7 +4,7 @@
 
 from . import xml
 
-from .extensions import Extension, ExtensionElements
+from .extensions import Extension, ExtensionElements, PropertyExtension
 
 class Participant(xml.Element):
   __tag__        = "bpmn:participant"
@@ -44,6 +44,15 @@ class Collaboration(xml.Element):
     super().__init__()
     self["id"] = id
     self.extension_groups = {}
+  
+  @property
+  def extension_properties(self):
+    properties = {}
+    for group in self.extension_groups.values():
+      for item in group.children:
+        if isinstance(item, PropertyExtension):
+          properties[item.name] = item.value
+    return properties
   
   def append(self, child):
     if isinstance(child, Extension):
