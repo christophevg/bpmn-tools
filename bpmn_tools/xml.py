@@ -104,11 +104,14 @@ class Element():
   def children(self):
     return self._children
 
-  def children_oftype(self, cls):
-    return [
-      child for child in self.children \
-      if isinstance(child, cls) or isinstance(child.wrapped, cls)
-    ]
+  def children_oftype(self, cls, recurse=False):
+    children = []
+    for child in self.children:
+      if isinstance(child, cls) or isinstance(child.wrapped, cls):
+        children.append(child)
+      if recurse:
+        children.extend(child.children_oftype(cls, recurse=True))
+    return children
 
   def as_dict(self, with_tag=False):
     # collect attributes
