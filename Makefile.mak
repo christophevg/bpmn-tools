@@ -1,4 +1,6 @@
-examples: examples/hello.png examples/hello-with-lanes.png
+EXAMPLES=examples/*.png
+
+examples: $(EXAMPLES)
 	PYTHONPATH=. python examples/visitor.py
 
 examples/%.png: examples/%.bpmn
