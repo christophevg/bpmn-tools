@@ -10,4 +10,3 @@ docs/_build
 *.backup
 .python-version
 .DS_Store
-*-latest.bpmn
