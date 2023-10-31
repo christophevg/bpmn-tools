@@ -20,13 +20,13 @@ class ExtensionElements(xml.Element):
 class CamundaProperties(xml.Element):
   __tag__ = "camunda:properties"
 
+class ZeebeProperties(xml.Element):
+  __tag__ = "zeebe:properties"
+
 class Extension(xml.Element):
   pass
 
-class CamundaPropertyExtension(Extension):
-  __tag__             = "camunda:property"
-  __extension_group__ = CamundaProperties
-
+class PropertyExtension(Extension):
   def __init__(self, name, value):
     super().__init__()
     self.name  = name
@@ -38,3 +38,11 @@ class CamundaPropertyExtension(Extension):
       "name" : self.name,
       "value": self.value
     }
+
+class CamundaPropertyExtension(PropertyExtension):
+  __tag__             = "camunda:property"
+  __extension_group__ = CamundaProperties
+
+class ZeebePropertyExtension(PropertyExtension):
+  __tag__             = "zeebe:property"
+  __extension_group__ = ZeebeProperties

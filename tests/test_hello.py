@@ -104,7 +104,8 @@ def test_create_definitions_with_process_and_collaboration(compare):
                       xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
                       xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
                       xmlns:modeler="http://camunda.org/schema/modeler/1.0"
-                      id="definitions">
+                      id="definitions"
+                      xmlns:zeebe="https://camunda.org/schema/zeebe/1.0">
       <bpmn:collaboration id="collaboration">
         <bpmn:participant id="participant" name="lane" processRef="process" />
       </bpmn:collaboration>
@@ -152,6 +153,7 @@ def test_create_definitions_with_process_and_collaboration(compare):
       "@xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
       "@xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",
       "@xmlns:di": "http://www.omg.org/spec/DD/20100524/DI",
+      "@xmlns:zeebe": "https://camunda.org/schema/zeebe/1.0",
       "@id": "definitions",
       "bpmn:process": {
         "@id": "process",
