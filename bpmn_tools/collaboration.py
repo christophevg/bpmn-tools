@@ -43,32 +43,37 @@ class Collaboration(xml.Element):
   def __init__(self, id="collaboration"):
     super().__init__()
     self["id"] = id
-    self.extension_groups = {}
   
   @property
   def extension_properties(self):
-    properties = {}
-    for group in self.extension_groups.values():
-      for item in group.children:
-        if isinstance(item, PropertyExtension):
-          properties[item.name] = item.value
-    return properties
+    return {
+      extension.name : extension.value
+      for extension in self.children_oftype(cls=PropertyExtension, recurse=True)
+    }
   
   def append(self, child):
+    # accept short-hand appending of Extensions, wrapping them in
+    # ExtensionElements > [...]Properties
     if isinstance(child, Extension):
-      group = child.__extension_group__
       try:
-        self.extension_groups[group].append(child)
-      except KeyError:
-        self.extension_groups[group] = group().append(child)
+        extension_elements = self.children_oftype(ExtensionElements)[0]
+      except Exception:
+        extension_elements = ExtensionElements()
+        super().append(extension_elements)
+      try:
+        group = extension_elements.children_oftype(child.__extension_group__)[0]
+      except Exception:
+        group = child.__extension_group__()
+        extension_elements.append(group)
+    
+      group.append(child)
     else:
       super().append(child)
     return self
   
   @property
   def children(self):
-    children = []
-    if self.extension_groups:
-      children.append(ExtensionElements().extend(self.extension_groups.values()))
-    children.extend(super().children.copy())
+    # put ExtensionElements first in line ;-)
+    children = super().children.copy()
+    children.sort(key=lambda c: 0 if c.__class__ is ExtensionElements else 1)
     return children
