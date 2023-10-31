@@ -10,6 +10,10 @@
     </bpmn:extensionElements>
   </bpmn:collaboration>
 
+  ExtensionElements
+    +-- ExtensionGroup                --> ZeebeProperties
+          +-- Extension
+                +-- PropertyExtension --> ZeebePropertyExtension
 """
 
 from . import xml
@@ -17,8 +21,10 @@ from . import xml
 class ExtensionElements(xml.Element):
   __tag__ = "bpmn:extensionElements"
 
+class ExtensionGroup(xml.Element):
+  pass
 
-class ZeebeProperties(xml.Element):
+class ZeebeProperties(ExtensionGroup):
   __tag__ = "zeebe:properties"
 
 class Extension(xml.Element):
