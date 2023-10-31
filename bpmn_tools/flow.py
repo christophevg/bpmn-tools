@@ -2,10 +2,14 @@
   Classes representing the different parts of a BPMN file.
 """
 
+import logging
+
 from enum import Enum 
 
 from .    import xml
 from .xml import IdentifiedElement
+
+logger = logging.getLogger(__name__)
 
 class Flow(IdentifiedElement):
   __tag__ = "bpmn:sequenceFlow"
@@ -33,7 +37,10 @@ class Flow(IdentifiedElement):
         if obj:
           self._resolving_source = False
           return obj
-    raise Exception(f"sourceRef {self['sourceRef']} not found.")
+      logger.warning(f"sourceRef {self['sourceRef']} not found.")
+    else:
+      logger.warning("no source available.")
+    return None
 
   @property
   def target(self):
@@ -46,21 +53,37 @@ class Flow(IdentifiedElement):
         if obj:
           self._resolving_target = False
           return obj
-    raise Exception(f"no target found on {self}")
+        logger.warning(f"targetRef {self['targetRef']} not found.")
+    else:
+      logger.warning("no target available.")
+    return None
+
+  def _get_flow_ids(self, default=None):
+    try:
+      source_id = self.source["id"]
+    except Exception:
+      source_id = default
+    try:
+      target_id = self.target["id"]
+    except Exception:
+      target_id = default
+    return (source_id, target_id)
 
   def __getitem__(self, name):
     if name == "id":
-      return f"flow_{self.source['id']}_{self.target['id']}"
+      source_id, target_id = self._get_flow_ids(default="unknown")
+      return f"flow_{source_id}_{target_id}"
     return super().__getitem__(name)
 
   @property
   def attributes(self):
     attributes = super().attributes.copy()
-    attributes.update({
-      "id"       : self["id"],
-      "sourceRef": self.source["id"],
-      "targetRef": self.target["id"]      
-    })
+    attributes["id"] = self["id"]
+    source_id, target_id = self._get_flow_ids()
+    if source_id:
+      attributes["sourceRef"] = source_id
+    if target_id:
+      attributes["targetRef"] = target_id
     return attributes
 
 class MessageFlow(Flow):

@@ -124,7 +124,7 @@ class Edge(xml.Element):
   @property
   def children(self):
     children = super().children.copy()
-    if self.flow:
+    if self.flow and self.flow.source and self.flow.target:
       below = self.flow.target.y > (self.flow.source.y + self.flow.source.height)
       above = (self.flow.target.y + self.flow.target.height) < self.flow.source.y
       if not (above or below): 
