@@ -31,17 +31,12 @@ class Extension(xml.Element):
   pass
 
 class PropertyExtension(Extension):
-  def __init__(self, name, value):
+  def __init__(self, name=None, value=None):
     super().__init__()
-    self.name  = name
-    self.value = value
-
-  @property
-  def attributes(self):
-    return {
-      "name" : self.name,
-      "value": self.value
-    }
+    if name:
+      self["name"] = name
+    if value:
+      self["value"] = value
 
 class ZeebePropertyExtension(PropertyExtension):
   __tag__             = "zeebe:property"

@@ -30,7 +30,8 @@ class Definitions(IdentifiedElement):
     classes = get_classes("bpmn_tools.notation") + \
               get_classes("bpmn_tools.collaboration") + \
               get_classes("bpmn_tools.flow") + \
-              get_classes("bpmn_tools.diagrams")
+              get_classes("bpmn_tools.diagrams") + \
+              get_classes("bpmn_tools.extensions")
     definitions = Element.from_dict(d, classes=classes, raise_unmapped=raise_unmapped)
     if isinstance(definitions, Definitions):
       for diagram in definitions.diagrams:

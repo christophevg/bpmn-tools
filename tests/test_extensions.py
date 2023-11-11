@@ -1,8 +1,12 @@
+import xmltodict
+
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process
 from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.extensions    import ZeebePropertyExtension
+
+from tests.conftest import load_model_src
 
 def test_minimal_zeebe_properies_extension(compare_model_to_file):
 
@@ -44,4 +48,14 @@ def test_extensions_access():
   assert collaboration.extension_properties == {
     "zeebe name 1"   : "value 1",
     "zeebe name 2"   : "value 2"
+  }
+
+def test_extensions_loading_from_xml():
+  definitions = Definitions.from_dict(
+    xmltodict.parse(load_model_src("extensions-zeebe.bpmn"))
+  ) 
+
+  assert definitions.collaborations[0].extension_properties == {
+    "name 1" : "value 1",
+    "name 2" : "value 2"
   }
