@@ -15,8 +15,8 @@ class Flow(IdentifiedElement):
   __tag__ = "bpmn:sequenceFlow"
   __labeled__ = False
 
-  def __init__(self, source=None, target=None):
-    super().__init__()
+  def __init__(self, source=None, target=None, **kwargs):
+    super().__init__(**kwargs)
     self._source = source
     self._target = target
     if self._source:
@@ -70,10 +70,11 @@ class Flow(IdentifiedElement):
     return (source_id, target_id)
 
   def __getitem__(self, name):
-    if name == "id":
+    value = super().__getitem__(name)
+    if value is None and name == "id":
       source_id, target_id = self._get_flow_ids(default="unknown")
       return f"flow_{source_id}_{target_id}"
-    return super().__getitem__(name)
+    return value
 
   @property
   def attributes(self):

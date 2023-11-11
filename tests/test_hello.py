@@ -36,8 +36,8 @@ def test_create_single_step_process(compare):
   ]
 
   process = Process(id="process").extend(activities).extend([
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[1], target=activities[2])
+    Flow(id="flow_start_hello", source=activities[0], target=activities[1]),
+    Flow(id="flow_hello_end",   source=activities[1], target=activities[2])
   ])
 
   compare(process.as_dict(with_tag=True), {
@@ -133,8 +133,8 @@ def test_create_definitions_with_process_and_collaboration(compare):
   ]
 
   process = Process(id="process").extend(activities).extend([
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[1], target=activities[2])
+    Flow(id="flow_start_hello", source=activities[0], target=activities[1]),
+    Flow(id="flow_hello_end",   source=activities[1], target=activities[2])
   ])
 
   collaboration = Collaboration(id="collaboration").append(
@@ -256,7 +256,7 @@ def test_create_edge(compare):
     </bpmndi:BPMNEdge>
   """
 
-  flow = Flow(source=Start(id="start"), target=Task(id="hello"))
+  flow = Flow(id="flow_start_hello", source=Start(id="start"), target=Task(id="hello"))
   edge = Edge(flow)
 
   compare(edge.as_dict(with_tag=True), {
@@ -339,8 +339,8 @@ def test_hello(compare_model_to_file):
   ]
 
   process = Process(id="process").extend(activities).extend([
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[1], target=activities[2])
+    Flow(id="flow_start_hello", source=activities[0], target=activities[1]),
+    Flow(id="flow_hello_end",   source=activities[1], target=activities[2])
   ])
 
   collaboration = Collaboration(id="collaboration").append(

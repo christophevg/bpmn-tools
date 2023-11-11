@@ -15,9 +15,9 @@ def test_recursive_simple_layout(compare_model_to_file):
   ]
 
   process1 = Process(id="process1").extend(activities).extend([
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[0], target=activities[2]),
-    Flow(source=activities[0], target=activities[3])
+    Flow(id="flow_step1_step2", source=activities[0], target=activities[1]),
+    Flow(id="flow_step1_step3", source=activities[0], target=activities[2]),
+    Flow(id="flow_step1_step4", source=activities[0], target=activities[3])
   ])
 
   remote_activity = Task("step 5", id="step5")
@@ -27,7 +27,7 @@ def test_recursive_simple_layout(compare_model_to_file):
     Participant("process 1", process1, id="participant_process1"),
     Participant("process 2", process2, id="participant_process2")
   ]).append(
-    MessageFlow(source=activities[0], target=remote_activity)
+    MessageFlow(id="flow_step1_step5", source=activities[0], target=remote_activity)
   )
 
   definitions = Definitions(id="definitions").extend([

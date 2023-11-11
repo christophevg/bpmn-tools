@@ -13,8 +13,8 @@ def test_colors(compare_model_to_file):
   ]
 
   process = Process(id="process").extend(activities).extend([
-    Flow(source=activities[0], target=activities[1]),
-    Flow(source=activities[1], target=activities[2])
+    Flow(id="flow_red_green",  source=activities[0], target=activities[1]),
+    Flow(id="flow_green_blue", source=activities[1], target=activities[2])
   ])
 
   collaboration = Collaboration(id="collaboration").append(
