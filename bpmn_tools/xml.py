@@ -158,9 +158,14 @@ class Element():
     return Element
   
   @classmethod
-  def from_dict(cls, d, classes=None, depth=0):
+  def from_dict(cls, d, classes=None, depth=0, raise_unmapped=False):
     element_type, element_definition = list(d.items())[0]
     element_class = cls.mapped_class(element_type, classes)
+    if element_class == Element and classes:
+      if raise_unmapped:
+        raise ValueError(f"unmapped element: {element_type}")
+      else:
+        logger.warning(f"unmapped element: {element_type}")
     element = element_class()
     element.__tag__ = element_type
     
@@ -181,7 +186,8 @@ class Element():
           elif isinstance(definition, str):
             definition = { "#text" : definition }
           child = Element.from_dict(
-            { key : definition }, classes=classes, depth=depth+1
+            { key : definition }, classes=classes, depth=depth+1,
+            raise_unmapped=raise_unmapped
            )
           assert child != element
           element.append(child)

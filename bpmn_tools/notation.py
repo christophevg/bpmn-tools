@@ -26,12 +26,12 @@ class Definitions(IdentifiedElement):
     self.diagrams       = []
 
   @classmethod
-  def from_dict(cls, d):
+  def from_dict(cls, d, raise_unmapped=False):
     classes = get_classes("bpmn_tools.notation") + \
               get_classes("bpmn_tools.collaboration") + \
               get_classes("bpmn_tools.flow") + \
               get_classes("bpmn_tools.diagrams")
-    definitions = Element.from_dict(d, classes=classes)
+    definitions = Element.from_dict(d, classes=classes, raise_unmapped=raise_unmapped)
     if isinstance(definitions, Definitions):
       for diagram in definitions.diagrams:
         for shape in diagram.plane._shapes:

@@ -18,7 +18,7 @@ def perform_roundtrip_test(filepath):
 
   # xml -> obj
   as_dict = xmltodict.parse(xml)
-  model   = Definitions.from_dict(as_dict)
+  model   = Definitions.from_dict(as_dict, raise_unmapped=True)
   
   # ensure that rebuild model from parsed xml is still equal
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
