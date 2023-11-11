@@ -242,6 +242,20 @@ class BusinessRuleTask(Task):
 class ScriptTask(Task):
   __tag__ = "bpmn:scriptTask"
 
+# Gateways
+
+class Gateway(Element):
+  __marker__ = True
+
+class ExclusiveGateway(Gateway):
+  __tag__ = "bpmn:exclusiveGateway"
+
+class InclusiveGateway(Gateway):
+  __tag__ = "bpmn:inclusiveGateway"
+
+class ParallelGateway(Gateway):
+  __tag__ = "bpmn:parallelGateway"
+
 
 class FlowNodeRef(xml.Element):
   __tag__ = "bpmn:flowNodeRef"

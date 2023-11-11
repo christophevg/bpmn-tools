@@ -5,7 +5,7 @@
 from . import xml
 
 from .collaboration import Participant
-from .flow          import Element, Flow, MessageFlow
+from .flow          import Element, Flow, MessageFlow, Gateway
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
@@ -63,6 +63,8 @@ class Shape(xml.Element):
       })
       if self.element.__horizontal__:
         attributes["isHorizontal"] = "true"
+      if self.element.__marker__:
+        attributes["isMarkerVisible"] = "true"
       if self.element.__color_scheme__:
         attributes.update(self.element.__color_scheme__)
     return attributes
@@ -124,49 +126,167 @@ class Edge(xml.Element):
   @property
   def children(self):
     children = super().children.copy()
-    if self.flow and self.flow.source and self.flow.target:
-      below = self.flow.target.y > (self.flow.source.y + self.flow.source.height)
-      above = (self.flow.target.y + self.flow.target.height) < self.flow.source.y
-      if not (above or below): 
-        children = [
-          WayPoint(
-            x=self.flow.source.x + self.flow.source.width,
-            y=self.flow.source.y + int(self.flow.source.height/2)
-          ),
-          WayPoint(
-            x=self.flow.target.x,
-            y=self.flow.target.y + int(self.flow.target.height/2)
-          )
-        ]
+    if not self.flow or not self.flow.source or not self.flow.target:
+      return children
+    if isinstance(self.flow.source, Gateway) or isinstance(self.flow.target, Gateway):
+      return self._route_gateway()
+    return self._route_default()
+
+  def _route_default(self):
+    """
+      Default routing routes directly from the right/middel exit of the source
+      to the left/middle of the target.
+    
+      Unless the target lies completely above or below the source, then routing
+      starts from the bottom/top to the top/bottom.
+
+                                    T (above)
+      0,0 --->                      ^
+       |    X       S --> T     +---+
+       | Y                      |
+       v                        S
+    """
+    # determine position of target vs source
+    below = self.flow.target.y > (self.flow.source.y + self.flow.source.height)
+    above = (self.flow.target.y + self.flow.target.height) < self.flow.source.y
+
+    if not (above or below): 
+      children = [
+        WayPoint(
+          x=self.flow.source.x + self.flow.source.width,
+          y=self.flow.source.y + int(self.flow.source.height/2)
+        ),
+        WayPoint(
+          x=self.flow.target.x,
+          y=self.flow.target.y + int(self.flow.target.height/2)
+        )
+      ]
+    else:
+      if below:
+        top     = self.flow.source
+        bottom  = self.flow.target
+        reverse = False
       else:
-        if self.flow.source.y < self.flow.target.y:
-          top     = self.flow.source
-          bottom  = self.flow.target
-          reverse = False
+        top     = self.flow.target
+        bottom  = self.flow.source
+        reverse = True
+      children = [
+        WayPoint(                               # bottom middle exit 
+          x=top.x + int(top.width/2),
+          y=top.y + top.height
+        ),
+        WayPoint(
+          x=top.x + int(top.width/2),           # straight down to 17px
+          y=bottom.y - 17
+        ),
+        WayPoint(                               # left/right to bottom
+          x=bottom.x + int(bottom.width/2),
+          y=bottom.y - 17
+        ),
+        WayPoint(
+          x=bottom.x + int(bottom.width/2),     # top middle entry
+          y=bottom.y
+        )
+      ]
+      if reverse:
+        children.reverse()
+    return children
+      
+  def _route_gateway(self):
+    """
+      Gateway routing routes directly from the right/middel exit of the source
+      to the left/middle of the target.
+    
+      Unless the target's middle lies above or below the gateway, then routing
+      starts from the bottom/top to the left/middle.
+
+                                    
+      0,0 --->                      
+       |    X       G --> T     +---> T
+       | Y                      |
+       v                        G
+    """
+    # determine position of target vs source
+    below = self.flow.target.y > (self.flow.source.y + int(self.flow.source.height/2))
+    above = (self.flow.target.y + int(self.flow.target.height/2)) < self.flow.source.y
+    if not (above or below): 
+      children = [
+        WayPoint(
+          x=self.flow.source.x + self.flow.source.width,
+          y=self.flow.source.y + int(self.flow.source.height/2)
+        ),
+        WayPoint(
+          x=self.flow.target.x,
+          y=self.flow.target.y + int(self.flow.target.height/2)
+        )
+      ]
+    else:
+      if below:
+        top     = self.flow.source
+        bottom  = self.flow.target
+        if isinstance(top, Gateway): # starting from GW?
+          children = [
+            WayPoint(                               # bottom middle exit 
+              x=top.x + int(top.width/2),
+              y=top.y + top.height
+            ),
+            WayPoint(
+              x=top.x + int(top.width/2),           # straight down middle
+              y=bottom.y + int(bottom.height/2)
+            ),
+            WayPoint(                               # left/right to left
+              x=bottom.x,
+              y=bottom.y + int(bottom.height/2)
+            )
+          ]
         else:
-          top     = self.flow.target
-          bottom  = self.flow.source
-          reverse = True
-        children = [
-          WayPoint(                               # bottom middle exit 
-            x=top.x + int(top.width/2),
-            y=top.y + top.height
-          ),
-          WayPoint(
-            x=top.x + int(top.width/2),           # straight down to 17px
-            y=bottom.y - 17
-          ),
-          WayPoint(                               # left/right to bottom
-            x=bottom.x + int(bottom.width/2),
-            y=bottom.y - 17
-          ),
-          WayPoint(
-            x=bottom.x + int(bottom.width/2),     # top middle entry
-            y=bottom.y
-          )
-        ]
-        if reverse:
-          children.reverse()
+          children = [
+            WayPoint(                               # middle right exit 
+              x=top.x + top.width,
+              y=top.y + int(top.height/2)
+            ),
+            WayPoint(
+              x=bottom.x + int(bottom.width/2),     # right to middle
+              y=top.y + int(top.height/2)
+            ),
+            WayPoint(                               # down to top
+              x=bottom.x + int(bottom.width/2),
+              y=bottom.y
+            )
+          ]
+      else: # target is above
+        top     = self.flow.target
+        bottom  = self.flow.source
+        if isinstance(bottom, Gateway): # starting from GW?
+          children = [
+            WayPoint(                               # top middle exit 
+              x=bottom.x + int(bottom.width/2),
+              y=bottom.y
+            ),
+            WayPoint(
+              x=bottom.x + int(bottom.width/2),     # straight up to middle
+              y=top.y + int(top.height/2)
+            ),
+            WayPoint(                               # left/right to left
+              x=top.x,
+              y=top.y + int(top.height/2)
+            )
+          ]
+        else:
+          children = [
+            WayPoint(                               # middle right exit 
+              x=bottom.x + bottom.width,
+              y=bottom.y + int(bottom.height/2)
+            ),
+            WayPoint(                               # right to middle
+              x=top.x + int(top.width/2),
+              y=bottom.y + int(bottom.height/2)
+            ),
+            WayPoint(                               # up to bottom
+              x=top.x + int(top.width/2),
+              y=top.y + top.height
+            )
+          ]
     return children
 
 class Plane(xml.Element):
