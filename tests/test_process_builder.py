@@ -33,3 +33,45 @@ def test_basic_process_building(compare_model_to_file):
   filepath = folder / "hello-process-builder.bpmn"
   
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
+
+
+def test_complex_process_building(compare_model_to_file):
+
+  process = Process(name="complex", starts=True, ends=True).extend([
+    Task(name="Task 1"),
+    Branch(kind=BranchKind.AND).extend([
+      Process().extend([
+        Branch().extend([
+          Task(name="Task 1b"),
+          Task(name="Task 1c"),
+          Task(name="Task 1d")
+        ]),
+        Task(name="Task 2a")
+      ]),
+      Task(name="Task 2b"),
+      Process().extend([
+        Branch().extend([
+          Task(name="Task 2c-1"),
+          Task(name="Task 2c-2"),
+          Task(name="Task 2c-3")
+        ]),
+        Branch().extend([
+          Task(name="Task 2d-1"),
+          Task(name="Task 2d-2"),
+          Task(name="Task 2d-3")
+        ])
+      ])        
+    ]).add(
+      Branch(default=True).add(
+        Task(name="Task 3")
+      )
+    ),
+    Task(name="Task 4")
+  ])
+
+  model = process.render()
+  
+  folder = Path(__file__).resolve().parent / "models"
+  filepath = folder / "complex-process-builder.bpmn"
+  
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")

@@ -27,12 +27,12 @@ TODO
 
 """
 
-PADDING               = 20
-FLOW_SPACE            = 20
+PADDING               =  10
+FLOW_SPACE            =  20
 MODEL_OFFSET_X        = 150
 MODEL_OFFSET_Y        =  80
-DEFAULT_BRANCH_HEIGHT = 30
-
+DEFAULT_BRANCH_HEIGHT =  75
+STANDARD_TASK_HEIGHT  =  80
 
 def NoColor(bpmn):
   return bpmn
@@ -64,6 +64,8 @@ class Step():
     return self.color(cls(**kwargs))
 
   def connect(self, source, target, label=None):
+    if source == target:
+      raise ValueError("connect: {source} == {target}")
     return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target, name=label)
 
 tasks = 0
@@ -105,8 +107,10 @@ class Task(Step):
 class Process(Step):
   name   : str  = ""
   starts : bool = False
-  ends  : bool = False
+  ends   : bool = False
   steps  : List[Step] = field(default_factory=list)
+  _root  = None
+  _tail  = None
 
   def __post_init__(self):
     if self.starts:
@@ -164,7 +168,7 @@ class Process(Step):
       x += step.width + FLOW_SPACE
       if prev:
         flows.append(self.connect(source=prev.tail, target=step.root))
-      else:
+      elif self.starts:
         flows.append(self.connect(source=self.root, target=step.root))
       prev = step
 
@@ -253,8 +257,7 @@ class Branch(Step):
     shapes = []
     flows  = []
     self.root.x = x
-    first_height = DEFAULT_BRANCH_HEIGHT if self.default else self.branches[0][0].height
-    self.root.y = y + int(first_height/2) - (self.root.height/2)
+    self.root.y = y + int((STANDARD_TASK_HEIGHT + PADDING * 2)/2) - (self.root.height/2)
     shapes.append(self.root)
     shapes.append(self.tail)
     x += FLOW_SPACE
