@@ -3,6 +3,7 @@
 from pathlib import Path
 
 from bpmn_tools.builder.process import Process, Task, Branch, BranchKind
+from bpmn_tools.colors import Green, Blue, Red, Orange
 
 def test_basic_process_building(compare_model_to_file):
   """
@@ -14,19 +15,17 @@ def test_basic_process_building(compare_model_to_file):
                                 | -> [ Task 3 ] - |
   
   """
-  process = Process(name="main", starts=True, ends=True).add(
-    Task(name="Task 1")
-  ).add(
-    Branch(kind=BranchKind.AND).add(
-      Task(name="Task 2")
+  process = Process(name="main", starts=True, ends=True, color=Red).extend([
+    Task(name="Task 1", color=Green),
+    Branch(kind=BranchKind.AND, label="AND").add(
+      Task(name="Task 2"), "with task 2"
     ).add(
-      Branch(default=True).add(
-        Task(name="Task 3")
-      )
-    )
-  ).add(
+      Branch(default=True, label="OR", color=Blue).add(
+        Task(name="Task 3", color=Orange), "only task 3"
+      ), "with task 3"
+    ),
     Task(name="Task 4")
-  )
+  ])
 
   model = process.render()
   

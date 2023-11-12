@@ -13,12 +13,13 @@ logger = logging.getLogger(__name__)
 
 class Flow(IdentifiedElement):
   __tag__ = "bpmn:sequenceFlow"
-  __labeled__ = False
 
-  def __init__(self, source=None, target=None, **kwargs):
+  def __init__(self, source=None, target=None, name=None, **kwargs):
     super().__init__(**kwargs)
     self._source = source
     self._target = target
+    self.name = name
+
     if self._source:
       self._source.outgoing.append(Outgoing(self))
     if self._target:
@@ -85,6 +86,8 @@ class Flow(IdentifiedElement):
       attributes["sourceRef"] = source_id
     if target_id:
       attributes["targetRef"] = target_id
+    if self.name:
+      attributes["name"] = self.name
     return attributes
 
 class MessageFlow(Flow):
@@ -175,7 +178,7 @@ class EventDefinitions(Enum):
   SIGNAL  = SignalEventDefinition
 
 class Event(Element):
-  __labeled__ = False
+  __labeled__ = True
 
   def __init__(self, name=None, definition=None, **kwargs):
     super().__init__(**kwargs)
@@ -245,12 +248,14 @@ class ScriptTask(Task):
 # Gateways
 
 class Gateway(Element):
-  __marker__ = True
+  __marker__  = True
+  __labeled__ = True
   
-  def __init__(self, **kwargs):
+  def __init__(self, name=None, **kwargs):
     super().__init__(**kwargs)
     self.width  = 50
     self.height = 50
+    self["name"] = name
 
 class ExclusiveGateway(Gateway):
   __tag__ = "bpmn:exclusiveGateway"

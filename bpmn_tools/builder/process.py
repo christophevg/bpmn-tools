@@ -28,6 +28,7 @@ TODO
 """
 
 PADDING               = 20
+FLOW_SPACE            = 20
 MODEL_OFFSET_X        = 150
 MODEL_OFFSET_Y        =  80
 DEFAULT_BRANCH_HEIGHT = 30
@@ -46,7 +47,7 @@ class Color(Enum):
 @dataclass
 class Step():
   label   : str   = None
-  # color   : Color = NoColor
+  color   : Color = NoColor
   
   @property
   def height(self):
@@ -59,6 +60,12 @@ class Step():
   def render(self, x=0, y=0):
     raise NotImplementedError
 
+  def shape(self, cls, **kwargs):
+    return self.color(cls(**kwargs))
+
+  def connect(self, source, target, label=None):
+    return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target, name=label)
+
 tasks = 0
 
 @dataclass
@@ -70,7 +77,7 @@ class Task(Step):
   def __post_init__(self):
     global tasks
     self.args["name"] = self.name
-    self.element = self.cls(id=f"task_{tasks}", **self.args)
+    self.element = self.shape(self.cls, id=f"task_{tasks}", **self.args)
     tasks += 1
   
   @property
@@ -94,9 +101,6 @@ class Task(Step):
   def tail(self):
     return self.element
 
-def connect(source, target):
-  return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target)
-
 @dataclass
 class Process(Step):
   name   : str  = ""
@@ -106,12 +110,17 @@ class Process(Step):
 
   def __post_init__(self):
     if self.starts:
-      self._root = flow.Start(id="start")
+      self._root = self.shape(flow.Start, id="start")
     if self.ends:
-      self._tail = flow.End(id="end")
+      self._tail = self.shape(flow.End, id="end")
 
   def add(self, step):
     self.steps.append(step)
+    return self
+
+  def extend(self, steps):
+    for step in steps:
+      self.add(step)
     return self
 
   @property
@@ -121,10 +130,11 @@ class Process(Step):
   @property
   def width(self):
     total_width = sum([ step.width for step in self.steps ])
+    total_width += FLOW_SPACE * (len(self.steps) - 1)
     if self.starts:
-      total_width += self.root.width
+      total_width += self.root.width + FLOW_SPACE
     if self.ends:
-      total_width += self.tail.width
+      total_width += self.tail.width + FLOW_SPACE
     return total_width 
 
   def render(self, x=None, y=None):
@@ -144,17 +154,18 @@ class Process(Step):
       x += self.root.width
       self.root.y = y + int(self.steps[0].height/2) - int(self.root.height/2)
       shapes.append(self.root)
+      x += FLOW_SPACE
 
     # add steps
     for step in self.steps:
       more_shapes, more_flows = step.render(x=x, y=y)
       shapes.extend(more_shapes)
       flows.extend(more_flows)
-      x += step.width
+      x += step.width + FLOW_SPACE
       if prev:
-        flows.append(connect(source=prev.tail, target=step.root))
+        flows.append(self.connect(source=prev.tail, target=step.root))
       else:
-        flows.append(connect(source=self.root, target=step.root))        
+        flows.append(self.connect(source=self.root, target=step.root))
       prev = step
 
     # add optional end event
@@ -162,7 +173,7 @@ class Process(Step):
       self.tail.x = x
       self.tail.y = self.root.y
       shapes.append(self.tail)
-      flows.append(connect(source=shapes[-2], target=self.tail))
+      flows.append(self.connect(source=shapes[-2], target=self.tail))
 
     # optinally wrap it all
     if wrap:
@@ -211,44 +222,53 @@ class Branch(Step):
 
   def __post_init__(self):
     global gws
-    self.root = self.kind.value(id=f"gateway_start_{gws}")
-    self.tail = self.kind.value(id=f"gateway_end_{gws}")
+    self.root = self.shape(self.kind.value, id=f"gateway_start_{gws}", name=self.label)
+    self.tail = self.shape(self.kind.value, id=f"gateway_end_{gws}")
     gws += 1
 
-  def add(self, branch):
-    self.branches.append(branch)
+  def add(self, branch, condition=None):
+    self.branches.append((branch, condition))
+    return self
+
+  def extend(self, steps):
+    for step in steps:
+      self.add(step)
     return self
 
   @property
   def height(self):
-    total_height = sum([ branch.height for branch in self.branches ])
+    total_height = sum([ branch.height for branch, _ in self.branches ])
     if self.default:
       total_height += DEFAULT_BRANCH_HEIGHT
     return total_height
 
   @property
   def width(self):
-    return max([ branch.width for branch in self.branches ]) + self.root.width + self.tail.width
+    total_width = max([ branch.width for branch, _ in self.branches ])
+    total_width += self.root.width + self.tail.width
+    total_width += FLOW_SPACE * 2
+    return total_width
 
   def render(self, x=0, y=0):
     shapes = []
     flows  = []
     self.root.x = x
-    first_height = DEFAULT_BRANCH_HEIGHT if self.default else self.branches[0].height
+    first_height = DEFAULT_BRANCH_HEIGHT if self.default else self.branches[0][0].height
     self.root.y = y + int(first_height/2) - (self.root.height/2)
     shapes.append(self.root)
     shapes.append(self.tail)
+    x += FLOW_SPACE
     if self.default:
-      flows.append(connect(source=self.root, target=self.tail))
+      flows.append(self.connect(source=self.root, target=self.tail))
       y += DEFAULT_BRANCH_HEIGHT
-    self.tail.x = x + self.width - self.tail.width
+    self.tail.x = x + self.width - self.tail.width - FLOW_SPACE
     self.tail.y = self.root.y
     x += self.root.width
-    for branch in self.branches:
+    for branch, condition in self.branches:
       more_shapes, more_flows = branch.render(x=x, y=y)
       shapes.extend(more_shapes)
       flows.extend(more_flows)
       y += branch.height
-      flows.append(connect(source=self.root,   target=branch.root))
-      flows.append(connect(source=branch.tail, target=self.tail))
+      flows.append(self.connect(source=self.root,   target=branch.root, label=condition))
+      flows.append(self.connect(source=branch.tail, target=self.tail))
     return shapes, flows
