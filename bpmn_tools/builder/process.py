@@ -27,7 +27,9 @@ TODO
 
 """
 
-PADDING = 20
+PADDING        = 20
+MODEL_OFFSET_X = 150
+MODEL_OFFSET_Y =  80
 
 def NoColor(bpmn):
   return bpmn
@@ -127,8 +129,8 @@ class Process(Step):
     # if we're called without positioning, we're adding diagram boilerplate
     wrap = x is None or y is None
     if wrap:
-      x = 50 # header of participant
-      y = 0
+      x = 50 + MODEL_OFFSET_X # header of participant
+      y = 0  + MODEL_OFFSET_Y
     
     shapes = []
     flows  = []
@@ -165,8 +167,8 @@ class Process(Step):
       process = flow.Process(id="process").extend(shapes).extend(flows)
       participant = Participant(self.name, process, id="participant")
       # participant shapes the lane
-      participant.x = 0
-      participant.y = 0
+      participant.x = MODEL_OFFSET_X
+      participant.y = MODEL_OFFSET_Y
       participant.width  = self.width + 50 + PADDING
       participant.height = self.height
       collaboration = Collaboration(id="collaboration").append(participant)
