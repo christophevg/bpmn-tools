@@ -116,7 +116,7 @@ class Element():
   def as_dict(self, with_tag=False):
     # collect attributes
     definition = {
-      f"@{key}" : value for key, value in self.attributes.items()
+      f"@{key}" : value for key, value in self.attributes.items() if value is not None
     }
 
     # collect text
