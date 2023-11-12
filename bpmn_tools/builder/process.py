@@ -46,6 +46,7 @@ class Color(Enum):
 
 @dataclass
 class Step():
+  children: List["Step"] = field(default_factory=list)
   label   : str   = None
   color   : Color = NoColor
   
@@ -108,7 +109,6 @@ class Process(Step):
   name   : str  = ""
   starts : bool = False
   ends   : bool = False
-  steps  : List[Step] = field(default_factory=list)
   _root  = None
   _tail  = None
 
@@ -119,7 +119,7 @@ class Process(Step):
       self._tail = self.shape(flow.End, id="end")
 
   def add(self, step):
-    self.steps.append(step)
+    self.children.append(step)
     return self
 
   def extend(self, steps):
@@ -129,12 +129,12 @@ class Process(Step):
 
   @property
   def height(self):
-    return max([ step.height for step in self.steps ])
+    return max([ step.height for step in self.children ])
 
   @property
   def width(self):
-    total_width = sum([ step.width for step in self.steps ])
-    total_width += FLOW_SPACE * (len(self.steps) - 1)
+    total_width = sum([ step.width for step in self.children ])
+    total_width += FLOW_SPACE * (len(self.children) - 1)
     if self.starts:
       total_width += self.root.width + FLOW_SPACE
     if self.ends:
@@ -156,12 +156,12 @@ class Process(Step):
     if self.starts:
       self.root.x = x
       x += self.root.width
-      self.root.y = y + int(self.steps[0].height/2) - int(self.root.height/2)
+      self.root.y = y + int(self.children[0].height/2) - int(self.root.height/2)
       shapes.append(self.root)
       x += FLOW_SPACE
 
     # add steps
-    for step in self.steps:
+    for step in self.children:
       more_shapes, more_flows = step.render(x=x, y=y)
       shapes.extend(more_shapes)
       flows.extend(more_flows)
@@ -203,13 +203,13 @@ class Process(Step):
   def root(self):
     if self._root:
       return self._root
-    return self.steps[0].root
+    return self.children[0].root
 
   @property
   def tail(self):
     if self._tail:
       return self._tail
-    return self.steps[-1].tail
+    return self.children[-1].tail
 
 class BranchKind(Enum):
   XOR = flow.ExclusiveGateway
@@ -222,16 +222,17 @@ gws = 0
 class Branch(Step):
   default  : str = None
   kind     : BranchKind = BranchKind.XOR
-  branches : List[Step] = field(default_factory=list)
 
   def __post_init__(self):
     global gws
     self.root = self.shape(self.kind.value, id=f"gateway_start_{gws}", name=self.label)
     self.tail = self.shape(self.kind.value, id=f"gateway_end_{gws}")
     gws += 1
+    # ensure all children to ensure they are tuples
+    self.children = list(map(lambda c: c if type(c) is tuple else (c,None), self.children))
 
   def add(self, branch, condition=None):
-    self.branches.append((branch, condition))
+    self.children.append((branch, condition))
     return self
 
   def extend(self, steps):
@@ -241,14 +242,14 @@ class Branch(Step):
 
   @property
   def height(self):
-    total_height = sum([ branch.height for branch, _ in self.branches ])
+    total_height = sum([ branch.height for branch, _ in self.children ])
     if self.default:
       total_height += DEFAULT_BRANCH_HEIGHT
     return total_height
 
   @property
   def width(self):
-    total_width = max([ branch.width for branch, _ in self.branches ])
+    total_width = max([ branch.width for branch, _ in self.children ])
     total_width += self.root.width + self.tail.width
     total_width += FLOW_SPACE * 2
     return total_width
@@ -267,7 +268,7 @@ class Branch(Step):
     self.tail.x = x + self.width - self.tail.width - FLOW_SPACE
     self.tail.y = self.root.y
     x += self.root.width
-    for branch, condition in self.branches:
+    for branch, condition in self.children:
       more_shapes, more_flows = branch.render(x=x, y=y)
       shapes.extend(more_shapes)
       flows.extend(more_flows)
