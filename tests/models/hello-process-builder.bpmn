@@ -57,6 +57,67 @@
   </bpmn:collaboration>
   <bpmndi:BPMNDiagram id="diagram">
     <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_0_task_3" bpmnElement="flow_gateway_end_0_task_3">
+        <di:waypoint x="566" y="60"/>
+        <di:waypoint x="586" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_1_gateway_end_0" bpmnElement="flow_gateway_end_1_gateway_end_0">
+        <di:waypoint x="491" y="155"/>
+        <di:waypoint x="491" y="60"/>
+        <di:waypoint x="516" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_gateway_start_1" bpmnElement="flow_gateway_start_0_gateway_start_1">
+        <di:waypoint x="251" y="85"/>
+        <di:waypoint x="251" y="180"/>
+        <di:waypoint x="276" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_1" bpmnElement="flow_gateway_start_0_task_1">
+        <di:waypoint x="276" y="60"/>
+        <di:waypoint x="296" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_1_task_2" bpmnElement="flow_gateway_start_1_task_2">
+        <di:waypoint x="326" y="180"/>
+        <di:waypoint x="346" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_start_task_0" bpmnElement="flow_start_task_0">
+        <di:waypoint x="86" y="60"/>
+        <di:waypoint x="106" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_0_gateway_start_0" bpmnElement="flow_task_0_gateway_start_0">
+        <di:waypoint x="206" y="60"/>
+        <di:waypoint x="226" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_1_gateway_end_0" bpmnElement="flow_task_1_gateway_end_0">
+        <di:waypoint x="396" y="60"/>
+        <di:waypoint x="516" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_2_gateway_end_1" bpmnElement="flow_task_2_gateway_end_1">
+        <di:waypoint x="446" y="180"/>
+        <di:waypoint x="466" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_3_end" bpmnElement="flow_task_3_end">
+        <di:waypoint x="686" y="60"/>
+        <di:waypoint x="706" y="60"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_end" bpmnElement="end">
+        <dc:Bounds x="706" y="42" height="36" width="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_0" bpmnElement="gateway_end_0" isMarkerVisible="true">
+        <dc:Bounds x="516" y="35" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_1" bpmnElement="gateway_end_1" isMarkerVisible="true">
+        <dc:Bounds x="466" y="155" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_0" bpmnElement="gateway_start_0" isMarkerVisible="true">
+        <dc:Bounds x="226" y="35" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_1" bpmnElement="gateway_start_1" isMarkerVisible="true">
+        <dc:Bounds x="276" y="155" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
         <dc:Bounds x="0" y="0" height="240" width="762"/>
       </bpmndi:BPMNShape>
@@ -67,24 +128,8 @@
         <dc:Bounds x="106" y="20" height="80" width="100"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_gateway_start_0" bpmnElement="gateway_start_0" isMarkerVisible="true">
-        <dc:Bounds x="226" y="35" height="50" width="50"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_gateway_end_0" bpmnElement="gateway_end_0" isMarkerVisible="true">
-        <dc:Bounds x="516" y="35" height="50" width="50"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_1" bpmnElement="task_1">
         <dc:Bounds x="296" y="20" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_gateway_start_1" bpmnElement="gateway_start_1" isMarkerVisible="true">
-        <dc:Bounds x="276" y="155" height="50" width="50"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_gateway_end_1" bpmnElement="gateway_end_1" isMarkerVisible="true">
-        <dc:Bounds x="466" y="155" height="50" width="50"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_2" bpmnElement="task_2">
@@ -95,51 +140,6 @@
         <dc:Bounds x="586" y="20" height="80" width="100"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_end" bpmnElement="end">
-        <dc:Bounds x="706" y="42" height="36" width="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_flow_start_task_0" bpmnElement="flow_start_task_0">
-        <di:waypoint x="86" y="60"/>
-        <di:waypoint x="106" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_1" bpmnElement="flow_gateway_start_0_task_1">
-        <di:waypoint x="276" y="60"/>
-        <di:waypoint x="296" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_task_1_gateway_end_0" bpmnElement="flow_task_1_gateway_end_0">
-        <di:waypoint x="396" y="60"/>
-        <di:waypoint x="516" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_gateway_start_1_task_2" bpmnElement="flow_gateway_start_1_task_2">
-        <di:waypoint x="326" y="180"/>
-        <di:waypoint x="346" y="180"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_task_2_gateway_end_1" bpmnElement="flow_task_2_gateway_end_1">
-        <di:waypoint x="446" y="180"/>
-        <di:waypoint x="466" y="180"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_gateway_start_1" bpmnElement="flow_gateway_start_0_gateway_start_1">
-        <di:waypoint x="251" y="85"/>
-        <di:waypoint x="251" y="180"/>
-        <di:waypoint x="276" y="180"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_gateway_end_1_gateway_end_0" bpmnElement="flow_gateway_end_1_gateway_end_0">
-        <di:waypoint x="491" y="155"/>
-        <di:waypoint x="491" y="60"/>
-        <di:waypoint x="516" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_task_0_gateway_start_0" bpmnElement="flow_task_0_gateway_start_0">
-        <di:waypoint x="206" y="60"/>
-        <di:waypoint x="226" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_gateway_end_0_task_3" bpmnElement="flow_gateway_end_0_task_3">
-        <di:waypoint x="566" y="60"/>
-        <di:waypoint x="586" y="60"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_task_3_end" bpmnElement="flow_task_3_end">
-        <di:waypoint x="686" y="60"/>
-        <di:waypoint x="706" y="60"/>
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

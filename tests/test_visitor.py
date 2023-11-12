@@ -30,10 +30,10 @@ def test_visiting_hello():
       'participant',
       'diagram',
       'plane_collaboration',
-      'shape_participant',
-      'shape_start',
-      'shape_hello',
-      'shape_end',
+      'edge_flow_hello_end',
       'edge_flow_start_hello',
-      'edge_flow_hello_end'
+      'shape_end',
+      'shape_hello',
+      'shape_participant',
+      'shape_start'
     ]

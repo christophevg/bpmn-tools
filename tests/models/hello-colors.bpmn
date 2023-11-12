@@ -19,6 +19,22 @@
   </bpmn:collaboration>
   <bpmndi:BPMNDiagram id="diagram">
     <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNEdge id="edge_flow_green_blue" bpmnElement="flow_green_blue">
+        <di:waypoint x="445" y="145"/>
+        <di:waypoint x="475" y="145"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_red_green" bpmnElement="flow_red_green">
+        <di:waypoint x="315" y="145"/>
+        <di:waypoint x="345" y="145"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_blue" bpmnElement="blue" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="475" y="105" height="80" width="100"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_green" bpmnElement="green" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="345" y="105" height="80" width="100"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
         <dc:Bounds x="160" y="80" height="125" width="445"/>
       </bpmndi:BPMNShape>
@@ -26,22 +42,6 @@
         <dc:Bounds x="215" y="105" height="80" width="100"/>
         <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_green" bpmnElement="green" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="345" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_blue" bpmnElement="blue" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
-        <dc:Bounds x="475" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_flow_red_green" bpmnElement="flow_red_green">
-        <di:waypoint x="315" y="145"/>
-        <di:waypoint x="345" y="145"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_flow_green_blue" bpmnElement="flow_green_blue">
-        <di:waypoint x="445" y="145"/>
-        <di:waypoint x="475" y="145"/>
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

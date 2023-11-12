@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <bpmn:definitions id="Definitions_1y3m25c" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0">
   <bpmn:process id="Process_0v2lup8" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_0iu1464" sourceRef="StartEvent_1" targetRef="Gateway_0hhzf30"/>
@@ -32,27 +32,6 @@
   </bpmn:collaboration>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="plane_Collaboration_02e8y5y" bpmnElement="Collaboration_02e8y5y">
-      <bpmndi:BPMNShape id="shape_Participant_1f17rtd" bpmnElement="Participant_1f17rtd" isHorizontal="true">
-        <dc:Bounds x="129" y="50" height="190" width="511"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_StartEvent_1" bpmnElement="StartEvent_1">
-        <dc:Bounds x="192" y="162" height="36" width="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Gateway_0hhzf30" bpmnElement="Gateway_0hhzf30" isMarkerVisible="true">
-        <dc:Bounds x="255" y="155" height="50" width="50"/>
-				<bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Gateway_00a9r1o" bpmnElement="Gateway_00a9r1o" isMarkerVisible="true">
-        <dc:Bounds x="442" y="155" height="50" width="50"/>
-				<bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Event_11gettn" bpmnElement="Event_11gettn">
-        <dc:Bounds x="522" y="162" height="36" width="36"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Activity_15wfs7b" bpmnElement="Activity_15wfs7b">
-        <dc:Bounds x="320" y="80" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge_Flow_0iu1464" bpmnElement="Flow_0iu1464">
         <di:waypoint x="228" y="180"/>
         <di:waypoint x="255" y="180"/>
@@ -67,14 +46,35 @@
         <di:waypoint x="280" y="120"/>
         <di:waypoint x="320" y="120"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_Flow_1w19iq1" bpmnElement="Flow_1w19iq1">
-        <di:waypoint x="492" y="180"/>
-        <di:waypoint x="522" y="180"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_Flow_1tpyz3i" bpmnElement="Flow_1tpyz3i">
         <di:waypoint x="305" y="180"/>
         <di:waypoint x="442" y="180"/>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_Flow_1w19iq1" bpmnElement="Flow_1w19iq1">
+        <di:waypoint x="492" y="180"/>
+        <di:waypoint x="522" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_Activity_15wfs7b" bpmnElement="Activity_15wfs7b">
+        <dc:Bounds x="320" y="80" height="80" width="100"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Event_11gettn" bpmnElement="Event_11gettn">
+        <dc:Bounds x="522" y="162" height="36" width="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_00a9r1o" bpmnElement="Gateway_00a9r1o" isMarkerVisible="true">
+        <dc:Bounds x="442" y="155" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_0hhzf30" bpmnElement="Gateway_0hhzf30" isMarkerVisible="true">
+        <dc:Bounds x="255" y="155" height="50" width="50"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Participant_1f17rtd" bpmnElement="Participant_1f17rtd" isHorizontal="true">
+        <dc:Bounds x="129" y="50" height="190" width="511"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds x="192" y="162" height="36" width="36"/>
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

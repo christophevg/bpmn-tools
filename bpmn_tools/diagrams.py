@@ -343,7 +343,7 @@ class Plane(xml.Element):
             children.append(Edge(flow))
       for flow in self.element.children_oftype(MessageFlow):
         children.append(Edge(flow))
-    return children
+    return sorted(children, key=lambda k: k.id)
 
 class Diagram(xml.Element):
   __tag__ = "bpmndi:BPMNDiagram"
