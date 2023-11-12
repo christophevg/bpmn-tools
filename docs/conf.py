@@ -13,7 +13,7 @@ author = u'Christophe VG'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser", "autodoc2"]
+extensions = ["myst_parser"] #, "autodoc2"]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
