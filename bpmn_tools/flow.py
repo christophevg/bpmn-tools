@@ -246,6 +246,11 @@ class ScriptTask(Task):
 
 class Gateway(Element):
   __marker__ = True
+  
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    self.width  = 50
+    self.height = 50
 
 class ExclusiveGateway(Gateway):
   __tag__ = "bpmn:exclusiveGateway"
