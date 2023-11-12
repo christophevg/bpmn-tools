@@ -41,11 +41,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_hear" bpmnElement="hear">
         <dc:Bounds x="215" y="255" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
         <dc:Bounds x="281" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_lane2" bpmnElement="lane2" isHorizontal="true">
         <dc:Bounds x="190" y="230" height="125" width="155"/>

@@ -32,7 +32,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
         <dc:Bounds x="0" y="0" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
         <dc:Bounds x="0" y="0" height="125" width="600"/>

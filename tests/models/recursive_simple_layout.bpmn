@@ -58,23 +58,18 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step1" bpmnElement="step1">
         <dc:Bounds x="215" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step2" bpmnElement="step2">
         <dc:Bounds x="345" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step3" bpmnElement="step3">
         <dc:Bounds x="475" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step4" bpmnElement="step4">
         <dc:Bounds x="605" y="105" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step5" bpmnElement="step5">
         <dc:Bounds x="215" y="255" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -226,7 +226,6 @@ def test_create_task_shape(compare):
 
     <bpmndi:BPMNShape id="shape_hello" bpmnElement="hello">
       <dc:Bounds x="270" y="77" width="100" height="80" />
-      <bpmndi:BPMNLabel />
     </bpmndi:BPMNShape>
   """
 
@@ -241,8 +240,7 @@ def test_create_task_shape(compare):
         "@y": "0",
         "@width": "100",
         "@height": "80"
-      },
-      "bpmndi:BPMNLabel": None
+      }
     }
   })
 
@@ -304,7 +302,6 @@ def test_plane_for_collaboration_with_one_participant_without_a_process(compare)
     <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
       <bpmndi:BPMNShape id="participant_di" bpmnElement="participant" isHorizontal="true">
         <dc:Bounds x="129" y="57" width="600" height="123" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   """ # noqa

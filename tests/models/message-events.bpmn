@@ -56,7 +56,6 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_Activity_182ggg5" bpmnElement="Activity_182ggg5">
         <dc:Bounds x="270" y="167" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Event_02nwk1r" bpmnElement="Event_02nwk1r">
         <dc:Bounds x="302" y="82" height="36" width="36"/>

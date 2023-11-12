@@ -17,11 +17,9 @@
       <bpmndi:BPMNEdge id="edge_flow_unknown_Activity_1an9l29" bpmnElement="flow_unknown_Activity_1an9l29"/>
       <bpmndi:BPMNShape id="shape_Activity_0hhbf3p" bpmnElement="Activity_0hhbf3p">
         <dc:Bounds x="260" y="130" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Activity_1an9l29" bpmnElement="Activity_1an9l29">
         <dc:Bounds x="410" y="130" height="80" width="100"/>
-        <bpmndi:BPMNLabel/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Participant_1o8gfhv" bpmnElement="Participant_1o8gfhv" isHorizontal="true">
         <dc:Bounds x="160" y="80" height="180" width="410"/>
