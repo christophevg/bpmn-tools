@@ -11,8 +11,12 @@
 
 
 
-## Documentation
+## Contents
 
-Visit [Read the Docs](https://bpmn-tools.readthedocs.org) for the full documentation, including overviews and several examples.
-
+```{toctree}
+:maxdepth: 1
+whats-in-the-box.md
+getting-started.md
+contributing.md
+```
 
