@@ -27,9 +27,11 @@ TODO
 
 """
 
-PADDING        = 20
-MODEL_OFFSET_X = 150
-MODEL_OFFSET_Y =  80
+PADDING               = 20
+MODEL_OFFSET_X        = 150
+MODEL_OFFSET_Y        =  80
+DEFAULT_BRANCH_HEIGHT = 30
+
 
 def NoColor(bpmn):
   return bpmn
@@ -219,7 +221,10 @@ class Branch(Step):
 
   @property
   def height(self):
-    return sum([ branch.height for branch in self.branches ])
+    total_height = sum([ branch.height for branch in self.branches ])
+    if self.default:
+      total_height += DEFAULT_BRANCH_HEIGHT
+    return total_height
 
   @property
   def width(self):
@@ -229,9 +234,13 @@ class Branch(Step):
     shapes = []
     flows  = []
     self.root.x = x
-    self.root.y = y + int(self.branches[0].height/2) - (self.root.height/2)
+    first_height = DEFAULT_BRANCH_HEIGHT if self.default else self.branches[0].height
+    self.root.y = y + int(first_height/2) - (self.root.height/2)
     shapes.append(self.root)
     shapes.append(self.tail)
+    if self.default:
+      flows.append(connect(source=self.root, target=self.tail))
+      y += DEFAULT_BRANCH_HEIGHT
     self.tail.x = x + self.width - self.tail.width
     self.tail.y = self.root.y
     x += self.root.width
