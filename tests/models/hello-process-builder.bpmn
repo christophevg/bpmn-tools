@@ -62,9 +62,9 @@
         <di:waypoint x="736" y="140"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_flow_gateway_end_1_gateway_end_0" bpmnElement="flow_gateway_end_1_gateway_end_0">
-        <di:waypoint x="641" y="235"/>
-        <di:waypoint x="641" y="140"/>
-        <di:waypoint x="666" y="140"/>
+        <di:waypoint x="666" y="260"/>
+        <di:waypoint x="691" y="260"/>
+        <di:waypoint x="691" y="165"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_gateway_start_1" bpmnElement="flow_gateway_start_0_gateway_start_1">
         <di:waypoint x="401" y="165"/>

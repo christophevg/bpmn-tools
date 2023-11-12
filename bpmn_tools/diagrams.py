@@ -257,7 +257,9 @@ class Edge(xml.Element):
       else: # target is above
         top     = self.flow.target
         bottom  = self.flow.source
-        if isinstance(bottom, Gateway): # starting from GW?
+        # gateways route from top/bottom to side of tasks, but
+        # from side to top/bottom of other gws
+        if isinstance(bottom, Gateway) and not isinstance(top, Gateway):
           children = [
             WayPoint(                               # top middle exit 
               x=bottom.x + int(bottom.width/2),
