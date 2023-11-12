@@ -30,7 +30,6 @@ class Shape(xml.Element):
   def __init__(self, element=None, id=None):
     super().__init__()
     self._element = element
-    self.label    = None
     self._bounds  = None
 
   def append(self, child):
@@ -81,8 +80,6 @@ class Shape(xml.Element):
           width  = self.element.width
         )
       ]
-      if self.element.__labeled__:
-        children.append(Label(self.label))
     return children
 
 class WayPoint(xml.Element):
