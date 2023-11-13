@@ -66,3 +66,18 @@ def test_complex_process_building(compare_model_to_file):
   
   filepath = folder / "complex-process-builder.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
+
+def test_bug_process_events_with_intial_branch(compare_model_to_file):
+  process = Process([
+    Branch([
+      Task(name="Task 1"),
+      Task(name="Task 2"),
+      Task(name="Task 3")
+    ]),
+    Task(name="Task 4")
+  ], name="bug start/end event with branch height", starts=True, ends=True)
+
+  model = process.render()
+  
+  filepath = folder / "bug_start_before_branch.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")

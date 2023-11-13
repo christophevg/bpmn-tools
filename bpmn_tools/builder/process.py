@@ -156,7 +156,7 @@ class Process(Step):
     if self.starts:
       self.root.x = x
       x += self.root.width
-      self.root.y = y + int(self.children[0].height/2) - int(self.root.height/2)
+      self.root.y = y + int((STANDARD_TASK_HEIGHT + PADDING * 2)/2) - (self.root.height/2)
       shapes.append(self.root)
       x += FLOW_SPACE
 
