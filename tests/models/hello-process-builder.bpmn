@@ -109,37 +109,37 @@
         <di:waypoint x="956" y="130"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_end" bpmnElement="end" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="956" y="112" height="36" width="36"/>
+        <dc:Bounds x="956" y="112" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_end_0" bpmnElement="gateway_end_0" isMarkerVisible="true">
-        <dc:Bounds x="746" y="105" height="50" width="50"/>
+        <dc:Bounds x="746" y="105" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_end_1" bpmnElement="gateway_end_1" isMarkerVisible="true" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
-        <dc:Bounds x="676" y="205" height="50" width="50"/>
+        <dc:Bounds x="676" y="205" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_start_0" bpmnElement="gateway_start_0" isMarkerVisible="true">
-        <dc:Bounds x="396" y="105" height="50" width="50"/>
+        <dc:Bounds x="396" y="105" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_start_1" bpmnElement="gateway_start_1" isMarkerVisible="true" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
-        <dc:Bounds x="466" y="205" height="50" width="50"/>
+        <dc:Bounds x="466" y="205" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
-        <dc:Bounds x="150" y="80" height="275" width="852"/>
+        <dc:Bounds x="150" y="80" width="852" height="275"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_start" bpmnElement="start" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
-        <dc:Bounds x="200" y="112" height="36" width="36"/>
+        <dc:Bounds x="200" y="112" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_0" bpmnElement="task_0" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
-        <dc:Bounds x="266" y="90" height="80" width="100"/>
+        <dc:Bounds x="266" y="90" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_1" bpmnElement="task_1">
-        <dc:Bounds x="476" y="90" height="80" width="100"/>
+        <dc:Bounds x="476" y="90" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_2" bpmnElement="task_2" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
-        <dc:Bounds x="546" y="265" height="80" width="100"/>
+        <dc:Bounds x="546" y="265" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_3" bpmnElement="task_3">
-        <dc:Bounds x="826" y="90" height="80" width="100"/>
+        <dc:Bounds x="826" y="90" width="100" height="80"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

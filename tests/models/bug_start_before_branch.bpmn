@@ -91,31 +91,31 @@
         <di:waypoint x="676" y="130"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_end" bpmnElement="end">
-        <dc:Bounds x="676" y="112" height="36" width="36"/>
+        <dc:Bounds x="676" y="112" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_end_7" bpmnElement="gateway_end_7" isMarkerVisible="true">
-        <dc:Bounds x="466" y="105" height="50" width="50"/>
+        <dc:Bounds x="466" y="105" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_gateway_start_7" bpmnElement="gateway_start_7" isMarkerVisible="true">
-        <dc:Bounds x="256" y="105" height="50" width="50"/>
+        <dc:Bounds x="256" y="105" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
-        <dc:Bounds x="150" y="80" height="300" width="572"/>
+        <dc:Bounds x="150" y="80" width="572" height="300"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_start" bpmnElement="start">
-        <dc:Bounds x="200" y="112" height="36" width="36"/>
+        <dc:Bounds x="200" y="112" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_18" bpmnElement="task_18">
-        <dc:Bounds x="336" y="90" height="80" width="100"/>
+        <dc:Bounds x="336" y="90" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_19" bpmnElement="task_19">
-        <dc:Bounds x="336" y="190" height="80" width="100"/>
+        <dc:Bounds x="336" y="190" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_20" bpmnElement="task_20">
-        <dc:Bounds x="336" y="290" height="80" width="100"/>
+        <dc:Bounds x="336" y="290" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_task_21" bpmnElement="task_21">
-        <dc:Bounds x="546" y="90" height="80" width="100"/>
+        <dc:Bounds x="546" y="90" width="100" height="80"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

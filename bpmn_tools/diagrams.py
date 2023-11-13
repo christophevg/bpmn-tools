@@ -10,12 +10,12 @@ from .flow          import Element, Flow, MessageFlow, Gateway
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
   
-  def __init__(self, x=0, y=0, height=0, width=0):
+  def __init__(self, x=0, y=0, width=0, height=0):
     super().__init__()
     self["x"]      = str(int(x))
     self["y"]      = str(int(y))
-    self["height"] = str(int(height))
     self["width"]  = str(int(width))
+    self["height"] = str(int(height))
 
 class Label(xml.Element):
   __tag__ = "bpmndi:BPMNLabel"

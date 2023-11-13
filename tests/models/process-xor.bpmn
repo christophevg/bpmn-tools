@@ -55,22 +55,22 @@
         <di:waypoint x="522" y="180"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_Activity_15wfs7b" bpmnElement="Activity_15wfs7b">
-        <dc:Bounds x="320" y="80" height="80" width="100"/>
+        <dc:Bounds x="320" y="80" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Event_11gettn" bpmnElement="Event_11gettn">
-        <dc:Bounds x="522" y="162" height="36" width="36"/>
+        <dc:Bounds x="522" y="162" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Gateway_00a9r1o" bpmnElement="Gateway_00a9r1o" isMarkerVisible="true">
-        <dc:Bounds x="442" y="155" height="50" width="50"/>
+        <dc:Bounds x="442" y="155" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Gateway_0hhzf30" bpmnElement="Gateway_0hhzf30" isMarkerVisible="true">
-        <dc:Bounds x="255" y="155" height="50" width="50"/>
+        <dc:Bounds x="255" y="155" width="50" height="50"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Participant_1f17rtd" bpmnElement="Participant_1f17rtd" isHorizontal="true">
-        <dc:Bounds x="129" y="50" height="190" width="511"/>
+        <dc:Bounds x="129" y="50" width="511" height="190"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_StartEvent_1" bpmnElement="StartEvent_1">
-        <dc:Bounds x="192" y="162" height="36" width="36"/>
+        <dc:Bounds x="192" y="162" width="36" height="36"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

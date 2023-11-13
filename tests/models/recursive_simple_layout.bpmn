@@ -51,25 +51,25 @@
         <di:waypoint x="265" y="255"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_participant_process1" bpmnElement="participant_process1" isHorizontal="true">
-        <dc:Bounds x="160" y="80" height="125" width="575"/>
+        <dc:Bounds x="160" y="80" width="575" height="125"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_participant_process2" bpmnElement="participant_process2" isHorizontal="true">
-        <dc:Bounds x="160" y="230" height="125" width="185"/>
+        <dc:Bounds x="160" y="230" width="185" height="125"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step1" bpmnElement="step1">
-        <dc:Bounds x="215" y="105" height="80" width="100"/>
+        <dc:Bounds x="215" y="105" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step2" bpmnElement="step2">
-        <dc:Bounds x="345" y="105" height="80" width="100"/>
+        <dc:Bounds x="345" y="105" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step3" bpmnElement="step3">
-        <dc:Bounds x="475" y="105" height="80" width="100"/>
+        <dc:Bounds x="475" y="105" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step4" bpmnElement="step4">
-        <dc:Bounds x="605" y="105" height="80" width="100"/>
+        <dc:Bounds x="605" y="105" width="100" height="80"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_step5" bpmnElement="step5">
-        <dc:Bounds x="215" y="255" height="80" width="100"/>
+        <dc:Bounds x="215" y="255" width="100" height="80"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

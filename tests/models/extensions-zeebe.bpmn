@@ -13,7 +13,7 @@
   <bpmndi:BPMNDiagram id="diagram">
     <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
       <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
-        <dc:Bounds x="0" y="0" height="125" width="600"/>
+        <dc:Bounds x="0" y="0" width="600" height="125"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

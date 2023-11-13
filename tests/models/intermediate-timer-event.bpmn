@@ -11,10 +11,10 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="plane_Collaboration_0aj36r1" bpmnElement="Collaboration_0aj36r1">
       <bpmndi:BPMNShape id="shape_Event_0f6ada4" bpmnElement="Event_0f6ada4">
-        <dc:Bounds x="240" y="122" height="36" width="36"/>
+        <dc:Bounds x="240" y="122" width="36" height="36"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Participant_0gs21iu" bpmnElement="Participant_0gs21iu" isHorizontal="true">
-        <dc:Bounds x="160" y="80" height="120" width="300"/>
+        <dc:Bounds x="160" y="80" width="300" height="120"/>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
