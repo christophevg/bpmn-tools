@@ -216,6 +216,10 @@ class BranchKind(Enum):
   OR  = flow.InclusiveGateway
   AND = flow.ParallelGateway
 
+# utility wrapper for an even more fluid API ;-)
+def If(condition, step):
+  return (step, condition)
+
 gws = 0
 
 @dataclass
