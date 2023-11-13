@@ -20,9 +20,21 @@ class Bounds(xml.Element):
 class Label(xml.Element):
   __tag__ = "bpmndi:BPMNLabel"
   
-  def __init__(self, label=None):
+  def __init__(self, x=0, y=0):
     super().__init__()
-    self.text = label
+    self.x = x - 50         # add offset from target point x,y
+    self.y = y + 5
+
+  @property
+  def children(self):
+    return [
+      Bounds(
+        x=self.x,
+        y=self.y,
+        width=0,
+        height=14
+      )
+    ]
 
 class Shape(xml.Element):
   __tag__ = "bpmndi:BPMNShape"
@@ -126,8 +138,14 @@ class Edge(xml.Element):
     if not self.flow or not self.flow.source or not self.flow.target:
       return children
     if isinstance(self.flow.source, Gateway) or isinstance(self.flow.target, Gateway):
-      return self._route_gateway()
-    return self._route_default()
+      children = self._route_gateway()
+    else:
+      children = self._route_default()
+    if self.flow["name"]:
+      x = self.flow.target.x
+      y = self.flow.target.y + self.flow.target.height/2
+      children.append(Label(x, y))
+    return children
 
   def _route_default(self):
     """

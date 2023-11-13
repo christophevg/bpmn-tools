@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from bpmn_tools.builder.process import Process, Task, Branch, BranchKind
+from bpmn_tools.builder.process import Process, Task, Branch, BranchKind, If
 from bpmn_tools.colors import Green, Blue, Red, Orange
 
 folder = Path(__file__).resolve().parent / "models"
@@ -80,4 +80,19 @@ def test_bug_process_events_with_intial_branch(compare_model_to_file):
   model = process.render()
   
   filepath = folder / "bug_start_before_branch.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
+
+def test_branch_conditions_and_labels(compare_model_to_file):
+  process = Process([
+    Branch([
+      If("long condition task 1", Task(name="Task 1")),
+      If("medium task 2", Task(name="Task 2")),
+      If("task 3", Task(name="Task 3"))
+    ], default=True, label="conditions"),
+    Task(name="Task 4")
+  ], name="conditions and labels", starts=True, ends=True)
+
+  model = process.render()
+  
+  filepath = folder / "conditions_and_labels.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")

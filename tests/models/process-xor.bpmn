@@ -45,10 +45,16 @@
         <di:waypoint x="280" y="155"/>
         <di:waypoint x="280" y="120"/>
         <di:waypoint x="320" y="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="270" y="125" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_Flow_1tpyz3i" bpmnElement="Flow_1tpyz3i">
         <di:waypoint x="305" y="180"/>
         <di:waypoint x="442" y="180"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="392" y="185" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_Flow_1w19iq1" bpmnElement="Flow_1w19iq1">
         <di:waypoint x="492" y="180"/>

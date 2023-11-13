@@ -18,7 +18,7 @@ class Flow(IdentifiedElement):
     super().__init__(**kwargs)
     self._source = source
     self._target = target
-    self.name = name
+    self["name"] = name
 
     if self._source:
       self._source.outgoing.append(Outgoing(self))
