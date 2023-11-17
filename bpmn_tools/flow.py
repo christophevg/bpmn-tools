@@ -4,8 +4,6 @@
 
 import logging
 
-from enum import Enum 
-
 from .    import xml
 from .xml import IdentifiedElement
 
@@ -163,19 +161,56 @@ class Element(IdentifiedElement):
       children.extend([ flow for flow in self.outgoing ])
     return children
 
-class MessageEventDefinition(IdentifiedElement):
+class EventDefinition(IdentifiedElement):
+  pass
+
+class MessageEventDefinition(EventDefinition):
   __tag__ = "bpmn:messageEventDefinition"
 
-class TimerEventDefinition(IdentifiedElement):
+class TimerEventDefinition(EventDefinition):
   __tag__ = "bpmn:timerEventDefinition"
 
-class SignalEventDefinition(IdentifiedElement):
+class EscalationEventDefinition(EventDefinition):
+  __tag__ = "bpmn:escalationEventDefinition"
+
+class ErrorEventDefinition(EventDefinition):
+  __tag__ = "bpmn:errorEventDefinition"
+
+class SignalEventDefinition(EventDefinition):
   __tag__ = "bpmn:signalEventDefinition"
 
-class EventDefinitions(Enum):
-  MESSAGE = MessageEventDefinition
-  TIMER   = TimerEventDefinition
-  SIGNAL  = SignalEventDefinition
+class CompensateEventDefinition(EventDefinition):
+  __tag__ = "bpmn:compensateEventDefinition"
+
+class Condition(Element):
+  __tag__ = "bpmn:condition"
+  @property
+  def attributes(self):
+    return { "xsi:type" : "bpmn:tFormalExpression" }
+
+class ConditionalEventDefinition(EventDefinition):
+  """
+  <bpmn:boundaryEvent id="Event_0lamv1c" attachedToRef="Activity_1sm8cz7">
+    <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_1224zru">
+      <bpmn:condition xsi:type="bpmn:tFormalExpression" />
+    </bpmn:conditionalEventDefinition>
+  </bpmn:boundaryEvent>
+  """
+  __tag__ = "bpmn:conditionalEventDefinition"
+
+  @property
+  def children(self):
+    return [ Condition() ]
+
+EventDefinitions = [
+  MessageEventDefinition,
+  TimerEventDefinition,
+  EscalationEventDefinition,
+  ErrorEventDefinition,
+  SignalEventDefinition,
+  CompensateEventDefinition,
+  ConditionalEventDefinition
+]
 
 class Event(Element):
   __labeled__ = True
@@ -189,9 +224,9 @@ class Event(Element):
     self.definition = definition
 
   def append(self, child):
-    try:
-      self.definition = EventDefinitions(child.__class__)
-    except Exception:
+    if isinstance(child, EventDefinition):
+      self.definition = child
+    else:
       super().append(child) # something else
     return self
 
@@ -199,8 +234,7 @@ class Event(Element):
   def children(self):
     children = super().children
     if self.definition:
-      cls = self.definition.value
-      children.append(cls(id=f"{cls.__name__}_{self['id']}"))
+      children.append(self.definition)
     return children
 
 class Start(Event):
@@ -214,6 +248,48 @@ class IntermediateCatch(Event):
 
 class End(Event):
   __tag__ = "bpmn:endEvent"
+
+# Boundary Events
+
+class BoundaryEvent(Event):
+  __tag__ = "bpmn:boundaryEvent"
+
+  def __init__(self, on=None, **kwargs):
+    super().__init__(**kwargs)
+    self._on = on
+
+  @property
+  def on(self):
+    if self._on:
+      return self._on
+    return self.root.find("id", self["attachedToRef"], skip=self)
+
+  @property
+  def attributes(self):
+    attributes = super().attributes.copy()
+    if self.on:
+      attributes["attachedToRef"] = self.on.id
+    return attributes
+
+  @property
+  def x(self):
+    if self.on:
+      return self.on.x + self.on.width - int(self.width / 2)
+    return 0
+
+  @x.setter
+  def x(self, value):
+    pass
+
+  @property
+  def y(self):
+    if self.on:
+      return self.on.y - int(self.height / 2)
+    return 0
+
+  @y.setter
+  def y(self, value):
+    pass
 
 # Tasks
 
