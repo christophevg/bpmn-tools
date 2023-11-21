@@ -198,7 +198,10 @@ class Element():
     with visitor:
       visitor.visit(self)
       for child in self.children:
-        child.accept(visitor)
+        try:
+          child.accept(visitor)
+        except TypeError:
+          raise ValueError(f"accept() on {child} is missing argument")
 
 class IdentifiedElement(Element):
   def __init__(self, id=None, **kwargs):

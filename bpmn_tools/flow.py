@@ -148,7 +148,7 @@ class Element(IdentifiedElement):
     elif type(child) == Outgoing:
       self.outgoing.append(child)
     else:
-      raise ValueError("Element expects only incoming or outgoing flows")
+      raise ValueError(f"Element {self} expects only incoming or outgoing flows. Got {type(child)}")
     child._parent = self
     return self
 
@@ -161,7 +161,7 @@ class Element(IdentifiedElement):
       children.extend([ flow for flow in self.outgoing ])
     return children
 
-class EventDefinition(IdentifiedElement):
+class EventDefinition(Element):
   pass
 
 class MessageEventDefinition(EventDefinition):
@@ -201,6 +201,11 @@ class ConditionalEventDefinition(EventDefinition):
   @property
   def children(self):
     return [ Condition() ]
+
+  def append(self, child):
+    if type(child) == Condition:
+      return self
+    return super().append(child)
 
 EventDefinitions = [
   MessageEventDefinition,
