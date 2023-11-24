@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions id="Definitions_1g7m7nh" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.9.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bpmn:process id="Process_1bcemd3" isExecutable="true">
+    <bpmn:association id="Association_1swes1f" sourceRef="Activity_1dgig3k" targetRef="TextAnnotation_1w5b2e0"/>
+    <bpmn:task id="Activity_1dgig3k" name="task"/>
+    <bpmn:textAnnotation id="TextAnnotation_1w5b2e0">
+      <bpmn:text>comments</bpmn:text>
+    </bpmn:textAnnotation>
+  </bpmn:process>
+  <bpmn:collaboration id="Collaboration_03fnek2">
+    <bpmn:participant id="Participant_0omr0h0" name="lane" processRef="Process_1bcemd3"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="plane_Collaboration_03fnek2" bpmnElement="Collaboration_03fnek2">
+      <bpmndi:BPMNEdge id="edge_Association_1swes1f" bpmnElement="Association_1swes1f">
+        <di:waypoint x="340" y="155"/>
+        <di:waypoint x="380" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_Activity_1dgig3k" bpmnElement="Activity_1dgig3k">
+        <dc:Bounds x="240" y="115" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Participant_0omr0h0" bpmnElement="Participant_0omr0h0" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="340" height="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_TextAnnotation_1w5b2e0" bpmnElement="TextAnnotation_1w5b2e0">
+        <dc:Bounds x="380" y="140" width="100" height="30"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

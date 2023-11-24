@@ -19,11 +19,11 @@ logger = logging.getLogger(__name__)
 class Element():
   __tag__     = "Element"
 
-  def __init__(self, **kwargs):
+  def __init__(self, text=None, **kwargs):
     self._children   = []
     self._parent     = None
     self._attributes = {}
-    self._text       = None
+    self._text       = text
 
   @property
   def text(self):
@@ -87,6 +87,8 @@ class Element():
     return None
 
   def append(self, child):
+    if not child:
+      raise ValueError(f"invalid child: {child}")
     self._children.append(child)
     child._parent = self
     return self

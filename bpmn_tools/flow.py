@@ -326,6 +326,107 @@ class BusinessRuleTask(Task):
 class ScriptTask(Task):
   __tag__ = "bpmn:scriptTask"
 
+# Annotations
+
+class Text(xml.Element):
+  __tag__ = "bpmn:text"
+
+class Annotation(IdentifiedElement):
+  """
+    <bpmn:textAnnotation id="TextAnnotation_1w5b2e0">
+      <bpmn:text>comments</bpmn:text>
+    </bpmn:textAnnotation>
+  """
+  
+  __tag__ = "bpmn:textAnnotation"
+
+  def __init__(self, text=None, **kwargs):
+    super().__init__(**kwargs)
+    self.annotation = text
+  
+  def append(self, child):
+    if isinstance(child, Text):
+      self.annotation = child.text
+    else:
+      super().append(child) # something else
+    return self
+
+  @property
+  def children(self):
+    return [ Text(text=self.annotation) ]
+
+class Association(IdentifiedElement):
+  __tag__ = "bpmn:association"
+
+  def __init__(self, source=None, target=None, **kwargs):
+    super().__init__(**kwargs)
+    self._source = source
+    self._target = target
+
+    self._resolving_source = False
+    self._resolving_target = False
+
+  @property
+  def source(self):
+    if self._source:
+      return self._source
+    elif self["sourceRef"]:
+      if not self._resolving_source:
+        self._resolving_source = True
+        obj = self.root.find("id", self["sourceRef"])
+        if obj:
+          self._resolving_source = False
+          return obj
+      logger.warning(f"sourceRef {self['sourceRef']} not found.")
+    else:
+      logger.warning("no source available.")
+    return None
+
+  @property
+  def target(self):
+    if self._target:
+      return self._target
+    elif self["targetRef"]:
+      if not self._resolving_target:
+        self._resolving_target = True
+        obj = self.root.find("id", self["targetRef"])
+        if obj:
+          self._resolving_target = False
+          return obj
+        logger.warning(f"targetRef {self['targetRef']} not found.")
+    else:
+      logger.warning("no target available.")
+    return None
+
+  def _get_flow_ids(self, default=None):
+    try:
+      source_id = self.source["id"]
+    except Exception:
+      source_id = default
+    try:
+      target_id = self.target["id"]
+    except Exception:
+      target_id = default
+    return (source_id, target_id)
+
+  def __getitem__(self, name):
+    value = super().__getitem__(name)
+    if value is None and name == "id":
+      source_id, target_id = self._get_flow_ids(default="unknown")
+      return f"association_{source_id}_{target_id}"
+    return value
+
+  @property
+  def attributes(self):
+    attributes = super().attributes.copy()
+    attributes["id"] = self["id"]
+    source_id, target_id = self._get_flow_ids()
+    if source_id:
+      attributes["sourceRef"] = source_id
+    if target_id:
+      attributes["targetRef"] = target_id
+    return attributes
+
 # Gateways
 
 class Gateway(Element):
@@ -491,6 +592,9 @@ class Process(IdentifiedElement):
   
   def append(self, child):
     if isinstance(child, Element):
+      self._elements.append(child)
+      child._parent = self
+    elif isinstance(child, Annotation):
       self._elements.append(child)
       child._parent = self
     elif isinstance(child, LaneSet):

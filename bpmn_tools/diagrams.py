@@ -4,8 +4,9 @@
 
 from . import xml
 
-from .collaboration import Participant
-from .flow          import Element, Flow, MessageFlow, Gateway
+from bpmn_tools.collaboration import Participant
+from bpmn_tools.flow          import Element, Flow, MessageFlow, Gateway
+from bpmn_tools.flow          import Annotation, Association
 
 class Bounds(xml.Element):
   __tag__ = "dc:Bounds"
@@ -312,7 +313,7 @@ class Plane(xml.Element):
   def __init__(self, id="plane", element=None):
     super().__init__()
     self._element = element
-    self["id"] = id
+    self["id"]   = id
     self._shapes = []
     self._edges  = []
 
@@ -356,6 +357,10 @@ class Plane(xml.Element):
             children.append(Shape(lane))
           for element in participant.process.children_oftype(Element):
             children.append(Shape(element))
+          for element in participant.process.children_oftype(Annotation):
+            children.append(Shape(element))
+          for element in participant.process.children_oftype(Association):
+            children.append(Edge(element))
           for flow in participant.process.children_oftype(Flow):
             children.append(Edge(flow))
       for flow in self.element.children_oftype(MessageFlow):
