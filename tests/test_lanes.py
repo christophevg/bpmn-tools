@@ -160,7 +160,7 @@ def test_diagram_with_lane(compare_model_to_file):
 
   simple.layout(definitions)
 
-  compare_model_to_file(definitions, "hello-lanes.bpmn")
+  compare_model_to_file(definitions, "hello-lanes.bpmn", save_to="hello-lanes-test.bpmn")
 
 def test_process_of_element_in_lane():
   """

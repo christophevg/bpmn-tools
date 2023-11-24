@@ -35,4 +35,4 @@ def test_colors(compare_model_to_file):
   
   simple.layout(definitions)
 
-  compare_model_to_file(definitions, "hello-colors.bpmn")
+  compare_model_to_file(definitions, "hello-colors.bpmn", save_to="hello-colors-test.bpmn")

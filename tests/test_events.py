@@ -28,4 +28,4 @@ def test_message_event(compare_model_to_file):
   
   simple.layout(definitions)
 
-  compare_model_to_file(definitions, "events.bpmn", save_to="events-latest.bpmn")
+  compare_model_to_file(definitions, "events.bpmn", save_to="events-test.bpmn")

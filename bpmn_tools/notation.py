@@ -93,6 +93,7 @@ class Definitions(IdentifiedElement):
       "xmlns:di"    : "http://www.omg.org/spec/DD/20100524/DI",
       "xmlns:bioc"  : "http://bpmn.io/schema/bpmn/biocolor/1.0",
       "xmlns:color" : "http://www.omg.org/spec/BPMN/non-normative/color/1.0",
-      "xmlns:zeebe" : "http://camunda.org/schema/zeebe/1.0"
+      "xmlns:zeebe" : "http://camunda.org/schema/zeebe/1.0",
+      "xmlms:xsi"   : "http://www.w3.org/2001/XMLSchema-instance"
     })
     return attributes

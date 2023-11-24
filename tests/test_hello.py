@@ -106,7 +106,7 @@ def test_create_definitions_with_process_and_collaboration(compare):
                       xmlns:modeler="http://camunda.org/schema/modeler/1.0"
                       id="definitions"
                       xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
-                      >
+                      xmlms:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <bpmn:collaboration id="collaboration">
         <bpmn:participant id="participant" name="lane" processRef="process" />
       </bpmn:collaboration>
@@ -155,6 +155,7 @@ def test_create_definitions_with_process_and_collaboration(compare):
       "@xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",
       "@xmlns:di": "http://www.omg.org/spec/DD/20100524/DI",
       "@xmlns:zeebe": "http://camunda.org/schema/zeebe/1.0",
+      "@xmlms:xsi" : "http://www.w3.org/2001/XMLSchema-instance",
       "@id": "definitions",
       "bpmn:process": {
         "@id": "process",
@@ -356,4 +357,4 @@ def test_hello(compare_model_to_file):
     )
   )
 
-  compare_model_to_file(definitions, "hello.bpmn", save_to="hello-latest.bpmn")
+  compare_model_to_file(definitions, "hello.bpmn", save_to="hello-test.bpmn")

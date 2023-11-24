@@ -55,7 +55,7 @@ def test_diagram_with_lane(compare_model_to_file):
   compare_model_to_file(
     definitions,
     "hello-lanes-with-message.bpmn",
-    save_to="hello-lanes-with-message-latest.bpmn"
+    save_to="hello-lanes-with-message-test.bpmn"
   )
   
   # TODO: first implement extraction of x, y, height, width from Shape->Element

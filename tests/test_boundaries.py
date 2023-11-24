@@ -44,4 +44,4 @@ def test_message_boundaries(compare_model_to_file):
     )
   )
 
-  compare_model_to_file(definitions, "boundaries.bpmn", save_to="boundaries-render.bpmn")
+  compare_model_to_file(definitions, "boundaries.bpmn", save_to="boundaries-test.bpmn")

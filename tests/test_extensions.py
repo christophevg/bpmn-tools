@@ -32,7 +32,7 @@ def test_minimal_zeebe_properies_extension(compare_model_to_file):
   )
 
   compare_model_to_file(
-    definitions, "extensions-zeebe.bpmn", save_to="extensions-zeebe-latest.bpmn"
+    definitions, "extensions-zeebe.bpmn", save_to="extensions-zeebe-test.bpmn"
   )
 
 def test_extensions_access():

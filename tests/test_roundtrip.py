@@ -21,7 +21,7 @@ def perform_roundtrip_test(filepath):
   model   = Definitions.from_dict(as_dict, raise_unmapped=True)
   
   # ensure that rebuild model from parsed xml is still equal
-  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-latest.bpmn")
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-roundtrip.bpmn")
 
 folder = Path(__file__).resolve().parent / "models" 
 models = [ str(filepath.name) for filepath in folder.glob("*.bpmn") ]
@@ -29,7 +29,7 @@ models = [ str(filepath.name) for filepath in folder.glob("*.bpmn") ]
 @pytest.mark.parametrize("filename", models)
 def test_all_reference_models(filename):
   filepath = folder / filename
-  if not filepath.stem.endswith("-latest") and "goal" not in filepath.stem:
+  if not filepath.stem.endswith("-roundtrip") and not filepath.stem.endswith("-test") and "goal" not in filepath.stem:
     if filepath.stem.startswith("bad-"):
       try:
         perform_roundtrip_test(filepath)
