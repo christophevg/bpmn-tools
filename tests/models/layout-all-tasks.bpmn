@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bpmn:process id="process">
+    <bpmn:task id="Task" name="Task"/>
+    <bpmn:userTask id="UserTask" name="UserTask"/>
+    <bpmn:serviceTask id="ServiceTask" name="ServiceTask"/>
+    <bpmn:sendTask id="SendTask" name="SendTask"/>
+    <bpmn:receiveTask id="ReceiveTask" name="ReceiveTask"/>
+    <bpmn:manualTask id="ManualTask" name="ManualTask"/>
+    <bpmn:businessRuleTask id="BusinessRuleTask" name="BusinessRuleTask"/>
+    <bpmn:scriptTask id="ScriptTask" name="ScriptTask"/>
+  </bpmn:process>
+  <bpmn:collaboration id="collaboration">
+    <bpmn:participant id="participant" name="all tasks" processRef="process"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNShape id="shape_BusinessRuleTask" bpmnElement="BusinessRuleTask">
+        <dc:Bounds x="995" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ManualTask" bpmnElement="ManualTask">
+        <dc:Bounds x="865" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ReceiveTask" bpmnElement="ReceiveTask">
+        <dc:Bounds x="735" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ScriptTask" bpmnElement="ScriptTask">
+        <dc:Bounds x="1125" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_SendTask" bpmnElement="SendTask">
+        <dc:Bounds x="605" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ServiceTask" bpmnElement="ServiceTask">
+        <dc:Bounds x="475" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task" bpmnElement="Task">
+        <dc:Bounds x="215" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_UserTask" bpmnElement="UserTask">
+        <dc:Bounds x="345" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1095" height="125"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -10,8 +10,7 @@ import json
 
 from bpmn_tools.flow          import Process, Start, End
 from bpmn_tools.flow          import IntermediateCatch, IntermediateThrow
-from bpmn_tools.flow          import Task, UserTask, ServiceTask, ScriptTask
-from bpmn_tools.flow          import BusinessRuleTask, SendTask, ReceiveTask
+from bpmn_tools.flow          import Tasks
 from bpmn_tools.collaboration import Participant
 from bpmn_tools.visitor       import Visitor, visiting
 
@@ -53,8 +52,7 @@ class LayoutVisitor(Visitor):
     self.current_process["end"] = event
     self._analyse_element (event)
 
-  @visiting(Task, UserTask, ServiceTask, ScriptTask,
-            BusinessRuleTask, SendTask, ReceiveTask)
+  @visiting(*Tasks)
   def visit(self, task): # noqa
     self._analyse_element(task)
 

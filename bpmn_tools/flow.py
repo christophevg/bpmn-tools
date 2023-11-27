@@ -326,6 +326,17 @@ class BusinessRuleTask(Task):
 class ScriptTask(Task):
   __tag__ = "bpmn:scriptTask"
 
+Tasks = [
+  Task,
+  UserTask,
+  ServiceTask,
+  SendTask,
+  ReceiveTask,
+  ManualTask,
+  BusinessRuleTask,
+  ScriptTask
+]
+
 # Annotations
 
 class Text(xml.Element):
