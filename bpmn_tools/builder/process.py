@@ -69,19 +69,24 @@ class Step():
       raise ValueError("connect: {source} == {target}")
     return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target, name=label)
 
-tasks = 0
-
 @dataclass
 class Task(Step):
   name  : str = ""
   cls   : Type[flow.Task] = flow.Task
   args  : Dict = field(default_factory=dict)
-  
+
+  tasks = 0 # class
+
+  @classmethod
+  def reset(cls):
+    print(f"before: {cls.tasks}")
+    cls.tasks = 0
+    print(f"after: {cls.tasks}")
+    
   def __post_init__(self):
-    global tasks
     self.args["name"] = self.name
-    self.element = self.shape(self.cls, id=f"task_{tasks}", **self.args)
-    tasks += 1
+    self.element = self.shape(self.cls, id=f"task_{self.tasks}", **self.args)
+    self.__class__.tasks += 1
   
   @property
   def height(self):
@@ -220,20 +225,24 @@ class BranchKind(Enum):
 def If(condition, step):
   return (step, condition)
 
-gws = 0
-
 @dataclass
 class Branch(Step):
   default  : str = None
   kind     : BranchKind = BranchKind.XOR
 
+  gws = 0
+
   def __post_init__(self):
     global gws
-    self.root = self.shape(self.kind.value, id=f"gateway_start_{gws}", name=self.label)
-    self.tail = self.shape(self.kind.value, id=f"gateway_end_{gws}")
-    gws += 1
+    self.root = self.shape(self.kind.value, id=f"gateway_start_{self.gws}", name=self.label)
+    self.tail = self.shape(self.kind.value, id=f"gateway_end_{self.gws}")
+    self.__class__.gws += 1
     # ensure all children to ensure they are tuples
     self.children = list(map(lambda c: c if type(c) is tuple else (c,None), self.children))
+
+  @classmethod
+  def reset(cls):
+    cls.gws = 0
 
   def add(self, branch, condition=None):
     self.children.append((branch, condition))
