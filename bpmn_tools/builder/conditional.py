@@ -14,11 +14,11 @@ import logging
 from dataclasses import dataclass, field
 from typing import List
 
-from bpmn_tools.builder.process import BranchKind
+from bpmn_tools.builder import process
 
 logger = logging.getLogger(__name__)
 
-ConditionKind = BranchKind
+ConditionKind = process.BranchKind
 
 @dataclass
 class Condition():
@@ -74,6 +74,9 @@ class Item():
   def to_dict(self):
     return self.name
 
+  def to_process(self):
+    return process.Task(name=self.name)
+
   def with_value(self, value):
     return Item(
       self.name,
@@ -92,7 +95,10 @@ class Sequence():
   
   def to_dict(self):
     return [ item.to_dict() for item in self.items ]
-    
+
+  def to_process(self):
+    return process.Process([ item.to_process() for item in self.items ])
+
   def __len__(self):
     return len(self.items)
   
@@ -144,6 +150,9 @@ class Branch():
   def to_dict(self):
     return { self.value : self.sequence.to_dict() }
 
+  def to_process(self):
+    return process.If(self.value, self.sequence.to_process())
+
   def __len__(self):
     return len(self.sequence)
 
@@ -172,6 +181,14 @@ class BranchedItem():
     return {
       str(self.condition) : [ branch.to_dict() for branch in self.branches ]
     }
+
+  def to_process(self):
+    return process.Branch(
+      [ branch.to_process() for branch in self.branches ],
+      label=self.condition.name,
+      kind=self.condition.kind,
+      default=self.condition.kind == ConditionKind.XOR
+    )
 
   def __len__(self):
     return len(self.branches)

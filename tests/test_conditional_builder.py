@@ -1,5 +1,11 @@
+from pathlib import Path
+
 from bpmn_tools.builder.conditional import Item, Sequence, BranchedItem
 from bpmn_tools.builder.conditional import ConditionSet, Condition, ConditionKind
+
+from bpmn_tools.builder.process import Task, Branch
+
+folder = Path(__file__).resolve().parent / "models"
 
 def test_single_item_without_conditions():
   item = Item("name")
@@ -60,7 +66,7 @@ def test_single_item_with_multiple_conditions_and_multiple_value():
   assert isinstance(branched_item[0].sequence[0], BranchedItem)
   assert isinstance(branched_item[1].sequence[0], BranchedItem)
 
-def test_a_more_complex_all_in_one_flow(compare):
+def test_a_more_complex_all_in_one_flow(compare, compare_model_to_file):
   sequence = Sequence().expand(
     Item("step 1"),
     Item("step 2", ConditionSet(
@@ -125,3 +131,12 @@ def test_a_more_complex_all_in_one_flow(compare):
       ]
     }
   ])
+
+  process = sequence.to_process()
+  model = process.render()
+
+  Task.reset()
+  Branch.reset()
+
+  filepath = folder / "conditional-builder.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")

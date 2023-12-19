@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bpmn:process id="process">
+    <bpmn:sequenceFlow id="flow_gateway_start_0_gateway_end_0" sourceRef="gateway_start_0" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_0_task_2" name="value a" sourceRef="gateway_start_0" targetRef="task_2"/>
+    <bpmn:sequenceFlow id="flow_task_2_gateway_end_0" sourceRef="task_2" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_0_task_3" name="value c" sourceRef="gateway_start_0" targetRef="task_3"/>
+    <bpmn:sequenceFlow id="flow_task_3_gateway_end_0" sourceRef="task_3" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_task_1_gateway_start_0" sourceRef="task_1" targetRef="gateway_start_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_3_task_1" name="value 1" sourceRef="gateway_start_3" targetRef="task_1"/>
+    <bpmn:sequenceFlow id="flow_gateway_end_0_gateway_end_3" sourceRef="gateway_end_0" targetRef="gateway_end_3"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_1_gateway_end_1" sourceRef="gateway_start_1" targetRef="gateway_end_1"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_1_task_5" name="value c" sourceRef="gateway_start_1" targetRef="task_5"/>
+    <bpmn:sequenceFlow id="flow_task_5_gateway_end_1" sourceRef="task_5" targetRef="gateway_end_1"/>
+    <bpmn:sequenceFlow id="flow_task_4_gateway_start_1" sourceRef="task_4" targetRef="gateway_start_1"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_3_task_4" name="value 2" sourceRef="gateway_start_3" targetRef="task_4"/>
+    <bpmn:sequenceFlow id="flow_gateway_end_1_gateway_end_3" sourceRef="gateway_end_1" targetRef="gateway_end_3"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_2_gateway_end_2" sourceRef="gateway_start_2" targetRef="gateway_end_2"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_2_task_6" name="value b" sourceRef="gateway_start_2" targetRef="task_6"/>
+    <bpmn:sequenceFlow id="flow_task_6_gateway_end_2" sourceRef="task_6" targetRef="gateway_end_2"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_2_task_7" name="value c" sourceRef="gateway_start_2" targetRef="task_7"/>
+    <bpmn:sequenceFlow id="flow_task_7_gateway_end_2" sourceRef="task_7" targetRef="gateway_end_2"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_3_gateway_start_2" name="value 3" sourceRef="gateway_start_3" targetRef="gateway_start_2"/>
+    <bpmn:sequenceFlow id="flow_gateway_end_2_gateway_end_3" sourceRef="gateway_end_2" targetRef="gateway_end_3"/>
+    <bpmn:sequenceFlow id="flow_task_0_gateway_start_3" sourceRef="task_0" targetRef="gateway_start_3"/>
+    <bpmn:sequenceFlow id="flow_gateway_end_3_task_8" sourceRef="gateway_end_3" targetRef="task_8"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_4_gateway_end_4" sourceRef="gateway_start_4" targetRef="gateway_end_4"/>
+    <bpmn:sequenceFlow id="flow_task_9_task_10" sourceRef="task_9" targetRef="task_10"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_4_task_9" name="value 1" sourceRef="gateway_start_4" targetRef="task_9"/>
+    <bpmn:sequenceFlow id="flow_task_10_gateway_end_4" sourceRef="task_10" targetRef="gateway_end_4"/>
+    <bpmn:sequenceFlow id="flow_task_8_gateway_start_4" sourceRef="task_8" targetRef="gateway_start_4"/>
+    <bpmn:task id="task_0" name="step 1">
+      <bpmn:outgoing>flow_task_0_gateway_start_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_1" name="step 2">
+      <bpmn:incoming>flow_gateway_start_3_task_1</bpmn:incoming>
+      <bpmn:outgoing>flow_task_1_gateway_start_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_2" name="step 3">
+      <bpmn:incoming>flow_gateway_start_0_task_2</bpmn:incoming>
+      <bpmn:outgoing>flow_task_2_gateway_end_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_3" name="step 3">
+      <bpmn:incoming>flow_gateway_start_0_task_3</bpmn:incoming>
+      <bpmn:outgoing>flow_task_3_gateway_end_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_4" name="step 2">
+      <bpmn:incoming>flow_gateway_start_3_task_4</bpmn:incoming>
+      <bpmn:outgoing>flow_task_4_gateway_start_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_5" name="step 3">
+      <bpmn:incoming>flow_gateway_start_1_task_5</bpmn:incoming>
+      <bpmn:outgoing>flow_task_5_gateway_end_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_6" name="step 3">
+      <bpmn:incoming>flow_gateway_start_2_task_6</bpmn:incoming>
+      <bpmn:outgoing>flow_task_6_gateway_end_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_7" name="step 3">
+      <bpmn:incoming>flow_gateway_start_2_task_7</bpmn:incoming>
+      <bpmn:outgoing>flow_task_7_gateway_end_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_8" name="step 4">
+      <bpmn:incoming>flow_gateway_end_3_task_8</bpmn:incoming>
+      <bpmn:outgoing>flow_task_8_gateway_start_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_9" name="step 5">
+      <bpmn:incoming>flow_gateway_start_4_task_9</bpmn:incoming>
+      <bpmn:outgoing>flow_task_9_task_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_10" name="step 6">
+      <bpmn:incoming>flow_task_9_task_10</bpmn:incoming>
+      <bpmn:outgoing>flow_task_10_gateway_end_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="gateway_start_3" name="condition 1">
+      <bpmn:incoming>flow_task_0_gateway_start_3</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_3_task_1</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_3_task_4</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_3_gateway_start_2</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:parallelGateway id="gateway_end_3">
+      <bpmn:incoming>flow_gateway_end_0_gateway_end_3</bpmn:incoming>
+      <bpmn:incoming>flow_gateway_end_1_gateway_end_3</bpmn:incoming>
+      <bpmn:incoming>flow_gateway_end_2_gateway_end_3</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_end_3_task_8</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:exclusiveGateway id="gateway_start_0" name="condition 2">
+      <bpmn:incoming>flow_task_1_gateway_start_0</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_0_gateway_end_0</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_0_task_2</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_0_task_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_end_0">
+      <bpmn:incoming>flow_gateway_start_0_gateway_end_0</bpmn:incoming>
+      <bpmn:incoming>flow_task_2_gateway_end_0</bpmn:incoming>
+      <bpmn:incoming>flow_task_3_gateway_end_0</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_end_0_gateway_end_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_start_1" name="condition 2">
+      <bpmn:incoming>flow_task_4_gateway_start_1</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_1_gateway_end_1</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_1_task_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_end_1">
+      <bpmn:incoming>flow_gateway_start_1_gateway_end_1</bpmn:incoming>
+      <bpmn:incoming>flow_task_5_gateway_end_1</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_end_1_gateway_end_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_start_2" name="condition 2">
+      <bpmn:incoming>flow_gateway_start_3_gateway_start_2</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_2_gateway_end_2</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_2_task_6</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_2_task_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_end_2">
+      <bpmn:incoming>flow_gateway_start_2_gateway_end_2</bpmn:incoming>
+      <bpmn:incoming>flow_task_6_gateway_end_2</bpmn:incoming>
+      <bpmn:incoming>flow_task_7_gateway_end_2</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_end_2_gateway_end_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_start_4" name="condition 1">
+      <bpmn:incoming>flow_task_8_gateway_start_4</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_4_gateway_end_4</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_4_task_9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_end_4">
+      <bpmn:incoming>flow_gateway_start_4_gateway_end_4</bpmn:incoming>
+      <bpmn:incoming>flow_task_10_gateway_end_4</bpmn:incoming>
+    </bpmn:exclusiveGateway>
+  </bpmn:process>
+  <bpmn:collaboration id="collaboration">
+    <bpmn:participant id="participant" name="" processRef="process"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_0_gateway_end_3" bpmnElement="flow_gateway_end_0_gateway_end_3">
+        <di:waypoint x="810" y="130"/>
+        <di:waypoint x="830" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_1_gateway_end_3" bpmnElement="flow_gateway_end_1_gateway_end_3">
+        <di:waypoint x="810" y="405"/>
+        <di:waypoint x="855" y="405"/>
+        <di:waypoint x="855" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_2_gateway_end_3" bpmnElement="flow_gateway_end_2_gateway_end_3">
+        <di:waypoint x="670" y="580"/>
+        <di:waypoint x="855" y="580"/>
+        <di:waypoint x="855" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_3_task_8" bpmnElement="flow_gateway_end_3_task_8">
+        <di:waypoint x="880" y="130"/>
+        <di:waypoint x="910" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_gateway_end_0" bpmnElement="flow_gateway_start_0_gateway_end_0">
+        <di:waypoint x="600" y="130"/>
+        <di:waypoint x="760" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_2" bpmnElement="flow_gateway_start_0_task_2">
+        <di:waypoint x="575" y="155"/>
+        <di:waypoint x="575" y="205"/>
+        <di:waypoint x="630" y="205"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="580" y="210" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_3" bpmnElement="flow_gateway_start_0_task_3">
+        <di:waypoint x="575" y="155"/>
+        <di:waypoint x="575" y="305"/>
+        <di:waypoint x="630" y="305"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="580" y="310" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_1_gateway_end_1" bpmnElement="flow_gateway_start_1_gateway_end_1">
+        <di:waypoint x="600" y="405"/>
+        <di:waypoint x="760" y="405"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_1_task_5" bpmnElement="flow_gateway_start_1_task_5">
+        <di:waypoint x="575" y="430"/>
+        <di:waypoint x="575" y="480"/>
+        <di:waypoint x="630" y="480"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="580" y="485" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_2_gateway_end_2" bpmnElement="flow_gateway_start_2_gateway_end_2">
+        <di:waypoint x="460" y="580"/>
+        <di:waypoint x="620" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_2_task_6" bpmnElement="flow_gateway_start_2_task_6">
+        <di:waypoint x="435" y="605"/>
+        <di:waypoint x="435" y="655"/>
+        <di:waypoint x="490" y="655"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440" y="660" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_2_task_7" bpmnElement="flow_gateway_start_2_task_7">
+        <di:waypoint x="435" y="605"/>
+        <di:waypoint x="435" y="755"/>
+        <di:waypoint x="490" y="755"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440" y="760" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_3_gateway_start_2" bpmnElement="flow_gateway_start_3_gateway_start_2">
+        <di:waypoint x="365" y="155"/>
+        <di:waypoint x="365" y="580"/>
+        <di:waypoint x="410" y="580"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="360" y="585" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_3_task_1" bpmnElement="flow_gateway_start_3_task_1">
+        <di:waypoint x="390" y="130"/>
+        <di:waypoint x="420" y="130"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="135" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_3_task_4" bpmnElement="flow_gateway_start_3_task_4">
+        <di:waypoint x="365" y="155"/>
+        <di:waypoint x="365" y="405"/>
+        <di:waypoint x="420" y="405"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="410" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_4_gateway_end_4" bpmnElement="flow_gateway_start_4_gateway_end_4">
+        <di:waypoint x="1090" y="130"/>
+        <di:waypoint x="1390" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_4_task_9" bpmnElement="flow_gateway_start_4_task_9">
+        <di:waypoint x="1065" y="155"/>
+        <di:waypoint x="1065" y="205"/>
+        <di:waypoint x="1120" y="205"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1070" y="210" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_0_gateway_start_3" bpmnElement="flow_task_0_gateway_start_3">
+        <di:waypoint x="310" y="130"/>
+        <di:waypoint x="340" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_10_gateway_end_4" bpmnElement="flow_task_10_gateway_end_4">
+        <di:waypoint x="1360" y="205"/>
+        <di:waypoint x="1415" y="205"/>
+        <di:waypoint x="1415" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_1_gateway_start_0" bpmnElement="flow_task_1_gateway_start_0">
+        <di:waypoint x="520" y="130"/>
+        <di:waypoint x="550" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_2_gateway_end_0" bpmnElement="flow_task_2_gateway_end_0">
+        <di:waypoint x="730" y="205"/>
+        <di:waypoint x="785" y="205"/>
+        <di:waypoint x="785" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_3_gateway_end_0" bpmnElement="flow_task_3_gateway_end_0">
+        <di:waypoint x="730" y="305"/>
+        <di:waypoint x="785" y="305"/>
+        <di:waypoint x="785" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_4_gateway_start_1" bpmnElement="flow_task_4_gateway_start_1">
+        <di:waypoint x="520" y="405"/>
+        <di:waypoint x="550" y="405"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_5_gateway_end_1" bpmnElement="flow_task_5_gateway_end_1">
+        <di:waypoint x="730" y="480"/>
+        <di:waypoint x="785" y="480"/>
+        <di:waypoint x="785" y="430"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_6_gateway_end_2" bpmnElement="flow_task_6_gateway_end_2">
+        <di:waypoint x="590" y="655"/>
+        <di:waypoint x="645" y="655"/>
+        <di:waypoint x="645" y="605"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_7_gateway_end_2" bpmnElement="flow_task_7_gateway_end_2">
+        <di:waypoint x="590" y="755"/>
+        <di:waypoint x="645" y="755"/>
+        <di:waypoint x="645" y="605"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_8_gateway_start_4" bpmnElement="flow_task_8_gateway_start_4">
+        <di:waypoint x="1010" y="130"/>
+        <di:waypoint x="1040" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_9_task_10" bpmnElement="flow_task_9_task_10">
+        <di:waypoint x="1220" y="205"/>
+        <di:waypoint x="1260" y="205"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_gateway_end_0" bpmnElement="gateway_end_0" isMarkerVisible="true">
+        <dc:Bounds x="760" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_1" bpmnElement="gateway_end_1" isMarkerVisible="true">
+        <dc:Bounds x="760" y="380" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_2" bpmnElement="gateway_end_2" isMarkerVisible="true">
+        <dc:Bounds x="620" y="555" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_3" bpmnElement="gateway_end_3" isMarkerVisible="true">
+        <dc:Bounds x="830" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_end_4" bpmnElement="gateway_end_4" isMarkerVisible="true">
+        <dc:Bounds x="1390" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_0" bpmnElement="gateway_start_0" isMarkerVisible="true">
+        <dc:Bounds x="550" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_1" bpmnElement="gateway_start_1" isMarkerVisible="true">
+        <dc:Bounds x="550" y="380" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_2" bpmnElement="gateway_start_2" isMarkerVisible="true">
+        <dc:Bounds x="410" y="555" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_3" bpmnElement="gateway_start_3" isMarkerVisible="true">
+        <dc:Bounds x="340" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_4" bpmnElement="gateway_start_4" isMarkerVisible="true">
+        <dc:Bounds x="1040" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="1300" height="725"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_0" bpmnElement="task_0">
+        <dc:Bounds x="210" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_1" bpmnElement="task_1">
+        <dc:Bounds x="420" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_10" bpmnElement="task_10">
+        <dc:Bounds x="1260" y="165" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_2" bpmnElement="task_2">
+        <dc:Bounds x="630" y="165" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_3" bpmnElement="task_3">
+        <dc:Bounds x="630" y="265" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_4" bpmnElement="task_4">
+        <dc:Bounds x="420" y="365" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_5" bpmnElement="task_5">
+        <dc:Bounds x="630" y="440" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_6" bpmnElement="task_6">
+        <dc:Bounds x="490" y="615" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_7" bpmnElement="task_7">
+        <dc:Bounds x="490" y="715" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_8" bpmnElement="task_8">
+        <dc:Bounds x="910" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_9" bpmnElement="task_9">
+        <dc:Bounds x="1120" y="165" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
