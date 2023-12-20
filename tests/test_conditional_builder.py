@@ -31,11 +31,11 @@ def test_single_item_with_single_condition_and_single_value():
   assert branched_item.name == "condition"
   assert len(branched_item) == 1
   branch = branched_item[0]
-  assert branch.value == "value"
+  assert branch.value == ("value",)
   assert len(branch.sequence) == 1
   assert branch.sequence[0].name == "name"
 
-def test_single_item_with_single_condition_and_multiple_values():
+def test_single_item_with_single_condition_and_multiple_values_to_collapse():
   item = Item(
     "name", ConditionSet(
       [Condition("condition")], [["value 1"], ["value 2"]]
@@ -46,9 +46,9 @@ def test_single_item_with_single_condition_and_multiple_values():
   assert isinstance(sequence[0], BranchedItem)
   branched_item = sequence[0]
   assert branched_item.name == "condition"
-  assert len(branched_item) == 2
+  assert len(branched_item) == 1
+  assert branched_item[0].value == ("value 1","value 2")
   assert branched_item[0].sequence[0].name == "name"
-  assert branched_item[1].sequence[0].name == "name"
 
 def test_single_item_with_multiple_conditions_and_multiple_value():
   item = Item(
@@ -96,8 +96,7 @@ def test_a_more_complex_all_in_one_flow(compare, compare_model_to_file):
             "step 2",
             {
               "condition 2(XOR)": [
-                { "value a": [ "step 3" ] },
-                { "value c": [ "step 3" ] }
+                { "value a,value c": [ "step 3" ] }
               ]
             }
           ]
@@ -116,8 +115,7 @@ def test_a_more_complex_all_in_one_flow(compare, compare_model_to_file):
           "value 3": [
             {
               "condition 2(XOR)": [
-                { "value b": [ "step 3" ] },
-                { "value c": [ "step 3" ] }
+                { "value b,value c": [ "step 3" ] }
               ]
             }
           ]

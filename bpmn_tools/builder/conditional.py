@@ -25,6 +25,9 @@ class Condition():
   name  : str
   kind  : ConditionKind = ConditionKind.XOR
 
+  def __eq__(self, other):
+    return self.name == other.name and self.kind == other.kind
+
   def __str__(self):
     return f"{self.name}({self.kind.name})"
 
@@ -77,6 +80,9 @@ class Item():
   def to_process(self):
     return process.Task(name=self.name)
 
+  def __eq__(self, other):
+    return self.name == other.name
+
   def with_value(self, value):
     return Item(
       self.name,
@@ -98,6 +104,10 @@ class Sequence():
 
   def to_process(self):
     return process.Process([ item.to_process() for item in self.items ])
+
+  def __eq__(self, other):
+    return len(self.items) == len(other.items) and \
+           all([ left == right for left, right in zip(self.items,other.items) ])
 
   def __len__(self):
     return len(self.items)
@@ -144,14 +154,17 @@ class Sequence():
 
 @dataclass
 class Branch():
-  value : str
+  value : tuple
   sequence : Sequence = field(default_factory=list)
 
   def to_dict(self):
-    return { self.value : self.sequence.to_dict() }
+    return { ','.join(map(str,self.value)) : self.sequence.to_dict() }
 
   def to_process(self):
-    return process.If(self.value, self.sequence.to_process())
+    return process.If(','.join(map(str,self.value)), self.sequence.to_process())
+
+  def __eq__(self, other):
+    return self.value == other.value and self.sequence == other.sequence
 
   def __len__(self):
     return len(self.sequence)
@@ -160,7 +173,7 @@ class Branch():
     # only accept items with our condition
     for item in items:
       for values in item.conditions.values:
-        if values[0] != self.value and values[0] is not None:
+        if values[0] not in self.value and values[0] is not None:
           raise ValueError(f"{self.value} != {values[0]}")
     # create a sequence for the items, without the first condition, which 
     # already brought us here (condition reduction up to no conditions left)
@@ -190,6 +203,10 @@ class BranchedItem():
       default=self.condition.kind == ConditionKind.XOR
     )
 
+  def __eq__(self, other):
+    return self.condition == other.condition and \
+           all([ left == right for left, right in zip(self.branches, other.branches) ])
+
   def __len__(self):
     return len(self.branches)
   
@@ -211,9 +228,10 @@ class BranchedItem():
       values[0] for item in items for values in item.conditions.values 
       if values[0] is not None
     ]))
+
     # create branches for each possible value
     for value in values:
-      branch = Branch(value)
+      branch = Branch((value,))
       branch_items = []
       for item in items:
         branch_item = item.with_value(value)
@@ -221,3 +239,17 @@ class BranchedItem():
           branch_items.append(branch_item)
       branch.expand(*branch_items)
       self.branches.append(branch)
+
+    # collapse branches that are the same (except for their value)
+    collapsed_branches = []
+    for index, branch in enumerate(self.branches):
+      if index not in collapsed_branches:
+        for other_index, other_branch in enumerate(self.branches[index+1:]):
+          if branch != other_branch:
+            if branch.sequence == other_branch.sequence:
+              collapsed_branches.append(index+other_index+1)
+              branch.value = branch.value + other_branch.value
+    self.branches = [
+      branch for index, branch in enumerate(self.branches)
+      if index not in collapsed_branches
+    ]
