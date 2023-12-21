@@ -26,6 +26,7 @@ TODO
  - [ ] labels
 
 """
+from bpmn_tools.util import slugify
 
 PADDING               =  10
 FLOW_SPACE            =  20
@@ -71,9 +72,10 @@ class Step():
 
 @dataclass
 class Task(Step):
-  name  : str = ""
-  cls   : Type[flow.Task] = flow.Task
-  args  : Dict = field(default_factory=dict)
+  name    : str = ""
+  cls     : Type[flow.Task] = flow.Task
+  args    : Dict = field(default_factory=dict)
+  boundary: Type[flow.EventDefinition] = None
 
   tasks = 0 # class
 
@@ -99,8 +101,15 @@ class Task(Step):
   def render(self, x=0, y=0):
     self.element.x = x + PADDING
     self.element.y = y + PADDING
-    return ( [ self.element ], [] )
-    
+    shapes = [ self.element ]
+    if self.boundary:
+      shapes.append(flow.BoundaryEvent(
+        id=f"boundary-event-{self.element.id}",
+        definition=self.boundary(id=f"{slugify(self.boundary.__name__)}-{self.element.id}"),
+        on=self.element
+      ))
+    return (shapes, [])
+
   @property
   def root(self):
     return self.element

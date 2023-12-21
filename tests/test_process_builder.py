@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from bpmn_tools.builder.process import Process, Task, Branch, BranchKind, If
+from bpmn_tools.flow import MessageEventDefinition
 from bpmn_tools.colors import Green, Blue, Red, Orange
 
 folder = Path(__file__).resolve().parent / "models"
@@ -95,4 +96,14 @@ def test_branch_conditions_and_labels(compare_model_to_file):
   model = process.render()
   
   filepath = folder / "conditions_and_labels.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_boundary_event(compare_model_to_file):
+  process = Process([
+    Task(name="Task 1", boundary=MessageEventDefinition)
+  ], name="task with boundary event")
+
+  model = process.render()
+  
+  filepath = folder / "process-builder-based-boundary-events.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
