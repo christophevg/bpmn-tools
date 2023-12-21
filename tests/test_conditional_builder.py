@@ -5,6 +5,8 @@ from bpmn_tools.builder.conditional import ConditionSet, Condition, ConditionKin
 
 from bpmn_tools.builder.process import Task, Branch
 
+from bpmn_tools import flow
+
 folder = Path(__file__).resolve().parent / "models"
 
 def test_single_item_without_conditions():
@@ -137,4 +139,18 @@ def test_a_more_complex_all_in_one_flow(compare, compare_model_to_file):
   Branch.reset()
 
   filepath = folder / "conditional-builder.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_custom_bpmn_element_class_and_boundary(compare_model_to_file):
+  sequence = Sequence().expand(
+    Item("step 1", cls=flow.ManualTask, boundary=flow.TimerEventDefinition),
+  )
+
+  process = sequence.to_process()
+  model = process.render()
+
+  Task.reset()
+  Branch.reset()
+
+  filepath = folder / "conditional-builder-with-custom-class-and-boundary.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
