@@ -20,12 +20,6 @@ from bpmn_tools.diagrams      import Diagram, Plane
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.colors        import Red, Green, Orange, Blue
 
-"""
-
-TODO
- - [ ] labels
-
-"""
 from bpmn_tools.util import slugify
 
 PADDING               =  10
@@ -81,9 +75,7 @@ class Task(Step):
 
   @classmethod
   def reset(cls):
-    print(f"before: {cls.tasks}")
     cls.tasks = 0
-    print(f"after: {cls.tasks}")
     
   def __post_init__(self):
     self.args["name"] = self.name
