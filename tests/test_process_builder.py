@@ -107,3 +107,14 @@ def test_boundary_event(compare_model_to_file):
   
   filepath = folder / "process-builder-based-boundary-events.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+
+def test_bug_flow_from_boundary_event_to_end(compare_model_to_file):
+  process = Process([
+    Task(name="Task 1", boundary=MessageEventDefinition)
+  ], name="task with boundary event", ends=True)
+
+  model = process.render()
+  
+  filepath = folder / "process-builder-bug_flow_from_boundary_event_to_end.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")

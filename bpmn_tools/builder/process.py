@@ -180,10 +180,16 @@ class Process(Step):
 
     # add optional end event
     if self.ends:
-      self.tail.x = x
-      self.tail.y = self.root.y
       shapes.append(self.tail)
-      flows.append(self.connect(source=shapes[-2], target=self.tail))
+      # find last Task (e.g. not its boundary)
+      index = -2
+      while not isinstance(shapes[index], flow.Task):
+        index -= 1
+      # position end in middle of last Task
+      self.tail.x = x
+      self.tail.y = shapes[index].y + (shapes[index].height/2) - (self.tail.height/2)
+      # add flow to end
+      flows.append(self.connect(source=shapes[index], target=self.tail))
 
     # optinally wrap it all
     if wrap:
