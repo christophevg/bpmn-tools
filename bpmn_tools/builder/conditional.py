@@ -105,11 +105,6 @@ class Item():
   def __eq__(self, other):
     return self.name == other.name
 
-  @property
-  def pruned(self):
-    self.conditions.prune()
-    return self
-
   def with_value(self, value):
     return Item(
       self.name,
@@ -158,12 +153,17 @@ class Sequence():
     items           = list(items) # ensure list
     prev_first_item = None        # track progress (avoid endless loop ;-))
 
+    # prune all items' conditions -> remove all None-conditions up to first 
+    # actual condition
+    for item in items:
+      item.conditions.prune()
+
     logger.debug(f"creating sequence from {[item.name for item in items]}")
     while len(items) and items[0] is not prev_first_item:
       prev_first_item = items[0]
 
       # simply add condition-less items without further expansion
-      while len(items) and not len(items[0].pruned.conditions):
+      while len(items) and not len(items[0].conditions):
         logger.debug(f"adding {items[0].name} to sequence")
         self.append(items.pop(0))
       
@@ -173,6 +173,7 @@ class Sequence():
       if len(items):
         branched_item  = BranchedItem(items[0].conditions[0])
         branched_items = []
+        
         while len(items) and items[0].conditions \
               and items[0].conditions[0].name == branched_item.name \
               and items[0].conditions.first_non_none_values:

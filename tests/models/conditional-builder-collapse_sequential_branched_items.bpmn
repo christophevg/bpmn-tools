@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bpmn:process id="process">
+    <bpmn:sequenceFlow id="flow_gateway_start_0_gateway_end_0" sourceRef="gateway_start_0" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_0_task_1" name="value 1" sourceRef="gateway_start_0" targetRef="task_1"/>
+    <bpmn:sequenceFlow id="flow_task_1_gateway_end_0" sourceRef="task_1" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_start_0_task_2" name="value 2,value 3" sourceRef="gateway_start_0" targetRef="task_2"/>
+    <bpmn:sequenceFlow id="flow_task_2_gateway_end_0" sourceRef="task_2" targetRef="gateway_end_0"/>
+    <bpmn:sequenceFlow id="flow_task_0_gateway_start_0" sourceRef="task_0" targetRef="gateway_start_0"/>
+    <bpmn:sequenceFlow id="flow_gateway_end_0_task_3" sourceRef="gateway_end_0" targetRef="task_3"/>
+    <bpmn:task id="task_0" name="step 1">
+      <bpmn:outgoing>flow_task_0_gateway_start_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_1" name="step 2">
+      <bpmn:incoming>flow_gateway_start_0_task_1</bpmn:incoming>
+      <bpmn:outgoing>flow_task_1_gateway_end_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_2" name="step 3">
+      <bpmn:incoming>flow_gateway_start_0_task_2</bpmn:incoming>
+      <bpmn:outgoing>flow_task_2_gateway_end_0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="task_3" name="step 4">
+      <bpmn:incoming>flow_gateway_end_0_task_3</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="gateway_start_0" name="condition 2">
+      <bpmn:incoming>flow_task_0_gateway_start_0</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_start_0_gateway_end_0</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_0_task_1</bpmn:outgoing>
+      <bpmn:outgoing>flow_gateway_start_0_task_2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="gateway_end_0">
+      <bpmn:incoming>flow_gateway_start_0_gateway_end_0</bpmn:incoming>
+      <bpmn:incoming>flow_task_1_gateway_end_0</bpmn:incoming>
+      <bpmn:incoming>flow_task_2_gateway_end_0</bpmn:incoming>
+      <bpmn:outgoing>flow_gateway_end_0_task_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+  </bpmn:process>
+  <bpmn:collaboration id="collaboration">
+    <bpmn:participant id="participant" name="" processRef="process"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNEdge id="edge_flow_gateway_end_0_task_3" bpmnElement="flow_gateway_end_0_task_3">
+        <di:waypoint x="600" y="130"/>
+        <di:waypoint x="630" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_gateway_end_0" bpmnElement="flow_gateway_start_0_gateway_end_0">
+        <di:waypoint x="390" y="130"/>
+        <di:waypoint x="550" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_1" bpmnElement="flow_gateway_start_0_task_1">
+        <di:waypoint x="365" y="155"/>
+        <di:waypoint x="365" y="205"/>
+        <di:waypoint x="420" y="205"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="210" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_gateway_start_0_task_2" bpmnElement="flow_gateway_start_0_task_2">
+        <di:waypoint x="365" y="155"/>
+        <di:waypoint x="365" y="305"/>
+        <di:waypoint x="420" y="305"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="310" width="0" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_0_gateway_start_0" bpmnElement="flow_task_0_gateway_start_0">
+        <di:waypoint x="310" y="130"/>
+        <di:waypoint x="340" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_1_gateway_end_0" bpmnElement="flow_task_1_gateway_end_0">
+        <di:waypoint x="520" y="205"/>
+        <di:waypoint x="575" y="205"/>
+        <di:waypoint x="575" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow_task_2_gateway_end_0" bpmnElement="flow_task_2_gateway_end_0">
+        <di:waypoint x="520" y="305"/>
+        <di:waypoint x="575" y="305"/>
+        <di:waypoint x="575" y="155"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_gateway_end_0" bpmnElement="gateway_end_0" isMarkerVisible="true">
+        <dc:Bounds x="550" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway_start_0" bpmnElement="gateway_start_0" isMarkerVisible="true">
+        <dc:Bounds x="340" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="600" height="275"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_0" bpmnElement="task_0">
+        <dc:Bounds x="210" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_1" bpmnElement="task_1">
+        <dc:Bounds x="420" y="165" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_2" bpmnElement="task_2">
+        <dc:Bounds x="420" y="265" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task_3" bpmnElement="task_3">
+        <dc:Bounds x="630" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

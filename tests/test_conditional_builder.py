@@ -336,3 +336,45 @@ def test_all_none_conditions(compare, compare_model_to_file):
 
   filepath = folder / "conditional-builder-with-various-nones.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_collapse_sequential_branched_items(compare, compare_model_to_file):
+  sequence = Sequence().expand(
+    Item("step 1"),
+    Item("step 2", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2")],
+      [
+        [None, "value 1"]
+      ]  
+    )),
+    Item("step 3", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2")],
+      [
+        [None, "value 2"],
+        [None, "value 3"]
+      ]  
+    )),
+    Item("step 4")
+  )
+  compare(sequence.to_dict(), [
+    "step 1",
+    {
+      "condition 2(XOR)": [
+        {
+          "value 1": [ "step 2" ]
+        },
+        {
+          "value 2,value 3": [ "step 3" ]
+        }
+      ]
+    },
+    "step 4"
+  ])
+
+  process = sequence.to_process()
+  model = process.render()
+
+  Task.reset()
+  Branch.reset()
+
+  filepath = folder / "conditional-builder-collapse_sequential_branched_items.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
