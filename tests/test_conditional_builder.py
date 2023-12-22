@@ -378,3 +378,14 @@ def test_collapse_sequential_branched_items(compare, compare_model_to_file):
 
   filepath = folder / "conditional-builder-collapse_sequential_branched_items.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_adding_process_properties(compare):
+  sequence = Sequence().expand(Item("step 1"))
+  process = sequence.to_process(name="with properties", starts=True, ends=True)
+  Task.reset()
+  Branch.reset()
+  assert len(process.children) == 1
+  assert process.children[0].name == "step 1"
+  assert process.name == "with properties"
+  assert process.starts
+  assert process.ends

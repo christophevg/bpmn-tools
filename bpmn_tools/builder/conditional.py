@@ -124,8 +124,8 @@ class Sequence():
   def to_dict(self):
     return [ item.to_dict() for item in self.items ]
 
-  def to_process(self):
-    return process.Process([ item.to_process() for item in self.items ])
+  def to_process(self, **kwargs):
+    return process.Process([ item.to_process() for item in self.items ], **kwargs)
 
   def __eq__(self, other):
     try:
