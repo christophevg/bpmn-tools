@@ -42,6 +42,20 @@ class ConditionSet():
       if len(values) != len(self.conditions):
         raise ValueError("each set of values should a value for each condition")
 
+  def prune(self):
+    # if all first values of a condition are None, it can be pruned  
+    needs_pruning = True
+    while needs_pruning:
+      if not self.values:
+        needs_pruning = False
+      for values in self.values:
+        if not values or values[0] is not None:
+          needs_pruning = False
+      if needs_pruning:
+        self.conditions = self.conditions[1:]
+        for index, values in enumerate(self.values):
+          self.values[index] = values[1:]
+
   def __len__(self):
     return len(self.conditions)
 
@@ -51,10 +65,15 @@ class ConditionSet():
   def __getitem__(self, index):
     return self.conditions[0]
 
+  @property
+  def first_non_none_values(self):
+    return [
+      values[0] for values in self.values if values[0] is not None
+    ]
+
   def with_value(self, value):
     """
     return a clone with only value-sets of which the first value matches "value"
-    or is None (meaning we don't care, so it matches everything)
     """
     return ConditionSet(
       self.conditions.copy(),
@@ -86,6 +105,11 @@ class Item():
   def __eq__(self, other):
     return self.name == other.name
 
+  @property
+  def pruned(self):
+    self.conditions.prune()
+    return self
+
   def with_value(self, value):
     return Item(
       self.name,
@@ -109,8 +133,11 @@ class Sequence():
     return process.Process([ item.to_process() for item in self.items ])
 
   def __eq__(self, other):
-    return len(self.items) == len(other.items) and \
-           all([ left == right for left, right in zip(self.items,other.items) ])
+    try:
+      return len(self.items) == len(other.items) and \
+             all([ left == right for left, right in zip(self.items,other.items) ])
+    except AttributeError:
+      return False
 
   def __len__(self):
     return len(self.items)
@@ -131,21 +158,24 @@ class Sequence():
     items           = list(items) # ensure list
     prev_first_item = None        # track progress (avoid endless loop ;-))
 
+    logger.debug(f"creating sequence from {[item.name for item in items]}")
     while len(items) and items[0] is not prev_first_item:
       prev_first_item = items[0]
 
       # simply add condition-less items without further expansion
-      while len(items) and len(items[0].conditions) == 0:
+      while len(items) and not len(items[0].pruned.conditions):
+        logger.debug(f"adding {items[0].name} to sequence")
         self.append(items.pop(0))
-
-      # we encountered an item with conditions
-      # collect leading sub-list of items that have the same first conditionname
+      
+      # we encountered an item with a condition
+      # collect leading sub-list of items that have the same first condition
       # and create a BranchedItem from them
       if len(items):
         branched_item  = BranchedItem(items[0].conditions[0])
         branched_items = []
         while len(items) and items[0].conditions \
-              and items[0].conditions[0].name == branched_item.name:
+              and items[0].conditions[0].name == branched_item.name \
+              and items[0].conditions.first_non_none_values:
           branched_items.append(items.pop(0))
         branched_item.expand(*branched_items)
         self.append(branched_item)
@@ -169,9 +199,6 @@ class Branch():
   def __eq__(self, other):
     return self.value == other.value and self.sequence == other.sequence
 
-  def __len__(self):
-    return len(self.sequence)
-
   def expand(self, *items):
     # only accept items with our condition
     for item in items:
@@ -180,9 +207,8 @@ class Branch():
           raise ValueError(f"{self.value} != {values[0]}")
     # create a sequence for the items, without the first condition, which 
     # already brought us here (condition reduction up to no conditions left)
-    self.sequence = Sequence().expand(
-      *[ item.without_first_condition() for item in items ]
-    )
+    items = [ item.without_first_condition() for item in items ]
+    self.sequence = Sequence().expand(*items)
 
 @dataclass
 class BranchedItem():
@@ -226,11 +252,13 @@ class BranchedItem():
       if item.conditions[0].name != self.name:
         raise ValueError(f"{self} only accepts items with condition {self.name}")
 
+    logger.debug(f"creating branched item for {self.condition.name} from {[item.name for item in items]}")
     # create a set of the possible values for conditions
     values = sorted(set([
       values[0] for item in items for values in item.conditions.values 
       if values[0] is not None
     ]))
+    logger.debug(f"  with possible branch values: {values}")
 
     # create branches for each possible value
     for value in values:
@@ -240,6 +268,7 @@ class BranchedItem():
         branch_item = item.with_value(value)
         if branch_item.conditions.values:
           branch_items.append(branch_item)
+      logger.debug(f"    - {value} : {[ item.name for item in branch_items ]}")
       branch.expand(*branch_items)
       self.branches.append(branch)
 

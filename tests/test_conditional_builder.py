@@ -154,3 +154,185 @@ def test_custom_bpmn_element_class_and_boundary(compare_model_to_file):
 
   filepath = folder / "conditional-builder-with-custom-class-and-boundary.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_all_none_conditions_1(compare):
+  sequence = Sequence().expand(
+    Item("step 1"),
+    Item("step 2", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2")],
+      [
+        ["value 1", "value a"],
+        ["value 1", "value b"],
+        ["value 2", None     ]
+      ]  
+    ))
+  )
+  compare(sequence.to_dict(), [
+    "step 1",
+    {
+      "condition 1(XOR)": [
+        {
+          "value 1": [
+            {
+              "condition 2(XOR)": [
+                {
+                  "value a,value b": [
+                    "step 2"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "value 2": [
+            "step 2"
+          ]
+        }
+      ]
+    }
+  ])
+
+def test_all_none_conditions_2(compare):
+  sequence = Sequence().expand(
+    Item("step 1"),
+    Item("step 2", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 1", "value a", None],
+        ["value 1", "value b", None],
+        ["value 2", None,      None]
+      ]  
+    ))
+  )
+  compare(sequence.to_dict(), [
+    "step 1",
+    {
+      "condition 1(XOR)": [
+        {
+          "value 1": [
+            {
+              "condition 2(XOR)": [
+                {
+                  "value a,value b": [
+                    "step 2"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "value 2": [
+            "step 2"
+          ]
+        }
+      ]
+    }
+  ])
+
+def test_all_none_conditions(compare, compare_model_to_file):
+  sequence = Sequence().expand(
+    Item("step 1"),
+    Item("step 2", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 1", "value a", None],
+        ["value 1", "value b", None],
+        ["value 2", None,      None]
+      ]  
+    )),
+    Item("step 3", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 3", None, None],
+        ["value 4", None, None]
+      ]  
+    )),
+    Item("step 4", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 3", None, None],
+        ["value 4", None, None]
+      ]  
+    )),
+    Item("step 5", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 1", None, "something"],
+        ["value 2", None, None]
+      ]  
+    )),
+    Item("step 6", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        ["value 2", None, None]
+      ]  
+    )),
+    Item("step 7", ConditionSet(
+      [Condition("condition 1"), Condition("condition 2"), Condition("condition 3")],
+      [
+        [ None, None, "something"]
+      ]  
+    ))
+  )
+  compare(sequence.to_dict(), [
+    "step 1",
+    {
+      "condition 1(XOR)": [
+        {
+          "value 1": [
+            {
+              "condition 2(XOR)": [
+                {
+                  "value a,value b": [
+                    "step 2"
+                  ]
+                }
+              ]
+            },
+            {
+              "condition 3(XOR)": [
+                {
+                  "something": [
+                    "step 5"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "value 2": [
+            "step 2",
+            "step 5",
+            "step 6"
+          ]
+        },
+        {
+          "value 3,value 4": [
+            "step 3",
+            "step 4"
+          ]
+        }
+      ]
+    },
+    {
+      "condition 3(XOR)": [
+        {
+          "something": [
+            "step 7"
+          ]
+        }
+      ]
+    }
+  ])
+
+  process = sequence.to_process()
+  model = process.render()
+
+  Task.reset()
+  Branch.reset()
+
+  filepath = folder / "conditional-builder-with-various-nones.bpmn"
+  compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
