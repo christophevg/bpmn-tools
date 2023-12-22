@@ -116,7 +116,7 @@ class Item():
   def without_first_condition(self):
     return Item(
       self.name,
-      self.conditions.without_first()
+      self.conditions.without_first(),
       self.cls,
       self.boundary
     )
