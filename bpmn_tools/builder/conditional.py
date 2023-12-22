@@ -108,13 +108,17 @@ class Item():
   def with_value(self, value):
     return Item(
       self.name,
-      self.conditions.with_value(value)
+      self.conditions.with_value(value),
+      self.cls,
+      self.boundary
     )
 
   def without_first_condition(self):
     return Item(
       self.name,
       self.conditions.without_first()
+      self.cls,
+      self.boundary
     )
 
 @dataclass
