@@ -181,9 +181,10 @@ class Process(Step):
     # add optional end event
     if self.ends:
       shapes.append(self.tail)
-      # find last Task (e.g. not its boundary)
+      # find last not-boundary
       index = -2
-      while not isinstance(shapes[index], flow.Task):
+      print(shapes[index])
+      while isinstance(shapes[index], flow.BoundaryEvent):
         index -= 1
       # position end in middle of last Task
       self.tail.x = x
