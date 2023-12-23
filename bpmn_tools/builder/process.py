@@ -11,7 +11,7 @@ Process builder builds single-process, forward branching-flow-like structures:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Dict, Type
+from typing import List, Dict, Type, Union, Callable
 
 from bpmn_tools import flow
 
@@ -70,17 +70,38 @@ class Task(Step):
   cls     : Type[flow.Task] = flow.Task
   args    : Dict = field(default_factory=dict)
   boundary: Type[flow.EventDefinition] = None
+  id      : Union[str, Callable] = None
+  _id     : Union[str, Callable] = field(init=False, repr=False, default=None)
+  _std_id : str = field(init=False, repr=False, default=None)
 
   tasks = 0 # class
 
   @classmethod
   def reset(cls):
     cls.tasks = 0
-    
+
+  @property
+  def id(self):
+    if self._id:
+      if callable(self._id):
+        return self._id(self._std_id)
+      else:
+        return self._id
+    return self._std_id
+  
+  @id.setter
+  def id(self, new_id):
+    # courtesy: https://stackoverflow.com/a/61480946
+    if type(new_id) is property:
+      # initial value not specified, use default
+      new_id = Task._id
+    self._id = new_id
+
   def __post_init__(self):
     self.args["name"] = self.name
-    self.element = self.shape(self.cls, id=f"task_{self.tasks}", **self.args)
+    self._std_id = f"task_{self.tasks}"
     self.__class__.tasks += 1
+    self.element = self.shape(self.cls, id=self.id, **self.args)
   
   @property
   def height(self):

@@ -118,3 +118,16 @@ def test_bug_flow_from_boundary_event_to_end(compare_model_to_file):
   
   filepath = folder / "process-builder-bug_flow_from_boundary_event_to_end.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
+
+def test_task_id():
+  task = Task()                             # task_0
+  assert task.id == "task_0"
+  assert task.element.id == "task_0"
+
+  task = Task(id="test_task")               # task_1
+  assert task.id == "test_task"
+  assert task.element.id == "test_task"
+
+  task = Task(id=lambda d: f"prefixed_{d}") # task_2
+  assert task.id == "prefixed_task_2"
+  assert task.element.id == "prefixed_task_2"
