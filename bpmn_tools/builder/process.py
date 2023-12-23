@@ -47,14 +47,14 @@ class Step():
   
   @property
   def height(self):
-    raise NotImplementedError
+    raise NotImplementedError # noqa
 
   @property
   def width(self):
-    raise NotImplementedError
+    raise NotImplementedError # noqa
 
   def render(self, x=0, y=0):
-    raise NotImplementedError
+    raise NotImplementedError # noqa
 
   def shape(self, cls, **kwargs):
     return self.color(cls(**kwargs))
