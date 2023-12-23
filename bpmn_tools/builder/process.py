@@ -202,15 +202,12 @@ class Process(Step):
     # add optional end event
     if self.ends:
       shapes.append(self.tail)
-      # find last not-boundary
-      index = -2
-      while isinstance(shapes[index], flow.BoundaryEvent):
-        index -= 1
-      # position end in middle of last Task
+      # attach to tail of last child
+      last_shape = self.children[-1].tail
       self.tail.x = x
-      self.tail.y = shapes[index].y + (shapes[index].height/2) - (self.tail.height/2)
+      self.tail.y = last_shape.y + (last_shape.height/2) - (self.tail.height/2)
       # add flow to end
-      flows.append(self.connect(source=shapes[index], target=self.tail))
+      flows.append(self.connect(source=last_shape, target=self.tail))
 
     # optinally wrap it all
     if wrap:

@@ -30,7 +30,6 @@ def test_basic_process_building(compare_model_to_file):
   filepath = folder / "hello-process-builder.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
-
 def test_complex_process_building(compare_model_to_file):
   process = Process([
     Task(name="Task 1"),
@@ -108,10 +107,11 @@ def test_boundary_event(compare_model_to_file):
   filepath = folder / "process-builder-based-boundary-events.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
-
 def test_bug_flow_from_boundary_event_to_end(compare_model_to_file):
   process = Process([
-    Task(name="Task 1", boundary=MessageEventDefinition)
+    Branch([
+      Task(name="Task 1", boundary=MessageEventDefinition)
+    ], default=True)
   ], name="task with boundary event", ends=True)
 
   model = process.render()
