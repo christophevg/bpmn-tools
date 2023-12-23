@@ -183,7 +183,6 @@ class Process(Step):
       shapes.append(self.tail)
       # find last not-boundary
       index = -2
-      print(shapes[index])
       while isinstance(shapes[index], flow.BoundaryEvent):
         index -= 1
       # position end in middle of last Task
