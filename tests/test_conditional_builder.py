@@ -3,8 +3,6 @@ from pathlib import Path
 from bpmn_tools.builder.conditional import Item, Sequence, BranchedItem
 from bpmn_tools.builder.conditional import ConditionSet, Condition, ConditionKind
 
-from bpmn_tools.builder.process import Task, Branch
-
 from bpmn_tools import flow
 
 folder = Path(__file__).resolve().parent / "models"
@@ -135,9 +133,6 @@ def test_a_more_complex_all_in_one_flow(compare, compare_model_to_file):
   process = sequence.to_process()
   model = process.render()
 
-  Task.reset()
-  Branch.reset()
-
   filepath = folder / "conditional-builder.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
@@ -148,9 +143,6 @@ def test_custom_bpmn_element_class_and_boundary(compare_model_to_file):
 
   process = sequence.to_process()
   model = process.render()
-
-  Task.reset()
-  Branch.reset()
 
   filepath = folder / "conditional-builder-with-custom-class-and-boundary.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
@@ -331,9 +323,6 @@ def test_all_none_conditions(compare, compare_model_to_file):
   process = sequence.to_process()
   model = process.render()
 
-  Task.reset()
-  Branch.reset()
-
   filepath = folder / "conditional-builder-with-various-nones.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
@@ -373,17 +362,12 @@ def test_collapse_sequential_branched_items(compare, compare_model_to_file):
   process = sequence.to_process()
   model = process.render()
 
-  Task.reset()
-  Branch.reset()
-
   filepath = folder / "conditional-builder-collapse_sequential_branched_items.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
 def test_adding_process_properties(compare):
   sequence = Sequence().expand(Item("step 1"))
   process = sequence.to_process(name="with properties", starts=True, ends=True)
-  Task.reset()
-  Branch.reset()
   assert len(process.children) == 1
   assert process.children[0].name == "step 1"
   assert process.name == "with properties"

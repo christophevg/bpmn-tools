@@ -65,7 +65,7 @@ def test_complex_process_building(compare_model_to_file):
 
   model = process.render()
   
-  filepath = folder / "complex-process-builder.bpmn"
+  filepath = folder / "process-builder-complex-process-builder.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
 def test_bug_process_events_with_intial_branch(compare_model_to_file):
@@ -80,7 +80,7 @@ def test_bug_process_events_with_intial_branch(compare_model_to_file):
 
   model = process.render()
   
-  filepath = folder / "bug_start_before_branch.bpmn"
+  filepath = folder / "process-builder-bug_start_before_branch.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
 def test_branch_conditions_and_labels(compare_model_to_file):
@@ -95,7 +95,7 @@ def test_branch_conditions_and_labels(compare_model_to_file):
 
   model = process.render()
   
-  filepath = folder / "conditions_and_labels.bpmn"
+  filepath = folder / "process-builder-conditions_and_labels.bpmn"
   compare_model_to_file(model, filepath, save_to=f"{filepath.stem}-test.bpmn")
 
 def test_boundary_event(compare_model_to_file):

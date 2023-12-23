@@ -6,6 +6,8 @@ import json
 
 from bpmn_tools.util import model2xml, sanitize_xml
 
+from bpmn_tools.builder.process import Task, Branch
+
 def compare_strings(result, expected):
   # print to std, which shows up in test output when assertion fails
   print("".join(unified_diff(
@@ -54,3 +56,9 @@ def compare_model_to_file_fixture():
   def tester(model, filename, save_to=None):
     return compare_model_to_file(model, filename, save_to=save_to)
   return tester
+
+@pytest.fixture(autouse=True)
+def ensure_starting_each_test_with_generated_ids_starting_at_0():
+  Task.reset()
+  Branch.reset()
+  yield
