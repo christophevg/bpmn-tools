@@ -25,7 +25,7 @@ INSTALL_REQUIRES = [
 ]
 ENTRY_POINTS = {
   "console_scripts" : [
-    "bt=bpmn_tools.__main__:cli",
+    "bpmn-tool=bpmn_tools.__main__:cli",
     
   ]
 }

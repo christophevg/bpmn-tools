@@ -5,7 +5,7 @@ classifiers:
 - 'Programming Language :: Python :: 3'
 - 'Programming Language :: Python :: 3.8'
 console_scripts:
-- bt=bpmn_tools.__main__:cli
+- bpmn-tool=bpmn_tools.__main__:cli
 first_year_of_publication: '2023'
 github_account: christophevg
 github_repo_name: bpmn-tools
