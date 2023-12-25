@@ -184,10 +184,6 @@ class Sequence():
           branched_items.append(items.pop(0))
         branched_item.expand(*branched_items)
         self.append(branched_item)
-  
-    if len(items):
-      raise ValueError(f"could not process all items. remaining: {items}")
-
     return self
 
 @dataclass

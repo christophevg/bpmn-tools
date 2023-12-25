@@ -47,22 +47,17 @@ class Step():
   
   @property
   def height(self):
-    raise NotImplementedError # noqa
+    raise NotImplementedError # pragma: no cover
 
   @property
   def width(self):
-    raise NotImplementedError # noqa
+    raise NotImplementedError # pragma: no cover
 
   def render(self, x=0, y=0):
-    raise NotImplementedError # noqa
+    raise NotImplementedError # pragma: no cover
 
   def shape(self, cls, **kwargs):
     return self.color(cls(**kwargs))
-
-  def connect(self, source, target, label=None):
-    if source == target:
-      raise ValueError("connect: {source} == {target}")
-    return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target, name=label)
 
 @dataclass
 class Task(Step):
@@ -131,6 +126,11 @@ class Task(Step):
   def tail(self):
     return self.element
 
+def connect(source, target, label=None):
+  if source == target:
+    raise ValueError("connect: {source} == {target}")
+  return flow.Flow(id=f"flow_{source.id}_{target.id}", source=source, target=target, name=label)
+
 @dataclass
 class Process(Step):
   name   : str  = ""
@@ -194,9 +194,9 @@ class Process(Step):
       flows.extend(more_flows)
       x += step.width + FLOW_SPACE
       if prev:
-        flows.append(self.connect(source=prev.tail, target=step.root))
+        flows.append(connect(source=prev.tail, target=step.root))
       elif self.starts:
-        flows.append(self.connect(source=self.root, target=step.root))
+        flows.append(connect(source=self.root, target=step.root))
       prev = step
 
     # add optional end event
@@ -207,7 +207,7 @@ class Process(Step):
       self.tail.x = x
       self.tail.y = last_shape.y + (last_shape.height/2) - (self.tail.height/2)
       # add flow to end
-      flows.append(self.connect(source=last_shape, target=self.tail))
+      flows.append(connect(source=last_shape, target=self.tail))
 
     # optinally wrap it all
     if wrap:
@@ -273,11 +273,6 @@ class Branch(Step):
     self.children.append((branch, condition))
     return self
 
-  def extend(self, steps):
-    for step in steps:
-      self.add(step)
-    return self
-
   @property
   def height(self):
     total_height = sum([ branch.height for branch, _ in self.children ])
@@ -301,7 +296,7 @@ class Branch(Step):
     shapes.append(self.tail)
     x += FLOW_SPACE
     if self.default:
-      flows.append(self.connect(source=self.root, target=self.tail))
+      flows.append(connect(source=self.root, target=self.tail))
       y += DEFAULT_BRANCH_HEIGHT
     self.tail.x = x + self.width - self.tail.width - FLOW_SPACE
     self.tail.y = self.root.y
@@ -311,6 +306,6 @@ class Branch(Step):
       shapes.extend(more_shapes)
       flows.extend(more_flows)
       y += branch.height
-      flows.append(self.connect(source=self.root,   target=branch.root, label=condition))
-      flows.append(self.connect(source=branch.tail, target=self.tail))
+      flows.append(connect(source=self.root,   target=branch.root, label=condition))
+      flows.append(connect(source=branch.tail, target=self.tail))
     return shapes, flows

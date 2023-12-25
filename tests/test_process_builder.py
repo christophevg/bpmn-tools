@@ -1,7 +1,9 @@
 from pathlib import Path
 
 from bpmn_tools.builder.process import Process, Task, Branch, BranchKind, If
-from bpmn_tools.flow import MessageEventDefinition
+from bpmn_tools.builder.process import connect
+
+from bpmn_tools import flow
 from bpmn_tools.colors import Green, Blue, Red, Orange
 
 folder = Path(__file__).resolve().parent / "models"
@@ -99,7 +101,7 @@ def test_branch_conditions_and_labels(compare_model_to_file):
 
 def test_boundary_event(compare_model_to_file):
   process = Process([
-    Task(name="Task 1", boundary=MessageEventDefinition)
+    Task(name="Task 1", boundary=flow.MessageEventDefinition)
   ], name="task with boundary event")
 
   model = process.render()
@@ -110,7 +112,7 @@ def test_boundary_event(compare_model_to_file):
 def test_bug_flow_from_boundary_event_to_end(compare_model_to_file):
   process = Process([
     Branch([
-      Task(name="Task 1", boundary=MessageEventDefinition)
+      Task(name="Task 1", boundary=flow.MessageEventDefinition)
     ], default=True)
   ], name="task with boundary event", ends=True)
 
@@ -131,3 +133,11 @@ def test_task_id():
   task = Task(id=lambda d: f"prefixed_{d}") # task_2
   assert task.id == "prefixed_task_2"
   assert task.element.id == "prefixed_task_2"
+
+def test_connect_only_accepts_different_source_and_target_shapes():
+  task = flow.Task(name="task")
+  try:
+    connect(task, task)
+    assert False, "connect should not accept same source and target"
+  except ValueError:
+    pass

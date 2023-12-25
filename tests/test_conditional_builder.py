@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from bpmn_tools.builder.conditional import Item, Sequence, BranchedItem
+from bpmn_tools.builder.conditional import Item, Sequence, BranchedItem, Branch
 from bpmn_tools.builder.conditional import ConditionSet, Condition, ConditionKind
 
 from bpmn_tools import flow
@@ -373,3 +373,27 @@ def test_adding_process_properties(compare):
   assert process.name == "with properties"
   assert process.starts
   assert process.ends
+
+def test_conditions_require_same_number_of_conditions_and_values():
+  try:
+    ConditionSet(["condition 1", "condition 2"], [[[1, 2, 3]]])
+    assert False, "number of values must match number of conditions"
+  except ValueError:
+    pass
+
+def test_branch_and_item_condition_value_should_match():
+  item = Item("name", ConditionSet(["condition"], [[ "something" ]] ))
+  try:
+    Branch(("value",)).expand(item)
+    assert False, "branch should only accept items with same condition value"
+  except ValueError:
+    pass
+
+def test_branched_item_and_item_condition_should_match():
+  item = Item("name", ConditionSet([Condition("condition")], [[ "something" ]] ))
+  try:
+    BranchedItem(Condition(["other condition"])).expand(item)
+    assert False, "branched item should only accept items with same condition"
+  except ValueError:
+    pass
+  
