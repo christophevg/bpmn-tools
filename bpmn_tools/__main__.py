@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 from fire import Fire
 
@@ -15,7 +16,7 @@ formatter = logging.Formatter(FORMAT, DATEFMT)
 
 def cli():
   try:
-    Fire(CLI(), name="bpmn-tool")
+    Fire(CLI(), name="bpmn-tool", command=sys.argv[1:] + ["--", "--separator=XXX"])
   except KeyboardInterrupt:
     pass
 
