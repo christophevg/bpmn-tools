@@ -69,7 +69,8 @@ class Definitions(IdentifiedElement):
       self.diagrams.append(child)
       child._parent = self
     else:
-      super().append(child)
+      raise ValueError(f"unsupported child for Definitions: {child}")
+    return self
     return self
 
   def element(self, id):
