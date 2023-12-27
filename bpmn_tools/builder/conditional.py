@@ -12,7 +12,7 @@ all conditions.
 import logging
 
 from dataclasses import dataclass, field
-from typing import List, Type
+from typing import List, Type, Union, Callable
 
 from bpmn_tools.builder import process
 from bpmn_tools import flow
@@ -95,12 +95,18 @@ class Item():
   conditions : ConditionSet = field(default_factory=ConditionSet)
   cls        : Type[flow.Task] = flow.Task
   boundary   : Type[flow.EventDefinition] = None
+  id         : Union[str, Callable] = None
 
   def to_dict(self):
     return self.name
 
   def to_process(self):
-    return process.Task(name=self.name, cls=self.cls, boundary=self.boundary)
+    return process.Task(
+      name=self.name,
+      id=self.id,
+      cls=self.cls,
+      boundary=self.boundary
+    )
 
   def __eq__(self, other):
     return self.name == other.name

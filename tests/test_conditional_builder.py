@@ -397,3 +397,12 @@ def test_branched_item_and_item_condition_should_match():
   except ValueError:
     pass
   
+def test_provide_id_for_task():
+  item = Item("name")                                 # task_0
+  assert item.to_process().id == "task_0"
+
+  item = Item("name", id="testing")                   # task_1
+  assert item.to_process().id == "testing"
+  
+  item = Item("name", id=lambda d: f"prefixed_{d}")   # task_2
+  assert item.to_process().id == "prefixed_task_2"
