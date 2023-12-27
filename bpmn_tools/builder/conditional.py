@@ -111,21 +111,18 @@ class Item():
   def __eq__(self, other):
     return self.name == other.name
 
+  def copy(self):
+    return Item(self.name, self.conditions, self.cls, self.boundary, self.id)
+
   def with_value(self, value):
-    return Item(
-      self.name,
-      self.conditions.with_value(value),
-      self.cls,
-      self.boundary
-    )
+    item = self.copy()
+    item.conditions = self.conditions.with_value(value)
+    return item
 
   def without_first_condition(self):
-    return Item(
-      self.name,
-      self.conditions.without_first(),
-      self.cls,
-      self.boundary
-    )
+    item = self.copy()
+    item.conditions = self.conditions.without_first()
+    return item
 
 @dataclass
 class Sequence():

@@ -406,3 +406,15 @@ def test_provide_id_for_task():
   
   item = Item("name", id=lambda d: f"prefixed_{d}")   # task_2
   assert item.to_process().id == "prefixed_task_2"
+
+def test_copy():
+  item = Item(
+    "name", ConditionSet(), flow.ManualTask, flow.TimerEventDefinition, "id"
+  )
+  copy = item.copy()
+  assert copy.name == item.name
+  assert copy.conditions is item.conditions
+  assert copy.cls == item.cls
+  assert copy.boundary == item.boundary
+  assert copy.id == item.id
+  
