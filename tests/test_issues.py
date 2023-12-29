@@ -38,4 +38,4 @@ def test_issue_1(compare_model_to_file):
 
   simple.layout(definitions)
 
-  compare_model_to_file(definitions, "issue-1.bpmn", save_to="issue-1-test.bpmn")
+  compare_model_to_file(definitions, "issues/1.bpmn", save_to="issues/1-test.bpmn")
