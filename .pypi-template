@@ -4,6 +4,9 @@ classifiers:
 - 'Intended Audience :: Developers'
 - 'Programming Language :: Python :: 3'
 - 'Programming Language :: Python :: 3.8'
+- 'Programming Language :: Python :: 3.9'
+- 'Programming Language :: Python :: 3.10'
+- 'Programming Language :: Python :: 3.11'
 console_scripts:
 - bpmn-tool=bpmn_tools.__main__:cli
 first_year_of_publication: '2023'
