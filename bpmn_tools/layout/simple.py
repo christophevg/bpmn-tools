@@ -10,7 +10,7 @@ import json
 
 from bpmn_tools.flow          import Process, Start, End
 from bpmn_tools.flow          import IntermediateCatch, IntermediateThrow
-from bpmn_tools.flow          import Tasks
+from bpmn_tools.flow          import Tasks, Gateways
 from bpmn_tools.collaboration import Participant
 from bpmn_tools.visitor       import Visitor, visiting
 
@@ -55,6 +55,10 @@ class LayoutVisitor(Visitor):
   @visiting(*Tasks)
   def visit(self, task): # noqa
     self._analyse_element(task)
+
+  @visiting(*Gateways)
+  def visit(self, gateway): # noqa
+    self._analyse_element(gateway)
 
   @property
   def current_process(self):

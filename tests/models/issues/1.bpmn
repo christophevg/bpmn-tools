@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bpmn:definitions id="definitions" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bpmn:process id="process">
+    <bpmn:sequenceFlow id="flow1" sourceRef="a" targetRef="gateway"/>
+    <bpmn:sequenceFlow id="flow2" sourceRef="gateway" targetRef="b"/>
+    <bpmn:task id="a" name="task a">
+      <bpmn:outgoing>flow1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="b" name="task b">
+      <bpmn:incoming>flow2</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="gateway" name="gateway">
+      <bpmn:incoming>flow1</bpmn:incoming>
+      <bpmn:outgoing>flow2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:laneSet id="LaneSet_process">
+      <bpmn:lane id="lane" name="lane">
+        <bpmn:flowNodeRef>a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>gateway</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>b</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+  </bpmn:process>
+  <bpmn:collaboration id="Colaboration">
+    <bpmn:participant id="participant" name="participant" processRef="process"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_Colaboration" bpmnElement="Colaboration">
+      <bpmndi:BPMNEdge id="edge_flow1" bpmnElement="flow1">
+        <di:waypoint x="315" y="145"/>
+        <di:waypoint x="345" y="145"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_flow2" bpmnElement="flow2">
+        <di:waypoint x="395" y="145"/>
+        <di:waypoint x="425" y="145"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape_a" bpmnElement="a">
+        <dc:Bounds x="215" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_b" bpmnElement="b">
+        <dc:Bounds x="425" y="105" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gateway" bpmnElement="gateway" isMarkerVisible="true">
+        <dc:Bounds x="345" y="120" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane" bpmnElement="lane" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="365" height="125"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="395" height="125"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -459,6 +459,11 @@ class InclusiveGateway(Gateway):
 class ParallelGateway(Gateway):
   __tag__ = "bpmn:parallelGateway"
 
+Gateways = [
+  ExclusiveGateway,
+  InclusiveGateway,
+  ParallelGateway
+]
 
 class FlowNodeRef(xml.Element):
   __tag__ = "bpmn:flowNodeRef"
