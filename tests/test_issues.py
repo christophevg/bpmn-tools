@@ -10,18 +10,18 @@ def test_issue_1(compare_model_to_file):
   # minimal example to illustrate raise problem, based on submitted example
   # https://github.com/christophevg/bpmn-tools/issues/1
 
-  a = Task("task a")
-  b = Task("task b")
+  a = Task("task a", id="a")
+  b = Task("task b", id="b")
 
-  decision = ExclusiveGateway("gateway")
+  decision = ExclusiveGateway("gateway", id="gateway")
 
-  lane1 = Lane("lane")
+  lane1 = Lane("lane", id="lane")
   lane1.extend([a, decision, b])
 
-  flow1 = Flow(source=a,        target=decision)
-  flow2 = Flow(source=decision, target=b)
+  flow1 = Flow(source=a,        target=decision, id="flow1")
+  flow2 = Flow(source=decision, target=b,        id="flow2")
 
-  process = Process().extend([ lane1, flow1, flow2 ])
+  process = Process(id="process").extend([ lane1, flow1, flow2 ])
 
   collaboration = Collaboration(id="Colaboration").extend([
     Participant("participant", process, id="participant")
