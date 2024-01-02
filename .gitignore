@@ -11,3 +11,5 @@ docs/_build
 .python-version
 .DS_Store
 local
+bpmn_tools/models
+schemas
