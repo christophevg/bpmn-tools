@@ -167,3 +167,13 @@ def test_ensure_root_is_available():
   container.append(something)
   assert something.root is container
   assert container.root is container
+
+def test_ensure_attributes_are_managed():
+  element = xml.Element()
+  assert element.attributes == {}
+
+  assert element["hello"] is None
+  element["hello"] = "world"
+  assert element["hello"] == "world"
+  assert element.hello == "world"
+  assert element.attributes == {"hello" : "world"}

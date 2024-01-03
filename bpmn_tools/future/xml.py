@@ -23,10 +23,10 @@ logger = logging.getLogger(__name__)
 class Element():
   text        : Optional[str]       = None
   children    : List["Element"]     = field(default_factory=list)
+  attributes  : Dict[str,str]       = field(default_factory=dict)
   _children   : List["Element"]     = field(init=False, repr=False)
   _tag        : str                 = field(init=False, default="Element")
   _parent     : Optional["Element"] = field(init=False, default=None)
-  _attributes : Dict[str,str]       = field(init=False, default_factory=dict)
   
   _catch_all_children = True
 
@@ -49,8 +49,8 @@ class Element():
         raise TypeError(f"on {self} field `{name}` should be `{field_type}` not `{type(instance)}`")
 
     for fld in fields(self):
-      # skip our own known private attributes and additionally defined ones
-      if fld.name in ["children", "_tag", "_parent", "_attributes"] or \
+      # skip our special/private properties and those marked as not to typecheck
+      if fld.name in ["children", "_tag", "_parent"] or \
          not fld.metadata.get("typecheck", True):
         continue
       # perform runtime typecheck
@@ -127,11 +127,11 @@ class Element():
       return self
 
   def __setitem__(self, name, value):
-    self._attributes[name] = value
+    self.attributes[name] = value
 
   def __getitem__(self, name):
     try:
-      return self._attributes[name]
+      return self.attributes[name]
     except KeyError:
       return None
 
@@ -151,7 +151,7 @@ class Element():
 
     # do I have the key=value attribute?
     try:
-      if self._attributes[key] == value:
+      if self.attributes[key] == value:
         return self
     except KeyError:
       pass
@@ -168,10 +168,6 @@ class Element():
     for child in children:
       self.append(child)
     return self
-
-  @property
-  def attributes(self):
-    return self._attributes
 
   def children_oftype(self, cls, recurse=False):
     children = []
@@ -243,7 +239,7 @@ class Element():
     
     for key, defintions in element_definition.items():
       if key[0] == "@":
-        element._attributes[key[1:]] = defintions
+        element.attributes[key[1:]] = defintions
       elif key == "#text":
         element.text = defintions
       else:
