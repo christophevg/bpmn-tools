@@ -152,3 +152,18 @@ def test_ensure_parent_link_is_set():
   container = SomeContainer()
   container.append(something)
   assert something._parent is container
+
+def test_ensure_root_is_available():
+  @dataclass
+  class Something(xml.Element):
+    pass
+
+  @dataclass
+  class SomeContainer(xml.Element):
+    values : List[Something] = field(default_factory=list, metadata={"child": True})
+  
+  something = Something()
+  container = SomeContainer()
+  container.append(something)
+  assert something.root is container
+  assert container.root is container

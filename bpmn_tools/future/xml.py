@@ -119,6 +119,13 @@ class Element():
     else:
       raise ValueError(f"{self} doesn't allow for children of type {type(child)}")
 
+  @property
+  def root(self):
+    if self._parent:
+      return self._parent.root
+    else:
+      return self
+
   def __setitem__(self, name, value):
     self._attributes[name] = value
 
@@ -130,13 +137,6 @@ class Element():
 
   def __getattr__(self, name):
     return self[name]
-
-  @property
-  def root(self):
-    if self._parent:
-      return self._parent.root
-    else:
-      return self
 
   def find(self, key, value, skip=None, stack=None):
     if stack is None:
