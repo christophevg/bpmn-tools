@@ -43,7 +43,10 @@ class Element():
     def _validate(name, instance, field_type):
       logger.debug(f"post init validating {name} : {field_type} = {instance}")
       if isinstance(field_type, ForwardRef):
-        field_type = field_type._evaluate(globals(), locals())
+        try:
+          field_type = field_type._evaluate(globals(), locals())
+        except TypeError:
+          field_type = field_type._evaluate(globals(), locals(), frozenset())
       if not isinstance(instance, field_type):
         raise TypeError(f"on {self} field `{name}` should be `{field_type}` not `{type(instance)}`")
 
