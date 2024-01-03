@@ -189,7 +189,6 @@ To avoid this boilerplate, we can pass `metadata` to the dataclass `field` facto
 
 ```pycon
 >>> import xmltodict
->>> import json
 >>> 
 >>> from dataclasses import dataclass, field
 >>> from typing import List
