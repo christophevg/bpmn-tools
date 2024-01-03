@@ -142,6 +142,11 @@ class Element():
   def __getattr__(self, name):
     return self[name]
 
+  def __eq__(self, other):
+    return self.text == other.text and \
+           self.attributes == other.attributes and \
+           self.children == other.children
+
   def find(self, key, value, skip=None, stack=None):
     if stack is None:
       stack = []
