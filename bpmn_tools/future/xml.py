@@ -53,29 +53,25 @@ class Element():
       if fld.name in ["children", "_tag", "_parent", "_attributes"] or \
          not fld.metadata.get("typecheck", True):
         continue
-      # ensure default value
-      if fld.name not in self.__dict__:
-        logger.debug(f"defaulting {fld.name} to {fld.default}")
-        setattr(self, fld.name, fld.default)
-      else:
-        base_type = get_origin(fld.type)
-        type_args = get_args(fld.type)
-        if base_type is list:
-          _validate(fld.name, self.__dict__[fld.name], list)
-          list_type = type_args[0]
-          for index, item in enumerate(self.__dict__[fld.name]):
-            _validate(f"{fld.name}[{index}]", item, list_type)
-        elif base_type is Union:
-          # Optiona[...] == Union[..., NoneType]
-          if len(type_args) == 2 and type_args[1] is None.__class__:
-            if self.__dict__[fld.name] is not None:
-              _validate(fld.name, self.__dict__[fld.name], type_args[0])
-          else:
-            logger.warning("type checking for Union is not (yet) implemented")
-        elif base_type is None:
-          _validate(fld.name, self.__dict__[fld.name], fld.type)
+      # perform runtime typecheck
+      base_type = get_origin(fld.type)
+      type_args = get_args(fld.type)
+      if base_type is list:
+        _validate(fld.name, self.__dict__[fld.name], list)
+        list_type = type_args[0]
+        for index, item in enumerate(self.__dict__[fld.name]):
+          _validate(f"{fld.name}[{index}]", item, list_type)
+      elif base_type is Union:
+        # Optiona[...] == Union[..., NoneType]
+        if len(type_args) == 2 and type_args[1] is None.__class__:
+          if self.__dict__[fld.name] is not None:
+            _validate(fld.name, self.__dict__[fld.name], type_args[0])
         else:
-          logger.warning(f"type checking for {base_type} is not (yet) implemented")
+          logger.warning("type checking for Union is not (yet) implemented")
+      elif base_type is None:
+        _validate(fld.name, self.__dict__[fld.name], fld.type)
+      else:
+        logger.warning(f"type checking for {base_type} is not (yet) implemented")
 
   @property
   def children(self):                                      # readonly tuple
