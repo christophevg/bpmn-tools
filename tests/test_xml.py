@@ -1,8 +1,10 @@
+import logging
+
 from pathlib import Path
 import xmltodict
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict, Optional, Union
 
 from bpmn_tools.future import xml
 
@@ -65,10 +67,10 @@ def test_xml_init_children_of_different_types(compare):
   assert branch.ints  == [1, 2, 3, 4]
   assert branch.bools == [True, False]
 
-def test_field_metadata_typechecking():
+def test_field_metadata_typecheck_flag():
   @dataclass
   class Something(xml.Element):
-    ints  : List[int]  = field(default_factory=list, metadata={"child": True, "typecheck": False})
+    ints  : List[int] = field(default_factory=list, metadata={"child": True, "typecheck": False})
   Something(ints=["a", "b", "c"])
 
   @dataclass
@@ -79,4 +81,60 @@ def test_field_metadata_typechecking():
     assert False, "default metadata typecheck not enforced"
   except TypeError:
     pass
-  
+
+def test_typecheck_of_simple_type():
+  @dataclass
+  class Something(xml.Element):
+    value : str = ""
+
+  Something()
+  Something(value="hello")
+  try:
+    Something(value=True)
+    assert False, "typecheck should fail for boolean"
+  except TypeError:
+    pass
+
+def test_typecheck_of_optional():
+  @dataclass
+  class Something(xml.Element):
+    value : Optional[str] = None
+
+  Something()
+  Something(value="hello")
+  Something(value=None)
+  try:
+    Something(value=True)
+    assert False, "typecheck should fail for boolean"
+  except TypeError:
+    pass
+
+def test_unimplemented_typecheck_of_union(caplog):
+  caplog.set_level(logging.WARNING)
+  @dataclass
+  class Something(xml.Element):
+    value : Union[str, int] = 1
+
+  Something()
+  assert "type checking for Union is not (yet) implemented" in caplog.text
+
+def test_unimplemented_typecheck_of_other_base_type(caplog):
+  caplog.set_level(logging.WARNING)
+  @dataclass
+  class Something(xml.Element):
+    value : Dict[str, str] = field(default_factory=dict)
+
+  Something()
+  assert "type checking for <class 'dict'> is not (yet) implemented" in caplog.text
+
+def test_strict_validation_on_append():
+  @dataclass
+  class Something(xml.Element):
+    _catch_all_children = False
+    values : List[int] = field(default_factory=list, metadata={"child": True})
+
+  try:
+    Something(children=[1, 2, "blah"])
+    assert False, "children other than int and Element should not be validated"
+  except ValueError:
+    pass
