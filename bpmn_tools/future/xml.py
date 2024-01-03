@@ -161,13 +161,6 @@ class Element():
 
     return None
 
-  # def append(self, child):
-  #   if not child:
-  #     raise ValueError(f"invalid child: {child}")
-  #   self.children.append(child)
-  #   child._parent = self
-  #   return self
-
   def extend(self, children):
     for child in children:
       self.append(child)
