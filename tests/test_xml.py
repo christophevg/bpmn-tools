@@ -177,3 +177,48 @@ def test_ensure_attributes_are_managed():
   assert element["hello"] == "world"
   assert element.hello == "world"
   assert element.attributes == {"hello" : "world"}
+
+def test_finding_elements():
+  element1 = xml.Element(attributes={"name" : "element 1"})
+  element2 = xml.Element(attributes={"name" : "element 2"})
+  element3 = xml.Element(attributes={"name" : "element 3"})
+
+  element1.append(element3)
+  element2.append(element3)
+  
+  assert element1.find("name", "element 3") is element3
+
+def test_avoiding_finding_recursion(caplog):
+  caplog.set_level(logging.WARNING)
+  
+  element1 = xml.Element(attributes={"name" : "element 1"})
+  element2 = xml.Element(attributes={"name" : "element 2"})
+  element3 = xml.Element(attributes={"name" : "element 3"})
+
+  element1.append(element2)
+  element2.append(element3)
+  element3.append(element1)
+
+  assert element1.find("name", "element 4") is None
+  assert "avoided recursion" in caplog.text
+
+def test_skipping_of_element_in_hierarchy():
+  element1 = xml.Element(attributes={"name" : "element 1"})
+  element2 = xml.Element(attributes={"name" : "element 2"})
+  element3 = xml.Element(attributes={"name" : "element 3"})
+
+  element1.append(element2)
+  element2.append(element3)
+
+  assert element1.find("name", "element 3") is element3
+  assert element1.find("name", "element 3", skip=element2) is None
+
+def test_ignore_unknown_attributes_on_find():
+  element1 = xml.Element(attributes={"name" : "element 1"})
+  element2 = xml.Element(attributes={"name" : "element 2"})
+  element3 = xml.Element(attributes={"named" : "element 3"})
+
+  element1.append(element2)
+  element2.append(element3)
+
+  assert element1.find("named", "element 3") is element3
