@@ -32,7 +32,14 @@ class Element():
   _no_validation      = []
 
   def __post_init__(self):
+    self._split_specialized_children()
     self._validate_fields()
+  
+  def _split_specialized_children(self):
+    children = self._children.copy()
+    self._children.clear()
+    for child in children:
+      self.append(child)
   
   def _validate_fields(self):
     def _validate(name, instance, field_type):
@@ -44,10 +51,12 @@ class Element():
 
     for fld in fields(self):
       # skip our own known private attributes and additionally defined ones
-      if fld.name in ["_tag", "_parent", "_attributes"] + self._no_validation:
+      # TODO move _no_validation to meta data
+      if fld.name in ["children", "_tag", "_parent", "_attributes"] + self._no_validation:
         continue
       # ensure default value
       if fld.name not in self.__dict__:
+        logger.debug(f"defaulting {fld.name} to {fld.default}")
         setattr(self, fld.name, fld.default)
       else:
         base_type = get_origin(fld.type)
@@ -77,7 +86,6 @@ class Element():
   def children(self, new_children):
     if type(new_children) is property:
       new_children = []
-    # TODO: validation
     self._children = new_children
 
   @property
@@ -104,7 +112,7 @@ class Element():
   def append(self, child):
     # find specialization
     for fld_type, fld in self.specializations.items():
-      if isinstance(child, fld_type):
+      if type(child) is fld_type:
         fld.append(child)
         return
     # default

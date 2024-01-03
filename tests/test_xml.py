@@ -6,6 +6,13 @@ from typing import List
 
 from bpmn_tools.future import xml
 
+def test_hello_round_trip(compare):
+  with open(Path(__file__).resolve().parent / "models" / "hello.bpmn") as fp:
+    expected = xmltodict.parse(fp.read())
+  tree = xml.Element.from_dict(expected)
+  result = tree.as_dict(with_tag=True)
+  compare(result, expected)
+
 @dataclass
 class Leaf(xml.Element):
   _tag = "Leaf"
@@ -49,9 +56,19 @@ def test_xml_element(compare):
   result = tree.as_dict(with_tag=True)
   compare(result, data)
 
-def test_hello_round_trip(compare):
-  with open(Path(__file__).resolve().parent / "models" / "hello.bpmn") as fp:
-    expected = xmltodict.parse(fp.read())
-  tree = xml.Element.from_dict(expected)
-  result = tree.as_dict(with_tag=True)
-  compare(result, expected)
+@dataclass
+class Something(xml.Element):
+  pass
+
+@dataclass
+class Specialist(xml.Element):
+  ints  : List[int]  = field(default_factory=list, metadata={"child": True})
+  bools : List[bool] = field(default_factory=list, metadata={"child": True})
+
+def test_xml_init_children_of_different_types(compare):
+  something = Something()
+  branch = Specialist(children=[1, 2, True, 3, False, something, 4])
+  assert branch.children == tuple([something, 1, 2, 3, 4, True, False])
+  assert branch.specialized_children == [1, 2, 3, 4, True, False]
+  assert branch.ints  == [1, 2, 3, 4]
+  assert branch.bools == [True, False]
