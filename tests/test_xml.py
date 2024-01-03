@@ -138,3 +138,17 @@ def test_strict_validation_on_append():
     assert False, "children other than int and Element should not be validated"
   except ValueError:
     pass
+
+def test_ensure_parent_link_is_set():
+  @dataclass
+  class Something(xml.Element):
+    pass
+
+  @dataclass
+  class SomeContainer(xml.Element):
+    values : List[Something] = field(default_factory=list, metadata={"child": True})
+  
+  something = Something()
+  container = SomeContainer()
+  container.append(something)
+  assert something._parent is container

@@ -105,6 +105,9 @@ class Element():
         yield fld
 
   def append(self, child):
+    if isinstance(child, Element):
+      child._parent = self
+    
     # find specialization
     for fld_type, fld in self.specializations.items():
       if type(child) is fld_type:
