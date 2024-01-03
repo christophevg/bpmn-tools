@@ -29,7 +29,6 @@ class Element():
   _attributes : Dict[str,str]       = field(init=False, default_factory=dict)
   
   _catch_all_children = True
-  _no_validation      = []
 
   def __post_init__(self):
     self._split_specialized_children()
@@ -51,8 +50,8 @@ class Element():
 
     for fld in fields(self):
       # skip our own known private attributes and additionally defined ones
-      # TODO move _no_validation to meta data
-      if fld.name in ["children", "_tag", "_parent", "_attributes"] + self._no_validation:
+      if fld.name in ["children", "_tag", "_parent", "_attributes"] or \
+         not fld.metadata.get("typecheck", True):
         continue
       # ensure default value
       if fld.name not in self.__dict__:

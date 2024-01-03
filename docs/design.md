@@ -237,3 +237,36 @@ Traceback (most recent call last):
     raise ValueError(f"{self} doesn't allow for children of type {type(child)}")
 ValueError: Trunk(text=None, children=(Branch(text=None, children=(Leaf(text='green', children=(), _tag='Leaf', _parent=None, _attributes={}),), _tag='Branch', _parent=None, _attributes={}, leafs=[Leaf(text='green', children=(), _tag='Leaf', _parent=None, _attributes={})]), Branch(text=None, children=(), _tag='Branch', _parent=None, _attributes={}, leafs=[])), _tag='Trunk', _parent=None, _attributes={}, branches=[Branch(text=None, children=(Leaf(text='green', children=(), _tag='Leaf', _parent=None, _attributes={}),), _tag='Branch', _parent=None, _attributes={}, leafs=[Leaf(text='green', children=(), _tag='Leaf', _parent=None, _attributes={})]), Branch(text=None, children=(), _tag='Branch', _parent=None, _attributes={}, leafs=[])]) doesn't allow for children of type <class '__main__.Leaf'>
 ```
+
+### Controling Child List Validation
+
+Through the field's metadata, it is also possible to determine if typechecking should be performed `Element`:
+
+```pycon
+>>> from bpmn_tools.future import xml
+>>> from dataclasses import dataclass, field
+>>> from typing import List
+>>> 
+>>> @dataclass
+... class Something(xml.Element):
+...   ints  : List[int]  = field(default_factory=list, metadata={"child": True, "typecheck": False})
+... 
+>>> Something(ints=["a", "b", "c"])
+Something(text=None, children=('a', 'b', 'c'), _tag='Element', _parent=None, _attributes={}, ints=['a', 'b', 'c'])
+>>> 
+>>> @dataclass
+... class SomethingElse(xml.Element):
+...   ints  : List[int]  = field(default_factory=list, metadata={"child": True})
+... 
+>>> SomethingElse(ints=["a", "b", "c"])
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 7, in __init__
+  File "/Users/xtof/Workspace/bpmn-tools/bpmn_tools/future/xml.py", line 36, in __post_init__
+    self._validate_fields()
+  File "/Users/xtof/Workspace/bpmn-tools/bpmn_tools/future/xml.py", line 68, in _validate_fields
+    _validate(f"{fld.name}[{index}]", item, list_type)
+  File "/Users/xtof/Workspace/bpmn-tools/bpmn_tools/future/xml.py", line 50, in _validate
+    raise TypeError(f"on {self} field `{name}` should be `{field_type}` not `{type(instance)}`")
+TypeError: on SomethingElse(text=None, children=('a', 'b', 'c'), _tag='Element', _parent=None, _attributes={}, ints=['a', 'b', 'c']) field `ints[0]` should be `<class 'int'>` not `<class 'str'>
+````

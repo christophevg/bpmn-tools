@@ -64,3 +64,19 @@ def test_xml_init_children_of_different_types(compare):
   assert branch.specialized_children == [1, 2, 3, 4, True, False]
   assert branch.ints  == [1, 2, 3, 4]
   assert branch.bools == [True, False]
+
+def test_field_metadata_typechecking():
+  @dataclass
+  class Something(xml.Element):
+    ints  : List[int]  = field(default_factory=list, metadata={"child": True, "typecheck": False})
+  Something(ints=["a", "b", "c"])
+
+  @dataclass
+  class SomethingElse(xml.Element):
+    ints  : List[int]  = field(default_factory=list, metadata={"child": True})
+  try:
+    SomethingElse(ints=["a", "b", "c"])
+    assert False, "default metadata typecheck not enforced"
+  except TypeError:
+    pass
+  
