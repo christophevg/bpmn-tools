@@ -13,29 +13,21 @@ def test_hello_round_trip(compare):
   result = tree.as_dict(with_tag=True)
   compare(result, expected)
 
-@dataclass
-class Leaf(xml.Element):
-  _tag = "Leaf"
-
-  @property
-  def color(self):
-    return self.text
-
-  @color.setter
-  def color(self, value):
-    self.text = value
-
-@dataclass
-class Branch(xml.Element):
-  _tag = "Branch"
-  leafs : List[Leaf] = field(default_factory=list, metadata={"child": True})
-
-@dataclass
-class Trunk(xml.Element):
-  _tag = "Trunk"
-  branches : List[Branch] = field(default_factory=list, metadata={"child": True})
-
 def test_xml_element(compare):
+  @dataclass
+  class Leaf(xml.Element):
+    _tag = "Leaf"
+
+  @dataclass
+  class Branch(xml.Element):
+    _tag = "Branch"
+    leafs : List[Leaf] = field(default_factory=list, metadata={"child": True})
+
+  @dataclass
+  class Trunk(xml.Element):
+    _tag = "Trunk"
+    branches : List[Branch] = field(default_factory=list, metadata={"child": True})
+
   src = """
 <Trunk>
   <Branch>
@@ -56,16 +48,16 @@ def test_xml_element(compare):
   result = tree.as_dict(with_tag=True)
   compare(result, data)
 
-@dataclass
-class Something(xml.Element):
-  pass
-
-@dataclass
-class Specialist(xml.Element):
-  ints  : List[int]  = field(default_factory=list, metadata={"child": True})
-  bools : List[bool] = field(default_factory=list, metadata={"child": True})
-
 def test_xml_init_children_of_different_types(compare):
+  @dataclass
+  class Something(xml.Element):
+    pass
+
+  @dataclass
+  class Specialist(xml.Element):
+    ints  : List[int]  = field(default_factory=list, metadata={"child": True})
+    bools : List[bool] = field(default_factory=list, metadata={"child": True})
+
   something = Something()
   branch = Specialist(children=[1, 2, True, 3, False, something, 4])
   assert branch.children == tuple([something, 1, 2, 3, 4, True, False])
