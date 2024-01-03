@@ -147,7 +147,7 @@ class Element():
       stack = []
 
     if self in stack:
-      logger.warn("avoided recursion")
+      logger.warning("avoided recursion")
       return None
 
     if self is skip:
