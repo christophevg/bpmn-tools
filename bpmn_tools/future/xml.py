@@ -37,8 +37,7 @@ class Element():
   def _split_specialized_children(self):
     children = self._children.copy()
     self._children.clear()
-    for child in children:
-      self.append(child)
+    self.extend(children)
   
   def _validate_fields(self):
     def _validate(name, instance, field_type):
@@ -119,6 +118,11 @@ class Element():
     else:
       raise ValueError(f"{self} doesn't allow for children of type {type(child)}")
 
+  def extend(self, children):
+    for child in children:
+      self.append(child)
+    return self
+
   @property
   def root(self):
     if self._parent:
@@ -163,11 +167,6 @@ class Element():
         return match
 
     return None
-
-  def extend(self, children):
-    for child in children:
-      self.append(child)
-    return self
 
   def children_oftype(self, cls, recurse=False):
     children = []
