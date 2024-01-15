@@ -222,3 +222,19 @@ def test_ignore_unknown_attributes_on_find():
   element2.append(element3)
 
   assert element1.find("named", "element 3") is element3
+
+def test_identified_element_creation_and_update():
+  element = xml.IdentifiedElement(id="test-id")
+  assert element.id == "test-id"
+  assert element["id"] == "test-id"
+  element.id = "test-id-2"
+  assert element.id == "test-id-2"
+  assert element["id"] == "test-id-2"
+  element["id"] = "test-id-3"
+  assert element.id == "test-id-3"
+  assert element["id"] == "test-id-3"
+
+def test_identified_element_id_generation():
+  element = xml.IdentifiedElement()
+  assert len(element.id) == len("identifiedelement_") + 8
+  assert element.id[:len("identifiedelement_")] == "identifiedelement_"

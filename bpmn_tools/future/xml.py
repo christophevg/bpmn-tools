@@ -275,10 +275,25 @@ class Element():
         except TypeError:
           raise ValueError(f"accept() on {child} is missing argument")
 
+@dataclass
 class IdentifiedElement(Element):
-  def __init__(self, id=None, **kwargs):
-    super().__init__(**kwargs)
-    if id is None:
+  """
+  IdentifiedElement adds an explicit construction argument `id` to attributes.
+  """
+  id : Optional[str] = None 
+  
+  def __post_init__(self):
+    if self.id is None:
       random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-      id = f"{self.__class__.__name__.lower()}_{random_str}"
-    self["id"] = id
+      self.id = f"{self.__class__.__name__.lower()}_{random_str}"
+    self["id"] = self.id
+
+  @property 
+  def id(self):
+    return self["id"]
+
+  @id.setter
+  def id(self, new_id):
+    if type(new_id) is property:
+      new_id = None
+    self["id"] = new_id
