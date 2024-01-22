@@ -1,2 +1,0 @@
-xmltodict==0.13.0
-pypi-template==0.4.6
