@@ -1,6 +1,8 @@
 import xmltodict
 import re
 
+from bpmn_tools.notation import Definitions
+
 def dict2xml(xml_as_dict):
   return xmltodict.unparse(
     xml_as_dict,
@@ -11,6 +13,9 @@ def dict2xml(xml_as_dict):
   
 def model2xml(model):
   return dict2xml(model.as_dict(with_tag=True))
+
+def xml2model(xml):
+  return Definitions.from_dict(xmltodict.parse(xml))
 
 def sanitize_xml(xml):
   return dict2xml(xmltodict.parse(xml))
