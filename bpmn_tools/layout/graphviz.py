@@ -20,11 +20,12 @@ from bpmn_tools.layout        import routing
 logger = logging.getLogger(__name__)
  
 class LayoutVisitor(Visitor):
-  def __init__(self):
+  def __init__(self, g=None):
     super().__init__()
     self.processes = {}
     self.process_participant = {}
     self._current_process = None
+    self.g = g if g else graphviz.Graph("", engine="sfdp", graph_attr={"repulsiveforce" : "10"})
  
   def analyze(self, model):
     model.accept(self)
@@ -98,17 +99,15 @@ class LayoutVisitor(Visitor):
       top += height + PADDING + SPACING
  
   def _make_gv(self, process):
-    g = graphviz.Graph("domain", engine="sfdp", graph_attr={"repulsiveforce" : "10"})
- 
     for element in process["elements"].keys():
-      g.node(element)
+      self.g.node(element)
  
     for source, target in process["interactions"]:
-      g.edge(source, target)
+      self.g.edge(source, target)
  
-    g.render()
-    gv = json.loads(g.pipe("json").decode())
-   
+    self.g.render()
+    gv = json.loads(self.g.pipe("json").decode())
+ 
     positions = [
       (obj["name"],) + tuple([int(float(pos)) for pos in obj["pos"].split(",")])
       for obj in gv["objects"]
@@ -122,7 +121,7 @@ class LayoutVisitor(Visitor):
       (position[0], position[1] - min_x, position[2] - min_y)
       for position in positions
     ]
- 
-def layout(model):
-  LayoutVisitor().analyze(model).layout()
+
+def layout(model, g=None):
+  LayoutVisitor(g=g).analyze(model).layout()
   model.apply(routing.Direct())
