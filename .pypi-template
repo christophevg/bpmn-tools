@@ -23,6 +23,7 @@ requires:
 - fire
 - xmltodict
 - colorama
+- graphviz
 scripts: []
 skip:
 - docs

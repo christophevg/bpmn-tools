@@ -11,6 +11,8 @@ from bpmn_tools.diagrams      import Diagram
 
 from bpmn_tools.xml import Element, IdentifiedElement
 
+from bpmn_tools.layout import routing
+
 def get_classes(module):
   return [
     c[1] for c in inspect.getmembers(sys.modules[module], inspect.isclass)
@@ -21,9 +23,10 @@ class Definitions(IdentifiedElement):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.processes      = []
-    self.collaborations = []
-    self.diagrams       = []
+    self.processes        = []
+    self.collaborations   = []
+    self.diagrams         = []
+    self.routing_strategy = routing.Default()
 
   @classmethod
   def from_dict(cls, d, raise_unmapped=False):
@@ -31,7 +34,8 @@ class Definitions(IdentifiedElement):
               get_classes("bpmn_tools.collaboration") + \
               get_classes("bpmn_tools.flow") + \
               get_classes("bpmn_tools.diagrams") + \
-              get_classes("bpmn_tools.extensions")
+              get_classes("bpmn_tools.extensions") + \
+              [ routing.WayPoint ]
     definitions = Element.from_dict(d, classes=classes, raise_unmapped=raise_unmapped)
     if isinstance(definitions, Definitions):
       for diagram in definitions.diagrams:
@@ -98,3 +102,7 @@ class Definitions(IdentifiedElement):
       "xmlns:xsi"   : "http://www.w3.org/2001/XMLSchema-instance"
     })
     return attributes
+
+  def apply(self, strategy):
+    for diagram in self.diagrams:
+      diagram.strategy = strategy

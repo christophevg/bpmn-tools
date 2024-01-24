@@ -24,6 +24,7 @@ INSTALL_REQUIRES = [
   "fire",
   "xmltodict",
   "colorama",
+  "graphviz",
   
 ]
 ENTRY_POINTS = {

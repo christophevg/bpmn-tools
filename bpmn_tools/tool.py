@@ -8,6 +8,8 @@ import json
 from bpmn_tools import __version__
 from bpmn_tools.notation import Definitions
 
+from bpmn_tools.layout import * #noqa
+
 logger = logging.getLogger(__name__)
 
 class CLI():
@@ -66,6 +68,21 @@ class CLI():
     this is triggered at the end if no explicit action (e.g. export is given)
     """
     return self.export()
+
+  def layout(self, engine):
+    """
+    apply the requested layout engine
+    """
+    try:
+      getattr(sys.modules[f"bpmn_tools.layout.{engine}"], "layout")(self._model)
+    except KeyError:
+      engines = ", ".join([
+        name[len("bpmn_tools.layout."):] 
+        for name in sys.modules.keys() if name.startswith("bpmn_tools.layout.")
+      ])
+      logger.error(f"unknown layout engine: `{engine}`. options are: {engines}")
+      return ""
+    return self
 
   # importer and exporters
 

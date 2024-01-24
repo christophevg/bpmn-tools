@@ -105,4 +105,38 @@ model = process.render()
 
 ![Conditional Builder](conditional-builder.png)
 
+## Graphviz as a Layout Engine
+
+Don't reinvent the wheel! Stand on the shoulders of giants!... Use Graphviz for laying out activities!
+
+### Before
+
+![Before](graphviz-before.png)
+
+### Apply
+
+```python
+>>> from pathlib import Path
+>>> from bpmn_tools import util
+>>> from bpmn_tools.layout import graphviz
+>>> model = util.xml2model(Path("before.bpmn").read_text())
+>>> graphviz.layout(model)
+>>> Path("after.bpmn").write_text(util.model2xml(model))
+7345
+```
+
+### After
+
+![After](graphviz-after.png)
+
+## A Command Line Tool
+
+BPMN Tools comes with a command line tool called `bpmn-tool`. It gives access to the functionality of implemented in the object model and supporting modules.
+
+To apply the Graphviz layout engine from the command line, the following command line instructions can replace to Python code above:
+
+```console
+% bpmn-tool load before.bpmn layout graphviz > after.bpmn
+```
+
 More to come...
