@@ -39,14 +39,26 @@ class CLI():
       _, format = f"{filepath}:bpmn".split(":", 2)[0:2]
     else:  
       filepath = Path(filepath)
-      src = filepath.read_text()
-      format = filepath.suffix[1:]
+      format   = filepath.suffix[1:]
+      src      = filepath.read_text()
     loader = getattr(self, f"_import_{format}")
     self._model = Definitions.from_dict(loader(src))
     return self
 
+  def save(self, filepath):
+    """
+    accepts a filepath to a file and saves the current model to it, exported
+    using the format provided by the filepath extension
+    """
+    filepath = Path(filepath)
+    format   = filepath.suffix[1:]
+    filepath.write_text(self.export(format))
+    return self
+
   def export(self, format="bpmn"):
-    # then export
+    """
+    export the model (to stdout) in the requested format, default is BPMN
+    """
     return getattr(self, f"_export_{format}")()
 
   def __str__(self):
