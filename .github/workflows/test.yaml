@@ -41,6 +41,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: models
+          name: models-${{ matrix.python-version }}
           path: |
             tests/models/*-test.bpmn
