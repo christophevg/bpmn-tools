@@ -1,3 +1,4 @@
+LOG_LEVEL=ERROR
 EXAMPLES=examples/*.png
 
 examples: $(EXAMPLES)
