@@ -111,6 +111,8 @@ class Outgoing(xml.Element):
 
   @property
   def target(self):
+    if not self.flow:
+      self.flow = self.root.find("id", self.text)
     return self.flow.target
 
 class Element(IdentifiedElement):
