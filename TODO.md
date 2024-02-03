@@ -1,0 +1,7 @@
+- [x] redesign xml sub system
+- [ ] redesign native bpmn model
+- [ ] create functional object model
+- [ ] create model loader
+- [ ] create bpmn generator
+- [ ] create transformation language
+- [ ] expose everything through bpmn-tool
