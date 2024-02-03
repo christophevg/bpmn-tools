@@ -14,3 +14,5 @@ local
 bpmn_tools/models
 schemas
 local
+*.gv
+*.pdf
