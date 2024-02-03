@@ -10,11 +10,17 @@ from typing import List, Optional
 from bpmn_tools.future import xml
 
 @dataclass
+class ProcessBound(xml.Element):
+  @property
+  def process(self):
+    return self._parent.process
+  
+@dataclass
 class FlowNode(xml.IdentifiedElement):
   pass
 
 @dataclass
-class FlowNodeRef(xml.Element):
+class FlowNodeRef(ProcessBound):
   """
   Refers to a FlowNode, which can be passed to the constructor as an element.
   This will be the main source. The actual reference is stored in the text
@@ -49,10 +55,6 @@ class FlowNodeRef(xml.Element):
       self._text = new_element.id
 
   @property
-  def process(self):
-    return self._parent.process
-
-  @property
   def text(self):
     try:
       return self._element.id # if we have a FlowNode
@@ -74,18 +76,18 @@ class FlowNodeRef(xml.Element):
       pass
 
 @dataclass
-class Lane(xml.IdentifiedElement):
+class Lane(xml.IdentifiedElement, ProcessBound):
   """
   A lane holds references to the flow nodes that are depicted inside it.
   The object model allows for specifying these as elements. This class will
   accept them as such, but wrap them in a FlowNodeRef and always work with
   these references.
   """
-  _tag = "bpmn:lane"
+  _tag                = "bpmn:lane"
+  _catch_all_children = False
+  
   elements : List[FlowNode]    = field(default_factory=list)
   _refs    : List[FlowNodeRef] = field(init=False, metadata={"child": True})
-
-  _catch_all_children = False
 
   # horizontal : bool = True  # is part of the shape (TODO)
 
@@ -109,10 +111,6 @@ class Lane(xml.IdentifiedElement):
       return super().append(child)
     return self    
 
-  @property
-  def process(self):
-    return self._parent.process
-
   def has_child(self, child):
     for ref in self._refs:
       if ref.element is child:
@@ -120,11 +118,35 @@ class Lane(xml.IdentifiedElement):
     return False
 
 @dataclass
-class Process(xml.IdentifiedElement):
+class LaneSet(xml.IdentifiedElement, ProcessBound):
+  """
+  LaneSet keeps one or more Lanes together.
+  """
+  __tag__             = "bpmn:laneSet"
+  _catch_all_children = False
+
+  lanes : List[Lane] = field(**xml.children)
+
+  def lane_of(self, child):
+    for lane in self.lanes:
+      if lane.has_child(child):
+        return lane
+    return None
+
+@dataclass
+class Process(xml.IdentifiedElement, ProcessBound):
+  """
+  
+  """
   _tag = "bpmn:process"
+  
   elements : List[xml.Element] = field(**xml.children)
   # laneset  : "LaneSet"     = None
   isExecutable : str = field(**xml.attribute, default="true")
+  
+  @property
+  def process(self):
+    return self
   
   # @property
   # def participant(self):

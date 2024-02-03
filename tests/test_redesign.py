@@ -165,4 +165,32 @@ def test_lane_has_child():
   assert not lane.has_child(node2)
   lane.append(node2)
   assert lane.has_child(node2)
-  
+
+# LaneSet
+
+def test_empty_lane_set():
+  laneset = bpmn.LaneSet()
+  assert len(laneset.lanes)    == 0
+  assert len(laneset.children) == 0
+
+def test_laneset_only_accepts_lanes():
+  lane1 = bpmn.Lane(id="lane1")
+  lane2 = bpmn.Lane(id="lane2")
+  laneset = bpmn.LaneSet(lanes=[lane1])
+  assert len(laneset.lanes) == 1
+  laneset.append(lane2)
+  assert len(laneset.lanes) == 2
+  try:
+    laneset.append(bpmn.FlowNode(id="node"))
+    assert False, "lane set should only accept lanes"
+  except ValueError:
+    pass
+
+def test_laneset_lane_of():
+  node1 = bpmn.FlowNode(id="node1")
+  node2 = bpmn.FlowNode(id="node2")
+  lane1 = bpmn.Lane(id="lane1", elements=[node1])
+  lane2 = bpmn.Lane(id="lane2", elements=[node2])
+  laneset = bpmn.LaneSet(id="laneset", lanes=[lane1, lane2])
+  assert laneset.lane_of(node1) is lane1
+  assert laneset.lane_of(node2) is lane2
