@@ -10,7 +10,7 @@ from typing import List
 
 # TODO: replace with future
 from bpmn_tools.collaboration import Collaboration
-from bpmn_tools.flow          import Process
+from bpmn_tools.future.bpmn.flow          import Process
 from bpmn_tools.diagrams      import Diagram
 
 from bpmn_tools.future import xml
@@ -29,9 +29,9 @@ BPMN_NS = {
 @dataclass
 class Definitions(xml.IdentifiedElement):
   _tag = "bpmn:definitions"
-  processes      : List[Process]       = field(**xml.list_of_children)
-  collaborations : List[Collaboration] = field(**xml.list_of_children)
-  diagrams       : List[Diagram]       = field(**xml.list_of_children)
+  processes      : List[Process]       = field(**xml.children)
+  collaborations : List[Collaboration] = field(**xml.children)
+  diagrams       : List[Diagram]       = field(**xml.children)
 
   def __post_init__(self):
     self. attributes = BPMN_NS

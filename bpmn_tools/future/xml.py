@@ -19,8 +19,8 @@ import string
 
 logger = logging.getLogger(__name__)
 
-# short hand: field(**list_of_fields)
-list_of_children = { "default_factory" : list, "metadata" : {"child": True} }
+# short hand: field(**xml.children)
+children = { "default_factory" : list, "metadata" : {"child": True} }
 
 @dataclass
 class Element():
@@ -113,6 +113,7 @@ class Element():
     
     # find specialization
     for fld_type, fld in self.specializations.items():
+      print(type(child), fld_type)
       if type(child) is fld_type:
         fld.append(child)
         return
@@ -232,6 +233,7 @@ class Element():
   
   @classmethod
   def from_dict(cls, d, classes=None, depth=0, raise_unmapped=False):
+    print(classes)
     if classes is None:
       classes = {} 
     element_type, element_definition = list(d.items())[0]
