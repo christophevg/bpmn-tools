@@ -45,9 +45,11 @@ Typical usage:
   
 """
 
-from bpmn_tools.flow          import * # noqa
-from bpmn_tools.collaboration import * # noqa
-from bpmn_tools.notation      import * # noqa
-from bpmn_tools.diagrams      import * # noqa
+# from bpmn_tools.flow          import * # noqa
+# from bpmn_tools.collaboration import * # noqa
+# from bpmn_tools.notation      import * # noqa
+# from bpmn_tools.diagrams      import * # noqa
+#
+# from bpmn_tools.future.bpmn.flow   import * # noqa
 
-from bpmn_tools.future.bpmn.flow   import * # noqa
+from bpmn_tools.future.bpmn.notation import * # noqa

@@ -19,6 +19,9 @@ import string
 
 logger = logging.getLogger(__name__)
 
+# short hand: field(**list_of_fields)
+list_of_children = { "default_factory" : list, "metadata" : {"child": True} }
+
 @dataclass
 class Element():
   text        : Optional[str]       = None
