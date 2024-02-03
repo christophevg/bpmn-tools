@@ -12,8 +12,10 @@ from bpmn_tools.future import bpmn
 
 # Definitions
 
+NS_ATTRS = { f"@{key}" : value for key, value in bpmn.notation.BPMN_NS.items() }
+
 def test_creation_of_empty_definitions():
-  definitions = bpmn.Definitions()
+  definitions = bpmn.Definitions(id="definitions")
 
   assert len(definitions.processes)      == 0
   assert len(definitions.collaborations) == 0
@@ -22,16 +24,18 @@ def test_creation_of_empty_definitions():
 
   assert definitions.as_dict(with_tag=True) == {
     "bpmn:definitions" : {
-      f"@{key}" : value for key, value in bpmn.notation.BPMN_NS.items()
+      **NS_ATTRS,
+      **{ "@id" : "definitions" }
     }
   }
 
 def test_parsing_of_empty_definitions():
   xml = """
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL">
+<bpmn:definitions id="definitions" 
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL">
 </bpmn:definitions>
 """
-  
+
   definitions = bpmn.Definitions.from_dict(xmltodict.parse(xml))
 
   assert len(definitions.processes)      == 0
@@ -41,17 +45,19 @@ def test_parsing_of_empty_definitions():
 
   assert definitions.as_dict(with_tag=True) == {
     "bpmn:definitions" : {
-      f"@{key}" : value for key, value in bpmn.notation.BPMN_NS.items()
+      **NS_ATTRS,
+      **{ "@id" : "definitions" }
     }
   }
+
 
 # Process
 
 def test_creation_of_empty_process():
   process = bpmn.Process(id="test-process")
-  
+
   assert len(process.elements) == 0
-  
+
   assert process.as_dict(with_tag=True) == {
     "bpmn:process" : {
       "@id" : "test-process",
@@ -61,7 +67,8 @@ def test_creation_of_empty_process():
 
 def test_parsing_of_definitions_with_empty_process():
   xml = """
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL">
+<bpmn:definitions id="definitions"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL">
   <bpmn:process id="parsed-id" isExecutable="false"></bpmn:process>
 </bpmn:definitions>
 """
@@ -75,7 +82,8 @@ def test_parsing_of_definitions_with_empty_process():
 
   assert definitions.as_dict(with_tag=True) == {
     "bpmn:definitions" : {
-      **{ f"@{key}" : value for key, value in bpmn.notation.BPMN_NS.items() },
+      **NS_ATTRS,
+      **{ "@id" : "definitions" },
       **{ "bpmn:process" : {
             "@id" : "parsed-id",
             "@isExecutable" : "false"

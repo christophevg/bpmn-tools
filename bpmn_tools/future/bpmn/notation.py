@@ -6,7 +6,7 @@ import sys
 from inspect import getmembers, isclass
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict
 
 # TODO: replace with future
 from bpmn_tools.collaboration import Collaboration
@@ -33,8 +33,7 @@ class Definitions(xml.IdentifiedElement):
   collaborations : List[Collaboration] = field(**xml.children)
   diagrams       : List[Diagram]       = field(**xml.children)
 
-  def __post_init__(self):
-    self. attributes = BPMN_NS
+  attributes     : Dict[str,str]       = field(default_factory=lambda: BPMN_NS)
 
   def element(self, id):
     for process in self.processes:

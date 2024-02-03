@@ -160,7 +160,7 @@ def test_ensure_root_is_available():
 
   @dataclass
   class SomeContainer(xml.Element):
-    values : List[Something] = field(default_factory=list, metadata={"child": True})
+    values : List[Something] = field(**xml.children)
   
   something = Something()
   container = SomeContainer()
@@ -168,14 +168,31 @@ def test_ensure_root_is_available():
   assert something.root is container
   assert container.root is container
 
-def test_ensure_attributes_are_managed():
+def test_ensure_unspecialized_attributes_are_managed():
   element = xml.Element()
   assert element.attributes == {}
 
-  assert element["hello"] is None
+  try:
+    element["hello"]
+    assert False, "element should raise KeyError for uninitialized attribute"
+  except KeyError:
+    pass
   element["hello"] = "world"
   assert element["hello"] == "world"
-  assert element.hello == "world"
+  try:
+    element.hello
+    assert False, "element should raise AttributeError for unspecialized attribute"
+  except AttributeError:
+    pass
+  assert element.attributes == {"hello" : "world"}
+
+def test_ensure_initialization_of_attributes():
+  print("start")
+  element = xml.Element(attributes={"hello": "world"})
+  print(element)
+  print("stop")
+
+  assert element["hello"] == "world"
   assert element.attributes == {"hello" : "world"}
 
 def test_finding_elements():
@@ -185,12 +202,12 @@ def test_finding_elements():
 
   element1.append(element3)
   element2.append(element3)
-  
+
   assert element1.find("name", "element 3") is element3
 
 def test_avoiding_finding_recursion(caplog):
   caplog.set_level(logging.WARNING)
-  
+
   element1 = xml.Element(attributes={"name" : "element 1"})
   element2 = xml.Element(attributes={"name" : "element 2"})
   element3 = xml.Element(attributes={"name" : "element 3"})

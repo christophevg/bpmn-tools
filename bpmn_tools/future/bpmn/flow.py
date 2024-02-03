@@ -14,12 +14,7 @@ class Process(xml.IdentifiedElement):
   _tag = "bpmn:process"
   elements : List[xml.Element] = field(**xml.children)
   # laneset  : "LaneSet"     = None
-
-  def __post_init__(self):
-    try:
-      self.attributes["isExecutable"]
-    except KeyError:
-      self.attributes["isExecutable"] = "true"
+  isExecutable : str = field(**xml.attribute, default="true")
   
   # @property
   # def participant(self):

@@ -21,13 +21,15 @@ logger = logging.getLogger(__name__)
 
 # short hand: field(**xml.children)
 children = { "default_factory" : list, "metadata" : {"child": True} }
+attribute = { "metadata" : {"attribute" : True} }
 
 @dataclass
 class Element():
   text        : Optional[str]       = None
   children    : List["Element"]     = field(default_factory=list)
-  attributes  : Dict[str,str]       = field(default_factory=dict)
   localns     : Dict                = field(default_factory=dict)
+  attributes  : Dict[str,str]       = field(default_factory=dict)
+  _attributes : Dict[str,str]       = field(init=False)
   _children   : List["Element"]     = field(init=False, repr=False)
   _tag        : str                 = field(init=False, default="Element")
   _parent     : Optional["Element"] = field(init=False, default=None)
@@ -35,9 +37,16 @@ class Element():
   _catch_all_children = True
 
   def __post_init__(self):
+    self._adopt_attributes()
     self._split_specialized_children()
     self._validate_fields()
   
+  def _adopt_attributes(self):
+    attributes = self._attributes.copy()
+    self._attributes.clear()
+    for key, value in attributes.items():
+      self[key] = value
+
   def _split_specialized_children(self):
     children = self._children.copy()
     self._children.clear()
@@ -66,8 +75,12 @@ class Element():
       elif base_type is Union:
         # Optiona[...] == Union[..., NoneType]
         if len(type_args) == 2 and type_args[1] is None.__class__:
-          if self.__dict__[fld.name] is not None:
-            _validate(fld.name, self.__dict__[fld.name], type_args[0])
+          try:
+            if self.__dict__[fld.name] is not None:
+              _validate(fld.name, self.__dict__[fld.name], type_args[0])
+          except KeyError:
+            pass
+            # TO CHECK: seems like Optional field without init is not in dict?
         else:
           logger.warning("type checking for Union is not (yet) implemented")
       elif base_type is None:
@@ -77,7 +90,7 @@ class Element():
         logger.warning(f" => {fld}")
 
   @property
-  def children(self):                                      # readonly tuple
+  def children(self): # readonly tuple
     return tuple(self._children) + tuple(self.specialized_children)
 
   @children.setter
@@ -85,6 +98,22 @@ class Element():
     if type(new_children) is property:
       new_children = []
     self._children = new_children
+
+  @property
+  def attributes(self):
+    # combine specialized attributes and _attributes
+    attrs = {
+      fld.name : getattr(self, fld.name)
+      for fld in self.specialized_attributes_fields
+    }
+    attrs.update(self._attributes)
+    return attrs
+
+  @attributes.setter
+  def attributes(self, new_attributes):
+    if type(new_attributes) is property:
+      new_attributes = {}
+    self._attributes = new_attributes
 
   @property
   def specialized_children(self):
@@ -113,7 +142,6 @@ class Element():
     
     # find specialization
     for fld_type, fld in self.specializations.items():
-      print(type(child), fld_type)
       if type(child) is fld_type:
         fld.append(child)
         return
@@ -135,17 +163,28 @@ class Element():
     else:
       return self
 
+  @property
+  def specialized_attributes_fields(self):
+    for fld in fields(self):
+      if fld.metadata.get("attribute", False):
+        yield fld
+
   def __setitem__(self, name, value):
-    self.attributes[name] = value
+    # check if we have an specialized attribute
+    for fld in self.specialized_attributes_fields:
+      if fld.name == name:
+        setattr(self, name, value)
+        return
+    # unspecialized attributes go in the general pool/dict
+    self._attributes[name] = value
 
   def __getitem__(self, name):
-    try:
-      return self.attributes[name]
-    except KeyError:
-      return None
-
-  def __getattr__(self, name):
-    return self[name]
+    # check if we have an specialized attribute
+    for fld in self.specialized_attributes_fields:
+      if fld.name == name:
+        return getattr(self, name)
+    # else try from unspecialized attributes
+    return self._attributes[name]
 
   def __eq__(self, other):
     return self.text == other.text and \
@@ -165,7 +204,7 @@ class Element():
 
     # do I have the key=value attribute?
     try:
-      if self.attributes[key] == value:
+      if self[key] == value:
         return self
     except KeyError:
       pass
@@ -233,7 +272,6 @@ class Element():
   
   @classmethod
   def from_dict(cls, d, classes=None, depth=0, raise_unmapped=False):
-    print(classes)
     if classes is None:
       classes = {} 
     element_type, element_definition = list(d.items())[0]
@@ -251,7 +289,7 @@ class Element():
     
     for key, defintions in element_definition.items():
       if key[0] == "@":
-        element.attributes[key[1:]] = defintions
+        element[key[1:]] = defintions
       elif key == "#text":
         element.text = defintions
       else:
@@ -293,22 +331,12 @@ class Element():
 @dataclass
 class IdentifiedElement(Element):
   """
-  IdentifiedElement adds an explicit construction argument `id` to attributes.
+  IdentifiedElement adds an `id` attribute, with a random default value
   """
-  id : Optional[str] = None 
+  id : Optional[str] = field(default=None, **attribute)
   
   def __post_init__(self):
+    super().__post_init__()
     if self.id is None:
       random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
       self.id = f"{self.__class__.__name__.lower()}_{random_str}"
-    self["id"] = self.id
-
-  @property 
-  def id(self):
-    return self["id"]
-
-  @id.setter
-  def id(self, new_id):
-    if type(new_id) is property:
-      new_id = None
-    self["id"] = new_id
