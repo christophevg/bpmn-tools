@@ -24,6 +24,7 @@ class Element():
   text        : Optional[str]       = None
   children    : List["Element"]     = field(default_factory=list)
   attributes  : Dict[str,str]       = field(default_factory=dict)
+  localns     : Dict                = field(default_factory=dict)
   _children   : List["Element"]     = field(init=False, repr=False)
   _tag        : str                 = field(init=False, default="Element")
   _parent     : Optional["Element"] = field(init=False, default=None)
@@ -42,17 +43,13 @@ class Element():
   def _validate_fields(self):
     def _validate(name, instance, field_type):
       logger.debug(f"post init validating {name} : {field_type} = {instance}")
-      if isinstance(field_type, ForwardRef):
-        try:
-          field_type = field_type._evaluate(globals(), locals())
-        except TypeError:
-          field_type = field_type._evaluate(globals(), locals(), frozenset())
+      field_type = self._deref(field_type)
       if not isinstance(instance, field_type):
         raise TypeError(f"on {self} field `{name}` should be `{field_type}` not `{type(instance)}`")
 
     for fld in fields(self):
       # skip our special/private properties and those marked as not to typecheck
-      if fld.name in ["children", "_tag", "_parent"] or \
+      if fld.name in ["children", "_tag", "_parent", "localns"] or \
          not fld.metadata.get("typecheck", True):
         continue
       # perform runtime typecheck
@@ -74,6 +71,7 @@ class Element():
         _validate(fld.name, self.__dict__[fld.name], fld.type)
       else:
         logger.warning(f"type checking for {base_type} is not (yet) implemented")
+        logger.warning(f" => {fld}")
 
   @property
   def children(self):                                      # readonly tuple
@@ -96,7 +94,7 @@ class Element():
   @property
   def specializations(self):
     return {
-      get_args(fld.type)[0] : self.__dict__[fld.name]
+      self._deref(get_args(fld.type)[0]) : self.__dict__[fld.name]
       for fld in self.specialized_children_fields
     }
 
@@ -231,6 +229,8 @@ class Element():
   
   @classmethod
   def from_dict(cls, d, classes=None, depth=0, raise_unmapped=False):
+    if classes is None:
+      classes = {} 
     element_type, element_definition = list(d.items())[0]
     element_class = cls.mapped_class(element_type, classes)
     if element_class == cls and classes:
@@ -238,7 +238,7 @@ class Element():
         raise ValueError(f"unmapped element: {element_type}")
       else:
         logger.warning(f"unmapped element: {element_type}")
-    element = element_class()
+    element = element_class(localns={ clazz.__name__ : clazz for clazz in classes })
     element._tag = element_type
     
     if isinstance(element_definition, str):
@@ -274,6 +274,16 @@ class Element():
           child.accept(visitor)
         except TypeError:
           raise ValueError(f"accept() on {child} is missing argument")
+
+  def _deref(self, field_type):
+    # credits: https://stackoverflow.com/a/76152697
+    if isinstance(field_type, ForwardRef):
+      args = (globals(), {**locals(), **self.localns})
+      try:
+        return field_type._evaluate(*args) # < py39
+      except TypeError:
+        return field_type._evaluate(*args, frozenset())
+    return field_type
 
 @dataclass
 class IdentifiedElement(Element):

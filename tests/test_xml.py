@@ -17,18 +17,18 @@ def test_hello_round_trip(compare):
 
 def test_xml_element(compare):
   @dataclass
-  class Leaf(xml.Element):
-    _tag = "Leaf"
+  class Trunk(xml.Element):
+    _tag = "Trunk"
+    branches : List["Branch"] = field(default_factory=list, metadata={"child": True})
 
   @dataclass
   class Branch(xml.Element):
     _tag = "Branch"
-    leafs : List[Leaf] = field(default_factory=list, metadata={"child": True})
+    leafs : List["Leaf"] = field(default_factory=list, metadata={"child": True})
 
   @dataclass
-  class Trunk(xml.Element):
-    _tag = "Trunk"
-    branches : List[Branch] = field(default_factory=list, metadata={"child": True})
+  class Leaf(xml.Element):
+    _tag = "Leaf"
 
   src = """
 <Trunk>
