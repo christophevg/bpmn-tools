@@ -121,3 +121,48 @@ def test_flow_node_ref_with_flow_node():
   ref.element = node2
   assert ref.element is node2
   assert ref.text == "node2"
+
+def test_ensure_flow_node_ref_does_not_accept_children():
+  ref = bpmn.FlowNodeRef()
+  try:
+    ref.append(bpmn.FlowNode(id="node1"))
+    assert False, "flow node ref should not accept children"
+  except ValueError:
+    pass
+
+# Lane
+
+def test_empty_lane():
+  lane = bpmn.Lane()
+  assert len(lane.elements) == 0
+  assert len(lane.children) == 0
+
+def test_lane_with_node():
+  node1 = bpmn.FlowNode(id="node1")
+  lane = bpmn.Lane(elements=[node1])
+  assert len(lane.elements) == 1
+  assert len(lane.children) == 1
+
+def test_ensure_lane_only_accepts_flow_nodes_and_flow_node_refs():
+  node1 = bpmn.FlowNode(id="node1")
+  node2 = bpmn.FlowNode(id="node2")
+  lane = bpmn.Lane()
+  lane.append(node1)
+  lane.append(bpmn.FlowNodeRef(element=node2))
+  assert len(lane.elements) == 2
+  assert len(lane.children) == 2
+  try:
+    lane.append(bpmn.Lane())
+    assert False, "lane should only accept FlowNode(Ref)s"
+  except ValueError:
+    pass
+
+def test_lane_has_child():
+  node1 = bpmn.FlowNode(id="node1")
+  node2 = bpmn.FlowNode(id="node2")
+  lane = bpmn.Lane(elements=[node1])
+  assert lane.has_child(node1)
+  assert not lane.has_child(node2)
+  lane.append(node2)
+  assert lane.has_child(node2)
+  

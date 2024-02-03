@@ -68,10 +68,13 @@ class Element():
       base_type = get_origin(fld.type)
       type_args = get_args(fld.type)
       if base_type is list:
-        _validate(fld.name, self.__dict__[fld.name], list)
-        list_type = type_args[0]
-        for index, item in enumerate(self.__dict__[fld.name]):
-          _validate(f"{fld.name}[{index}]", item, list_type)
+        try:
+          _validate(fld.name, self.__dict__[fld.name], list)
+          list_type = type_args[0]
+          for index, item in enumerate(self.__dict__[fld.name]):
+            _validate(f"{fld.name}[{index}]", item, list_type)
+        except KeyError:
+          pass # when no value provided through the init
       elif base_type is Union:
         # Optiona[...] == Union[..., NoneType]
         if len(type_args) == 2 and type_args[1] is None.__class__:
@@ -139,15 +142,17 @@ class Element():
         yield fld
 
   def append(self, child):
+    # add back reference to "us", the parent
     if isinstance(child, Element):
       child._parent = self
     
-    # find specialization
-    for fld_type, fld in self.specializations.items():
-      if type(child) is fld_type:
-        fld.append(child)
-        return
-    # default
+    try: # add to a specialized child collection
+      self.specializations[type(child)].append(child)
+      return
+    except KeyError:
+      pass
+
+    # else keep in default children collection IF catch-all is allowed
     if self._catch_all_children:
       self._children.append(child)
     else:

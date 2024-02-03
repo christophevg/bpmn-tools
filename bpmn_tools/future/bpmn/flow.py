@@ -21,7 +21,9 @@ class FlowNodeRef(xml.Element):
   of the XML tag. Access to that text is intercepted and used to keep the
   element "in sync".
   """
-  _tag = "bpmn:flowNodeRef"
+  _tag                = "bpmn:flowNodeRef"
+  _catch_all_children = False
+
   element  : FlowNode           = field(default=None)
   _element : Optional[FlowNode] = field(init=False) # Optional?
   _text    : Optional[str]      = field(init=False)
@@ -35,7 +37,7 @@ class FlowNodeRef(xml.Element):
       self._element = self.process.element(self._text)
       return self._element
     except (TypeError, AttributeError):
-      raise ValueError("could not resolve reference {self._text}")
+      raise ValueError(f"could not resolve reference {self._text}")
 
   @element.setter
   def element(self, new_element):
@@ -70,6 +72,52 @@ class FlowNodeRef(xml.Element):
       self._element = self.process.element(new_text)
     except (TypeError, AttributeError):
       pass
+
+@dataclass
+class Lane(xml.IdentifiedElement):
+  """
+  A lane holds references to the flow nodes that are depicted inside it.
+  The object model allows for specifying these as elements. This class will
+  accept them as such, but wrap them in a FlowNodeRef and always work with
+  these references.
+  """
+  _tag = "bpmn:lane"
+  elements : List[FlowNode]    = field(default_factory=list)
+  _refs    : List[FlowNodeRef] = field(init=False, metadata={"child": True})
+
+  _catch_all_children = False
+
+  # horizontal : bool = True  # is part of the shape (TODO)
+
+  @property
+  def elements(self):
+    return [ ref.element for ref in self._refs ]
+  
+  @elements.setter
+  def elements(self, new_elements):
+    if type(new_elements) is property:
+      new_elements = []
+    self._refs = [ FlowNodeRef(element=element) for element in new_elements ]
+
+  def append(self, child):
+    if isinstance(child, FlowNode):
+      wrapped = FlowNodeRef(element=child)
+      child._parent = wrapped
+      wrapped._parent = self
+      self._refs.append(wrapped)  # wrap it
+    else:
+      return super().append(child)
+    return self    
+
+  @property
+  def process(self):
+    return self._parent.process
+
+  def has_child(self, child):
+    for ref in self._refs:
+      if ref.element is child:
+        return True
+    return False
 
 @dataclass
 class Process(xml.IdentifiedElement):
