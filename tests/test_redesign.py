@@ -91,3 +91,33 @@ def test_parsing_of_definitions_with_empty_process():
       }
     }
   }
+
+# FlowNodeRef
+
+def test_empty_flow_node_ref():
+  ref = bpmn.FlowNodeRef()
+  assert ref.text is None
+  try:
+    ref.element
+    assert False, "empty flow node ref should raise ValueError"
+  except ValueError:
+    pass
+
+def test_flow_node_ref_with_flow_node():
+  node1 = bpmn.FlowNode(id="node1")
+  ref = bpmn.FlowNodeRef(element=node1)
+  assert ref.element is node1
+  assert ref.text == "node1"
+
+  ref.text = "other node"
+  assert ref.text == "other node"
+  try:
+    ref.element
+    assert False, "flow node with unknown ref should raise ValueError"
+  except ValueError:
+    pass
+
+  node2 = bpmn.FlowNode(id="node2")
+  ref.element = node2
+  assert ref.element is node2
+  assert ref.text == "node2"

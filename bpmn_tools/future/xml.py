@@ -79,12 +79,14 @@ class Element():
             if self.__dict__[fld.name] is not None:
               _validate(fld.name, self.__dict__[fld.name], type_args[0])
           except KeyError:
-            pass
-            # TO CHECK: seems like Optional field without init is not in dict?
+            pass # when no value provided through the init
         else:
           logger.warning("type checking for Union is not (yet) implemented")
       elif base_type is None:
-        _validate(fld.name, self.__dict__[fld.name], fld.type)
+        try:
+          _validate(fld.name, self.__dict__[fld.name], fld.type)
+        except KeyError:
+          pass # when no value provided through the init
       else:
         logger.warning(f"type checking for {base_type} is not (yet) implemented")
         logger.warning(f" => {fld}")

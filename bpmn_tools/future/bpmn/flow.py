@@ -5,9 +5,71 @@ All (Process)Flow related classes.
 """
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from bpmn_tools.future import xml
+
+@dataclass
+class FlowNode(xml.IdentifiedElement):
+  pass
+
+@dataclass
+class FlowNodeRef(xml.Element):
+  """
+  Refers to a FlowNode, which can be passed to the constructor as an element.
+  This will be the main source. The actual reference is stored in the text
+  of the XML tag. Access to that text is intercepted and used to keep the
+  element "in sync".
+  """
+  _tag = "bpmn:flowNodeRef"
+  element  : FlowNode           = field(default=None)
+  _element : Optional[FlowNode] = field(init=False) # Optional?
+  _text    : Optional[str]      = field(init=False)
+
+  @property
+  def element(self):
+    if self._element:
+      return self._element
+    # no actual element, try to find it
+    try:
+      self._element = self.process.element(self._text)
+      return self._element
+    except (TypeError, AttributeError):
+      raise ValueError("could not resolve reference {self._text}")
+
+  @element.setter
+  def element(self, new_element):
+    if type(new_element) is property:
+      new_element = None
+    self._element = new_element
+    # keep text up2date
+    if new_element:
+      self._text = new_element.id
+
+  @property
+  def process(self):
+    return self._parent.process
+
+  @property
+  def text(self):
+    try:
+      return self._element.id # if we have a FlowNode
+    except AttributeError:
+      return self._text      # else use the textual version
+
+  @text.setter
+  def text(self, new_text):
+    if type(new_text) is property:
+      new_text = None
+    self._text = new_text
+
+    # at least reset our reference
+    self._element = None
+    # and try to resolve it and store as an element
+    try:
+      self._element = self.process.element(new_text)
+    except (TypeError, AttributeError):
+      pass
 
 @dataclass
 class Process(xml.IdentifiedElement):
