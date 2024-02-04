@@ -16,8 +16,17 @@ class ProcessBound(xml.Element):
     return self._parent.process
   
 @dataclass
-class FlowNode(xml.IdentifiedElement):
+class FlowNode(xml.IdentifiedElement, ProcessBound):
   pass
+
+@dataclass
+class Task(FlowNode):
+  """
+  Tasks represent Activities ;-) They are your basic process building blocks.
+  """
+  _tag = "bpmn:task"
+
+  name : Optional[str] = field(**xml.attribute, default=None)
 
 @dataclass
 class FlowNodeRef(ProcessBound):
@@ -86,8 +95,10 @@ class Lane(xml.IdentifiedElement, ProcessBound):
   _tag                = "bpmn:lane"
   _catch_all_children = False
   
-  elements : List[FlowNode]    = field(default_factory=list)
-  _refs    : List[FlowNodeRef] = field(init=False, metadata={"child": True})
+  # this is brittle: due to the order, elements are "set" by the init after
+  # the default_factory has created the _refs, thus not overwriting them
+  _refs    : List[FlowNodeRef] = field(init=False, **xml.children)
+  elements : List[FlowNode]    = field()
 
   # horizontal : bool = True  # is part of the shape (TODO)
 
@@ -101,14 +112,14 @@ class Lane(xml.IdentifiedElement, ProcessBound):
       new_elements = []
     self._refs = [ FlowNodeRef(element=element) for element in new_elements ]
 
-  def append(self, child):
+  def add(self, child):
     if isinstance(child, FlowNode):
       wrapped = FlowNodeRef(element=child)
       child._parent = wrapped
       wrapped._parent = self
       self._refs.append(wrapped)  # wrap it
     else:
-      return super().append(child)
+      return super().add(child)
     return self    
 
   def has_child(self, child):
@@ -122,7 +133,7 @@ class LaneSet(xml.IdentifiedElement, ProcessBound):
   """
   LaneSet keeps one or more Lanes together.
   """
-  __tag__             = "bpmn:laneSet"
+  _tag                = "bpmn:laneSet"
   _catch_all_children = False
 
   lanes : List[Lane] = field(**xml.children)
@@ -136,18 +147,23 @@ class LaneSet(xml.IdentifiedElement, ProcessBound):
 @dataclass
 class Process(xml.IdentifiedElement, ProcessBound):
   """
-  
+  Processes bring thogether Tasks (ProcessBound, soon 😇)
+  (and SequenceFlows, soon 😇).
+  Optionally they can have a LaneSet.
   """
-  _tag = "bpmn:process"
+  _tag                = "bpmn:process"
+  _catch_all_children = False
   
-  elements : List[xml.Element] = field(**xml.children)
-  # laneset  : "LaneSet"     = None
-  isExecutable : str = field(**xml.attribute, default="true")
+  elements     : List[Task]         = field(**xml.children)
+  laneset      : Optional[LaneSet]  = field(**xml.child)
+  isExecutable : str                = field(**xml.attribute, default="true")
   
   @property
   def process(self):
     return self
+
   
+
   # @property
   # def participant(self):
   #   for collaboration in self._parent.collaborations:
@@ -183,11 +199,3 @@ class Process(xml.IdentifiedElement, ProcessBound):
   #   else:
   #     super().append(child) # generic child handling
   #   return self
-  #
-  # @property
-  # def children(self):
-  #   children = super().children.copy()
-  #   children.extend(self.elements)
-  #   if len(self.laneset) > 0:
-  #     children.append(self.laneset)
-  #   return children

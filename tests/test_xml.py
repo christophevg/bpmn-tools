@@ -19,12 +19,12 @@ def test_xml_element(compare):
   @dataclass
   class Trunk(xml.Element):
     _tag = "Trunk"
-    branches : List["Branch"] = field(default_factory=list, metadata={"child": True})
+    branches : List["Branch"] = field(**xml.children)
 
   @dataclass
   class Branch(xml.Element):
     _tag = "Branch"
-    leafs : List["Leaf"] = field(default_factory=list, metadata={"child": True})
+    leafs : List["Leaf"] = field(**xml.children)
 
   @dataclass
   class Leaf(xml.Element):
@@ -57,8 +57,8 @@ def test_xml_init_children_of_different_types(compare):
 
   @dataclass
   class Specialist(xml.Element):
-    ints  : List[int]  = field(default_factory=list, metadata={"child": True})
-    bools : List[bool] = field(default_factory=list, metadata={"child": True})
+    ints  : List[int]  = field(**xml.children)
+    bools : List[bool] = field(**xml.children)
 
   something = Something()
   branch = Specialist(children=[1, 2, True, 3, False, something, 4])
@@ -70,12 +70,12 @@ def test_xml_init_children_of_different_types(compare):
 def test_field_metadata_typecheck_flag():
   @dataclass
   class Something(xml.Element):
-    ints  : List[int] = field(default_factory=list, metadata={"child": True, "typecheck": False})
+    ints  : List[int] = field(**xml.children, metadata={"typecheck": False})
   Something(ints=["a", "b", "c"])
 
   @dataclass
   class SomethingElse(xml.Element):
-    ints  : List[int]  = field(default_factory=list, metadata={"child": True})
+    ints  : List[int]  = field(**xml.children)
   try:
     SomethingElse(ints=["a", "b", "c"])
     assert False, "default metadata typecheck not enforced"
@@ -150,7 +150,7 @@ def test_ensure_parent_link_is_set():
   
   something = Something()
   container = SomeContainer()
-  container.append(something)
+  container.add(something)
   assert something._parent is container
 
 def test_ensure_root_is_available():
@@ -164,7 +164,7 @@ def test_ensure_root_is_available():
   
   something = Something()
   container = SomeContainer()
-  container.append(something)
+  container.add(something)
   assert something.root is container
   assert container.root is container
 
@@ -200,8 +200,8 @@ def test_finding_elements():
   element2 = xml.Element(attributes={"name" : "element 2"})
   element3 = xml.Element(attributes={"name" : "element 3"})
 
-  element1.append(element3)
-  element2.append(element3)
+  element1.add(element3)
+  element2.add(element3)
 
   assert element1.find("name", "element 3") is element3
 
@@ -212,9 +212,9 @@ def test_avoiding_finding_recursion(caplog):
   element2 = xml.Element(attributes={"name" : "element 2"})
   element3 = xml.Element(attributes={"name" : "element 3"})
 
-  element1.append(element2)
-  element2.append(element3)
-  element3.append(element1)
+  element1.add(element2)
+  element2.add(element3)
+  element3.add(element1)
 
   assert element1.find("name", "element 4") is None
   assert "avoided recursion" in caplog.text
@@ -224,8 +224,8 @@ def test_skipping_of_element_in_hierarchy():
   element2 = xml.Element(attributes={"name" : "element 2"})
   element3 = xml.Element(attributes={"name" : "element 3"})
 
-  element1.append(element2)
-  element2.append(element3)
+  element1.add(element2)
+  element2.add(element3)
 
   assert element1.find("name", "element 3") is element3
   assert element1.find("name", "element 3", skip=element2) is None
@@ -235,8 +235,8 @@ def test_ignore_unknown_attributes_on_find():
   element2 = xml.Element(attributes={"name" : "element 2"})
   element3 = xml.Element(attributes={"named" : "element 3"})
 
-  element1.append(element2)
-  element2.append(element3)
+  element1.add(element2)
+  element2.add(element3)
 
   assert element1.find("named", "element 3") is element3
 
@@ -255,3 +255,111 @@ def test_identified_element_id_generation():
   element = xml.IdentifiedElement()
   assert len(element.id) == len("identifiedelement_") + 8
   assert element.id[:len("identifiedelement_")] == "identifiedelement_"
+
+def test_ensure_parent_child_relations_are_maintained():
+  @dataclass
+  class Trunk(xml.Element):
+    _tag = "Trunk"
+    branches    : List["Branch"] = field(**xml.children)
+    main_branch : "Branch"       = field(**xml.child)
+
+  @dataclass
+  class Branch(xml.Element):
+    _tag = "Branch"
+    leafs : List["Leaf"] = field(**xml.children)
+
+  @dataclass
+  class Leaf(xml.Element):
+    _tag = "Leaf"
+
+def test_element_list_maintains_parent_reference():
+  parent = xml.Element(text="parent")
+  leaf  = xml.Element(text="leaf")
+
+  assert parent._parent is None
+  assert leaf._parent is None
+
+  parent.add(leaf)
+
+  assert parent._parent is None
+  assert leaf._parent is parent
+
+  parent.remove(leaf)
+
+  assert parent._parent is None
+  assert leaf._parent is None
+
+  root = xml.Element([parent], text="root")
+
+  assert parent._parent is root
+  assert leaf._parent is None
+
+  parent.add(leaf)
+
+  assert leaf.root is root
+
+  root.clear()
+  parent.clear()
+
+  assert root._parent is None
+  assert parent._parent is None
+  assert leaf._parent is None
+
+  @dataclass
+  class Special(xml.Element):
+    pass
+
+  @dataclass
+  class Custom(xml.Element):
+    specials : List[Special] = field(**xml.children)
+
+  custom = Custom(text="custom")
+  special1 = Special(text="special1")
+  special2 = Special(text="special2")
+  custom.add(special1)
+  custom.add(special2)
+  element = xml.Element(text="element")
+  custom.add(element)
+  
+  assert special1._parent is custom
+  assert special2._parent is custom
+  assert element._parent is custom
+  
+  assert len(custom.children) == 3
+  assert len(custom.specials) == 2
+
+  root.add(parent)
+  special1.add(leaf)
+  parent.add(custom)
+  
+  assert leaf._parent is special1
+  assert leaf._parent._parent is custom
+  assert leaf._parent._parent._parent is parent
+  assert leaf._parent._parent._parent._parent is root
+
+  assert leaf.root is root
+
+def test_element_property_maintains_parent_reference():
+  @dataclass
+  class Custom(xml.Element):
+    special1 : Optional[xml.Element] = field(**xml.child)
+    special2 : Optional[xml.Element] = field(**xml.child)
+
+  custom = Custom()
+  leaf = xml.Element(text="leaf")
+  
+  assert custom.special1 is None
+  assert custom.special2 is None
+  
+  custom.special1 = leaf
+
+  assert custom.special1 is leaf
+  assert custom.special2 is None
+  assert leaf._parent is custom
+
+  del custom.special1
+  
+  assert leaf._parent is None
+  # assert custom.special1 should raise AttributeError because it should be gone
+  assert custom.special2 is None
+  
