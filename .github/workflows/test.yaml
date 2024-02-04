@@ -34,7 +34,6 @@ jobs:
       - name: Test with PyTest and generate coverage report
         run: |
           coverage run -m --omit="*/.tox/*,*/distutils/*,tests/*" pytest
-          coverage combine
           coverage lcov
       - name: Coveralls
         uses: coverallsapp/github-action@v2
