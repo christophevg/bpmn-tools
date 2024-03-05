@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="definitions" exporter="Camunda Modeler" exporterVersion="5.9.0">
+  <bpmn:process id="process" isExecutable="false">
+    <bpmn:task id="task-TimerEventDefinition" name="Task" />
+    <bpmn:boundaryEvent id="boundary-event-TimerEventDefinition" attachedToRef="task-TimerEventDefinition">
+      <bpmn:timerEventDefinition id="message-event-definition-TimerEventDefinition" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="bad-boundary-event" attachedToRef="unknown-task">
+      <bpmn:timerEventDefinition id="unknown-message-event-definition" />
+    </bpmn:boundaryEvent>
+  </bpmn:process>
+  <bpmn:collaboration id="collaboration">
+    <bpmn:participant id="participant" name="lane" processRef="process" />
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane_collaboration" bpmnElement="collaboration">
+      <bpmndi:BPMNShape id="shape_participant" bpmnElement="participant" isHorizontal="true">
+        <dc:Bounds x="160" y="60" width="300" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_task-TimerEventDefinition" bpmnElement="task-TimerEventDefinition">
+        <dc:Bounds x="250" y="90" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_boundary-event-TimerEventDefinition" bpmnElement="boundary-event-TimerEventDefinition">
+        <dc:Bounds x="332" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

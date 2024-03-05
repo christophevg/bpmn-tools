@@ -60,7 +60,7 @@ class Element():
     else:
       return self
 
-  def find(self, key, value, skip=None, stack=None):
+  def find(self, key, value, skip=None, skip_classes=None, stack=None):
     if stack is None:
       stack = []
 
@@ -69,6 +69,9 @@ class Element():
       return None
 
     if self is skip:
+      return None
+
+    if skip_classes and self.__class__.__name__ in skip_classes:
       return None
 
     # do I have the key=value attribute?
@@ -80,7 +83,7 @@ class Element():
     
     # recurse down children
     for child in self.children:
-      match = child.find(key, value, skip=skip, stack=stack+[self])
+      match = child.find(key, value, skip=skip, skip_classes=skip_classes, stack=stack+[self])
       if match:
         return match
 

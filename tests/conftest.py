@@ -8,6 +8,8 @@ from bpmn_tools.util import model2xml, sanitize_xml
 
 from bpmn_tools.builder.process import Task, Branch
 
+folder = Path(__file__).resolve().parent / "models"
+
 def compare_strings(result, expected):
   # print to std, which shows up in test output when assertion fails
   print("".join(unified_diff(
@@ -22,11 +24,17 @@ def compare(result,expected):
   compare_strings(result_str, expected_str)
 
 def load_model_src(filename):
-  return (Path(__file__).parent / "models" / filename).read_text()
+  return (folder / filename).read_text()
+
+@pytest.fixture(name="model")
+def model_fixture():
+  def fixture(filename):
+    return load_model_src(filename)
+  return fixture
 
 def compare_to_file(result, filename, save_to=None):
   if save_to:
-    (Path(__file__).parent / "models" / save_to).write_text(result)
+    (folder / save_to).write_text(result)
   try:
     expected = load_model_src(filename)
     expected = sanitize_xml(expected)

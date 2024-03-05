@@ -269,7 +269,7 @@ class BoundaryEvent(Event):
   def on(self):
     if self._on:
       return self._on
-    return self.root.find("id", self["attachedToRef"], skip=self)
+    return self.root.find("id", self["attachedToRef"], skip=self, skip_classes=["Diagram"])
 
   @property
   def attributes(self):

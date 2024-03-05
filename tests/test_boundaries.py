@@ -1,3 +1,5 @@
+import xmltodict
+
 from bpmn_tools.notation      import Definitions
 from bpmn_tools.collaboration import Collaboration, Participant
 from bpmn_tools.flow          import Process, Task
@@ -45,3 +47,15 @@ def test_message_boundaries(compare_model_to_file):
   )
 
   compare_model_to_file(definitions, "boundaries.bpmn", save_to="boundaries-test.bpmn")
+
+def test_dangling_boundaries(model):
+  xml = model("bad-boundaries.bpmn")
+  d = xmltodict.parse(xml)
+  definitions = Definitions.from_dict(d)
+  for event in definitions.children_oftype(BoundaryEvent, recurse=True):
+    try:
+      assert event.on
+      assert event.id != "bad-boundary-event", "dangling boundary should have None"
+    except AssertionError:
+      pass
+
