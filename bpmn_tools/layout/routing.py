@@ -1,8 +1,12 @@
+import logging
+
 import math
 
-from bpmn_tools.flow import Gateway
+from bpmn_tools.flow import Gateway, Flow
 
 from bpmn_tools import xml
+
+logger = logging.getLogger(__name__)
 
 class WayPoint(xml.Element):
   __tag__ = "di:waypoint"
@@ -112,6 +116,12 @@ class Default(EdgeRoutingStrategy):
   TODO: reuse EdgeRoutingStrategy Routables
   """
   def route(self, flow):
+    if isinstance(flow.source, Flow):
+      logger.warning(f"routing is not supported for source Flow: {flow}")
+      return []
+    if isinstance(flow.target, Flow):
+      logger.warning(f"routing is not supported for targer Flow: {flow}")
+      return []
     self.given(flow)
     if isinstance(self.flow.source, Gateway) or isinstance(self.flow.target, Gateway):
       return self._route_gateway()
