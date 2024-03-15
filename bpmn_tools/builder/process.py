@@ -33,11 +33,11 @@ def NoColor(bpmn):
   return bpmn
 
 class Color(Enum):
-  NONE   : NoColor
-  RED    : Red
-  GREEN  : Green
-  ORANGE : Orange
-  BLUE   : Blue
+  NONE   = NoColor
+  RED    = Red
+  GREEN  = Green
+  ORANGE = Orange
+  BLUE   = Blue
 
 @dataclass
 class Step():
@@ -252,7 +252,7 @@ def If(condition, step):
 
 @dataclass
 class Branch(Step):
-  default  : str = None
+  default  : bool = None
   kind     : BranchKind = BranchKind.XOR
 
   gws = 0
