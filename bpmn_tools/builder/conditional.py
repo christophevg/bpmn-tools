@@ -247,9 +247,6 @@ class BranchedItem():
   branches  : List[Branch] = field(default_factory=list)
   strategy  : Strategy = field(default_factory=Strategy)
  
-  def __post_init__(self):
-    print(self)
- 
   @property
   def name(self):
     return self.condition.name
